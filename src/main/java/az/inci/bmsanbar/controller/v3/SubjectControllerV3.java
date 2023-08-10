@@ -6,6 +6,7 @@ import az.inci.bmsanbar.model.Sbe;
 import az.inci.bmsanbar.model.Whs;
 import az.inci.bmsanbar.model.v2.Response;
 import az.inci.bmsanbar.services.v3.SubjectServiceV3;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RequestMapping("/v3/src")
 @RestController
+@Slf4j
 public class SubjectControllerV3
 {
     private SubjectServiceV3 service;
@@ -31,19 +33,12 @@ public class SubjectControllerV3
         try
         {
             List<Sbe> result = service.getSbeList();
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .data(result)
-                                             .build());
+            return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)
         {
-            e.printStackTrace();
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 
@@ -54,19 +49,12 @@ public class SubjectControllerV3
         try
         {
             List<Customer> result = service.getCustomerList(sbeCode);
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .data(result)
-                                             .build());
+            return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)
         {
-            e.printStackTrace();
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 
@@ -77,19 +65,12 @@ public class SubjectControllerV3
         try
         {
             List<Whs> result = service.getWhsList();
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .data(result)
-                                             .build());
+            return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)
         {
-            e.printStackTrace();
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 
@@ -100,19 +81,12 @@ public class SubjectControllerV3
         try
         {
             List<Whs> result = service.getTrgWhsList(userId);
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .data(result)
-                                             .build());
+            return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)
         {
-            e.printStackTrace();
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 
@@ -123,19 +97,12 @@ public class SubjectControllerV3
         try
         {
             List<ExpCenter> result = service.getExpCenterList();
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .data(result)
-                                             .build());
+            return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)
         {
-            e.printStackTrace();
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 }

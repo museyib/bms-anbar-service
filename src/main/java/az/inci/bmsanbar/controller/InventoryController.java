@@ -134,15 +134,15 @@ public class InventoryController
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/update-barcodes",
-            consumes = "application/json;charset=UTF-8",
-            method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<Boolean> updateInvBarcodes(@RequestBody List<InvBarcode> barcodeList)
-    {
-        boolean result = service.updateInvBarcodes(barcodeList);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
+//    @RequestMapping(value = "/update-barcodes",
+//            consumes = "application/json;charset=UTF-8",
+//            method = RequestMethod.POST)
+//    @ResponseBody
+//    public ResponseEntity<Boolean> updateInvBarcodes(@RequestBody List<InvBarcode> barcodeList)
+//    {
+//        boolean result = service.updateInvBarcodes(barcodeList);
+//        return new ResponseEntity<>(result, HttpStatus.OK);
+//    }
 
     @RequestMapping(produces = "application/json;charset=UTF-8")
     @ResponseBody

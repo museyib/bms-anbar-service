@@ -9,6 +9,7 @@ import az.inci.bmsanbar.model.v2.Response;
 import az.inci.bmsanbar.model.v3.CheckShipmentResponse;
 import az.inci.bmsanbar.model.v3.ShipmentRequest;
 import az.inci.bmsanbar.services.v3.ShipmentServiceV3;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RequestMapping("/v3/shipment")
 @RestController
+@Slf4j
 public class ShipmentControllerV3
 {
     private ShipmentServiceV3 service;
@@ -36,25 +38,16 @@ public class ShipmentControllerV3
         {
             if(service.isValid(trxNo))
             {
-                CheckShipmentResponse shipmentResponse = service.checkShipment(trxNo);
-                return ResponseEntity.ok(Response.builder()
-                                                 .statusCode(0)
-                                                 .data(shipmentResponse)
-                                                 .build());
+                CheckShipmentResponse result = service.checkShipment(trxNo);
+                return ResponseEntity.ok(Response.getResultResponse(result));
             }
             else
-                return ResponseEntity.ok(Response.builder()
-                                                 .statusCode(2)
-                                                 .developerMessage("Yükləmə üçün keçərli sənəd deyil.")
-                                                 .build());
+                return ResponseEntity.ok(Response.getUserErrorResponse("Yükləmə üçün keçərli sənəd deyil."));
         }
         catch(Exception e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 
@@ -66,18 +59,12 @@ public class ShipmentControllerV3
         try
         {
             boolean result = service.isShippedForDriver(trxNo, driverCode);
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .data(result)
-                                             .build());
+            return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 
@@ -88,19 +75,12 @@ public class ShipmentControllerV3
         try
         {
             service.insertShipDetails(shipmentRequest);
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .developerMessage("Uğurlu əməliyyat")
-                                             .build());
+            return ResponseEntity.ok(Response.getSuccessResponse());
         }
         catch(Exception e)
         {
-            e.printStackTrace();
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 
@@ -111,18 +91,12 @@ public class ShipmentControllerV3
         try
         {
             boolean result = service.isValid(trxNo);
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .data(result)
-                                             .build());
+            return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 }

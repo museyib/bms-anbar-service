@@ -5,6 +5,7 @@ import az.inci.bmsanbar.model.Trx;
 import az.inci.bmsanbar.model.v2.CollectTrxRequest;
 import az.inci.bmsanbar.model.v2.Response;
 import az.inci.bmsanbar.services.v3.PackServiceV3;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @RequestMapping("/v3/pack")
 @RestController
+@Slf4j
 public class PackControllerV3
 {
     private PackServiceV3 service;
@@ -30,20 +32,13 @@ public class PackControllerV3
     {
         try
         {
-            Doc doc = service.getPackDoc(approveUser, mode);
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .data(doc)
-                                             .build());
+            Doc result = service.getPackDoc(approveUser, mode);
+            return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)
         {
-            e.printStackTrace();
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 
@@ -55,17 +50,12 @@ public class PackControllerV3
         try
         {
             service.collectTrx(data, trxNo);
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .build());
+            return ResponseEntity.ok(Response.getSuccessResponse());
         }
         catch(Exception e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 
@@ -75,19 +65,13 @@ public class PackControllerV3
     {
         try
         {
-            List<Doc> doc = service.getPackDocList(userId);
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .data(doc)
-                                             .build());
+            List<Doc> result = service.getPackDocList(userId);
+            return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 
@@ -97,20 +81,49 @@ public class PackControllerV3
     {
         try
         {
-            List<Trx> trxList = service.getWaitingPackItems(trxNo);
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .data(trxList)
-                                             .build());
+            List<Trx> result = service.getWaitingPackItems(trxNo);
+            return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)
         {
-            e.printStackTrace();
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+        }
+    }
+
+    @GetMapping(value = "/report", produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResponseEntity<Response> getReport(@RequestParam("start-date") String startDate,
+                                              @RequestParam("end-date") String endDate,
+                                              @RequestParam("user-id") String pickUser)
+    {
+        try
+        {
+            Integer result = service.getReport(startDate, endDate, pickUser);
+            return ResponseEntity.ok(Response.getResultResponse(result));
+        }
+        catch(Exception e)
+        {
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+        }
+    }
+
+    @GetMapping(value = "/report-actual", produces = "application/json;charset=UTF-8")
+    @ResponseBody
+    public ResponseEntity<Response> getReportActual(@RequestParam("start-date") String startDate,
+                                                    @RequestParam("end-date") String endDate,
+                                                    @RequestParam("user-id") String pickUser)
+    {
+        try
+        {
+            Integer result = service.getReportActual(startDate, endDate, pickUser);
+            return ResponseEntity.ok(Response.getResultResponse(result));
+        }
+        catch(Exception e)
+        {
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 }

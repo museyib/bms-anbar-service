@@ -31,7 +31,7 @@ public class InventoryServiceV3 extends AbstractService
         q.setParameter("BARCODE", barcode);
         q.setParameter("USER_ID", userId);
         List<Object[]> result = q.getResultList();
-        if(result.size() > 0)
+        if(!result.isEmpty())
         {
             invInfo.setInvCode(String.valueOf(result.get(0)[0]));
             invInfo.setInvName(String.valueOf(result.get(0)[1]));
@@ -55,7 +55,7 @@ public class InventoryServiceV3 extends AbstractService
         q.setParameter("INV_CODE", invCode);
         q.setParameter("USER_ID", userId);
         List<Object[]> result = q.getResultList();
-        if(result.size() > 0)
+        if(!result.isEmpty())
         {
             invInfo.setInvCode(String.valueOf(result.get(0)[0]));
             invInfo.setInvName(String.valueOf(result.get(0)[1]));
@@ -139,7 +139,7 @@ public class InventoryServiceV3 extends AbstractService
         q.setParameter("INV_CODE", invCode);
         List<BigDecimal> resultList = q.getResultList();
         BigDecimal qty = new BigDecimal("0");
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
             qty = resultList.get(0);
 
         em.close();
@@ -160,7 +160,7 @@ public class InventoryServiceV3 extends AbstractService
         q.setParameter("USER_ID", pickUser);
         List<Integer> resultList = q.getResultList();
         Integer qty = 0;
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
             qty = resultList.get(0);
 
         em.close();
@@ -181,7 +181,7 @@ public class InventoryServiceV3 extends AbstractService
         q.setParameter("USER_ID", approveUser);
         List<Integer> resultList = q.getResultList();
         Integer qty = 0;
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
             qty = resultList.get(0);
 
         em.close();
@@ -351,7 +351,7 @@ public class InventoryServiceV3 extends AbstractService
         selectQuery.setParameter("WHS_CODE", whsCode);
         String invCode = "";
         List<Object> resultList = selectQuery.getResultList();
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
             invCode = String.valueOf(resultList.get(0));
 
         if(invCode != null && !invCode.isEmpty())
@@ -372,7 +372,7 @@ public class InventoryServiceV3 extends AbstractService
             selectQuery = em.createNativeQuery("SELECT INV_CODE from INV_BARCODE WHERE BAR_CODE = :BAR_CODE");
             selectQuery.setParameter("BAR_CODE", invBarcode);
             resultList = selectQuery.getResultList();
-            if(resultList.size() > 0)
+            if(!resultList.isEmpty())
             {
                 invCode = String.valueOf(resultList.get(0));
                 Query insertQuery = em.createNativeQuery("""
@@ -574,7 +574,7 @@ public class InventoryServiceV3 extends AbstractService
                 WHERE BAR_CODE = :BAR_CODE""");
         q.setParameter("BAR_CODE", barcode);
         List<Object[]> resultList = q.getResultList();
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
         {
             invBarcode.setInvCode(String.valueOf(resultList.get(0)[0]));
             invBarcode.setBarcode(String.valueOf(resultList.get(0)[1]));

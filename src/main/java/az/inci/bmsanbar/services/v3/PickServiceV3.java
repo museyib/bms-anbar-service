@@ -84,7 +84,7 @@ public class PickServiceV3 extends AbstractService
         query.setParameter("USER_ID", pickUser);
         Doc doc = new Doc();
         List<Object[]> resultList = query.getResultList();
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
         {
             Object[] result = resultList.get(0);
             doc.setTrxNo((String) result[0]);
@@ -150,6 +150,47 @@ public class PickServiceV3 extends AbstractService
 
         em.close();
 
-        return result.size() >= 1 && String.valueOf(result.get(0)).equals("1");
+        return !result.isEmpty() && String.valueOf(result.get(0)).equals("1");
+    }
+
+    public Integer getReport(String startDate, String endDate, String pickUser)
+    {
+        Query q = em.createNativeQuery("""
+                                SELECT count(*) FROM INV_PICK_TRX IPT JOIN PICK_DOC PD
+                                ON IPT.TRX_NO=PD.TRX_NO AND PD.REC_STATUS=6
+                                WHERE IPT.TRX_DATE BETWEEN :START_DATE AND :END_DATE
+                                AND IPT.PICK_USER_ID = :USER_ID
+                                AND IPT.PICK_STATUS IN ('P', 'Q')""");
+        q.setParameter("START_DATE", startDate);
+        q.setParameter("END_DATE", endDate);
+        q.setParameter("USER_ID", pickUser);
+        List<Integer> resultList = q.getResultList();
+        Integer qty = 0;
+        if(!resultList.isEmpty())
+            qty = resultList.get(0);
+
+        em.close();
+
+        return qty;
+    }
+
+    public Integer getReportActual(String startDate, String endDate, String pickUser)
+    {
+        Query q = em.createNativeQuery("""
+                                SELECT count(*) FROM INV_PICK_TRX
+                                WHERE CAST(PICK_END AS DATE) BETWEEN :START_DATE AND :END_DATE
+                                AND PICK_USER_ID = :USER_ID
+                                AND PICK_STATUS IN ('P', 'Q')""");
+        q.setParameter("START_DATE", startDate);
+        q.setParameter("END_DATE", endDate);
+        q.setParameter("USER_ID", pickUser);
+        List<Integer> resultList = q.getResultList();
+        Integer qty = 0;
+        if(!resultList.isEmpty())
+            qty = resultList.get(0);
+
+        em.close();
+
+        return qty;
     }
 }

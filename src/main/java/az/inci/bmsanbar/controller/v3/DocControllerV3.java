@@ -8,6 +8,7 @@ package az.inci.bmsanbar.controller.v3;
 import az.inci.bmsanbar.model.Doc;
 import az.inci.bmsanbar.model.v2.Response;
 import az.inci.bmsanbar.services.v3.DocServiceV3;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ import java.util.List;
  */
 @RequestMapping("/v3/doc")
 @RestController
+@Slf4j
 public class DocControllerV3
 {
     private DocServiceV3 service;
@@ -35,19 +37,13 @@ public class DocControllerV3
     {
         try
         {
-            List<Doc> docList = service.getPackDocList(userId);
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .data(docList)
-                                             .build());
+            List<Doc> result = service.getPackDocList(userId);
+            return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 
@@ -58,18 +54,12 @@ public class DocControllerV3
         try
         {
             boolean result = service.isTaxed(trxNo);
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .data(result)
-                                             .build());
+            return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 }

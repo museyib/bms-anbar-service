@@ -3,6 +3,7 @@ package az.inci.bmsanbar.controller.v3;
 import az.inci.bmsanbar.model.Uom;
 import az.inci.bmsanbar.model.v2.Response;
 import az.inci.bmsanbar.services.v3.UomServiceV3;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RequestMapping("/v3/uom")
 @RestController
+@Slf4j
 public class UomControllerV3
 {
     private UomServiceV3 service;
@@ -31,18 +33,12 @@ public class UomControllerV3
         try
         {
             List<Uom> result = service.getUomList();
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .data(result)
-                                             .build());
+            return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 }

@@ -83,7 +83,7 @@ public class PackServiceV3 extends AbstractService
         query.setParameter("TRX_NO", trxNo);
         Doc doc = new Doc();
         List<Object[]> resultList = query.getResultList();
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
         {
             Object[] result = resultList.get(0);
             doc.setTrxNo((String) result[0]);
@@ -206,5 +206,45 @@ public class PackServiceV3 extends AbstractService
         em.close();
 
         return docList;
+    }
+
+    public Integer getReport(String startDate, String endDate, String approveUser)
+    {
+        Query q = em.createNativeQuery("""
+                                SELECT count(*) FROM INV_PICK_TRX
+                                WHERE TRX_DATE BETWEEN :START_DATE AND :END_DATE
+                                    AND APPROVE_USER_ID = :USER_ID
+                                    AND PICK_STATUS IN ('P', 'Q')""");
+        q.setParameter("START_DATE", startDate);
+        q.setParameter("END_DATE", endDate);
+        q.setParameter("USER_ID", approveUser);
+        List<Integer> resultList = q.getResultList();
+        Integer qty = 0;
+        if(!resultList.isEmpty())
+            qty = resultList.get(0);
+
+        em.close();
+
+        return qty;
+    }
+
+    public Integer getReportActual(String startDate, String endDate, String pickUser)
+    {
+        Query q = em.createNativeQuery("""
+                                SELECT count(*) FROM INV_PICK_TRX
+                                WHERE CAST(PICK_END AS DATE) BETWEEN :START_DATE AND :END_DATE
+                                AND APPROVE_USER_ID = :USER_ID
+                                AND PICK_STATUS IN ('P', 'Q')""");
+        q.setParameter("START_DATE", startDate);
+        q.setParameter("END_DATE", endDate);
+        q.setParameter("USER_ID", pickUser);
+        List<Integer> resultList = q.getResultList();
+        Integer qty = 0;
+        if(!resultList.isEmpty())
+            qty = resultList.get(0);
+
+        em.close();
+
+        return qty;
     }
 }

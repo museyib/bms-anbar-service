@@ -33,7 +33,7 @@ public class ShipmentServiceV2 extends AbstractService
                                        " WHERE ST.SRC_TRX_NO=? AND ST.SHIP_STATUS != 'MD'");
         q.setParameter(1, trxNo);
         List<Object[]> resultList = q.getResultList();
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
         {
             shipDocInfo = new ShipDocInfo();
             Object[] result = resultList.get(0);
@@ -63,7 +63,7 @@ public class ShipmentServiceV2 extends AbstractService
         q.setParameter(1, trxNo);
         q.setParameter(2, driverCode);
         List<Object[]> resultList = q.getResultList();
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
         {
             shippedDriverCode = (String) resultList.get(0)[0];
         }
@@ -76,17 +76,35 @@ public class ShipmentServiceV2 extends AbstractService
     @Transactional
     public void insertShipDetails(String userId, List<ShipmentRequest> shipmentRequest)
     {
-        Query q = em.createNativeQuery("INSERT INTO TERMINAL_SHIPMENT(SHIP_REGION_CODE, " +
-                                       "DRIVER_CODE, SRC_TRX_NO, VEHICLE_CODE, USER_ID, SHIP_STATUS)" +
-                                       "  VALUES (?,?,?,?,?,?)");
+        Query q = em.createNativeQuery("""
+                               INSERT INTO TERMINAL_SHIPMENT(
+                                   SHIP_REGION_CODE,
+                                   DRIVER_CODE,
+                                   SRC_TRX_NO,
+                                   VEHICLE_CODE,
+                                   USER_ID,
+                                   SHIP_STATUS,
+                                   TRANSITION_FLAG)
+                               VALUES (
+                                   :SHIP_REGION_CODE,
+                                   :DRIVER_CODE,
+                                   :SRC_TRX_NO,
+                                   :VEHICLE_CODE,
+                                   :USER_ID,
+                                   :SHIP_STATUS,
+                                   :TRANSITION_FLAG
+                                   )""");
         for(ShipmentRequest request : shipmentRequest)
         {
-            q.setParameter(1, request.getRegionCode());
-            q.setParameter(2, request.getDriverCode());
-            q.setParameter(3, request.getSrcTrxNo());
-            q.setParameter(4, request.getVehicleCode());
-            q.setParameter(5, userId);
-            q.setParameter(6, request.getShipStatus());
+            int transitionFlag = request.getShipStatus().equals("MG") ? 1 : 0;
+            q.setParameter("SHIP_REGION_CODE", request.getRegionCode());
+            q.setParameter("DRIVER_CODE", request.getDriverCode());
+            q.setParameter("SRC_TRX_NO", request.getSrcTrxNo());
+            q.setParameter("VEHICLE_CODE", request.getVehicleCode());
+            q.setParameter("USER_ID", userId);
+            q.setParameter("SHIP_STATUS", request.getShipStatus());
+            q.setParameter("TRANSITION_FLAG", transitionFlag);
+
             q.executeUpdate();
         }
 
@@ -98,8 +116,8 @@ public class ShipmentServiceV2 extends AbstractService
     @Transactional
     public void createShipDoc(String userId)
     {
-        Query q = em.createNativeQuery("EXEC DBO.SP_TERMINAL_CREAT_SHIPMENT_DOC ?");
-        q.setParameter(1, userId);
+        Query q = em.createNativeQuery("EXEC DBO.SP_TERMINAL_CREAT_SHIPMENT_DOC :TRX_NO");
+        q.setParameter("TRX_NO", userId);
         q.getResultList();
         em.close();
     }
@@ -112,6 +130,6 @@ public class ShipmentServiceV2 extends AbstractService
 
         em.close();
 
-        return resultList.size() > 0;
+        return !resultList.isEmpty();
     }
 }

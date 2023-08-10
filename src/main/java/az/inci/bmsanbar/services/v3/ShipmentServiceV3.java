@@ -39,7 +39,7 @@ public class ShipmentServiceV3 extends AbstractService
         q.setParameter("SRC_TRX_NO", trxNo);
         List<Object[]> resultList = q.getResultList();
         CheckShipmentResponse shipmentResponse = new CheckShipmentResponse();
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
         {
             Object[] result = resultList.get(0);
             shipmentResponse.setDriverCode((String) result[0]);
@@ -71,7 +71,7 @@ public class ShipmentServiceV3 extends AbstractService
         q.setParameter("SRC_TRX_NO", trxNo);
         q.setParameter("DRIVER_CODE", driverCode);
         List<Object[]> resultList = q.getResultList();
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
         {
             shippedDriverCode = (String) resultList.get(0)[0];
         }
@@ -91,22 +91,26 @@ public class ShipmentServiceV3 extends AbstractService
                     SRC_TRX_NO,
                     VEHICLE_CODE,
                     USER_ID,
-                    SHIP_STATUS)
+                    SHIP_STATUS,
+                    TRANSITION_FLAG)
                 VALUES (
                     :SHIP_REGION_CODE,
                     :DRIVER_CODE,
                     :SRC_TRX_NO,
                     :VEHICLE_CODE,
                     :USER_ID,
-                    :SHIP_STATUS)""");
+                    :SHIP_STATUS,
+                    :TRANSITION_FLAG)""");
         for(ShipmentRequestItem requestItem : request.getRequestItems())
         {
+            int transitionFlag = requestItem.getShipStatus().equals("MG") ? 1 : 0;
             q.setParameter("SHIP_REGION_CODE", request.getRegionCode());
             q.setParameter("DRIVER_CODE", request.getDriverCode());
             q.setParameter("SRC_TRX_NO", requestItem.getSrcTrxNo());
             q.setParameter("VEHICLE_CODE", request.getVehicleCode());
             q.setParameter("USER_ID", request.getUserId());
             q.setParameter("SHIP_STATUS", requestItem.getShipStatus());
+            q.setParameter("TRANSITION_FLAG", transitionFlag);
             q.executeUpdate();
         }
 
@@ -133,6 +137,6 @@ public class ShipmentServiceV3 extends AbstractService
 
         em.close();
 
-        return resultList.size() > 0;
+        return !resultList.isEmpty();
     }
 }

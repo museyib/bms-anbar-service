@@ -307,27 +307,27 @@ public class InventoryControllerV2
                                          .build());
     }
 
-    @PostMapping(value = "/update-barcodes", consumes = "application/json;charset=UTF-8")
-    @ResponseBody
-    public ResponseEntity<Response> updateInvBarcodes(@RequestBody List<InvBarcode> barcodeList)
-    {
-        try
-        {
-            service.updateInvBarcodes(barcodeList);
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .developerMessage("Uğurlu əməliyyat")
-                                             .build());
-        }
-        catch(Exception e)
-        {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
-        }
-    }
+//    @PostMapping(value = "/update-barcodes", consumes = "application/json;charset=UTF-8")
+//    @ResponseBody
+//    public ResponseEntity<Response> updateInvBarcodes(@RequestBody List<InvBarcode> barcodeList)
+//    {
+//        try
+//        {
+//            service.updateInvBarcodes(barcodeList);
+//            return ResponseEntity.ok(Response.builder()
+//                                             .statusCode(0)
+//                                             .developerMessage("Uğurlu əməliyyat")
+//                                             .build());
+//        }
+//        catch(Exception e)
+//        {
+//            return ResponseEntity.ok(Response.builder()
+//                                             .statusCode(1)
+//                                             .systemMessage(e.toString())
+//                                             .developerMessage("Server xətası")
+//                                             .build());
+//        }
+//    }
 
     @GetMapping(produces = "application/json;charset=UTF-8")
     @ResponseBody

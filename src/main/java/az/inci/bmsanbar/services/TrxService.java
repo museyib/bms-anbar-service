@@ -43,7 +43,6 @@ public class TrxService extends AbstractService
         }
         catch(Exception e)
         {
-            e.printStackTrace();
             return new ArrayList<>();
         }
 
@@ -102,7 +101,6 @@ public class TrxService extends AbstractService
                 }
                 catch(Exception exception)
                 {
-                    exception.printStackTrace();
                     return false;
                 }
                 if(!trxNo.equals("null"))
@@ -115,7 +113,6 @@ public class TrxService extends AbstractService
                     }
                     catch(Exception e)
                     {
-                        e.printStackTrace();
                         return false;
                     }
                 }
@@ -123,7 +120,6 @@ public class TrxService extends AbstractService
         }
         catch(JSONException ex)
         {
-            ex.printStackTrace();
             return false;
         }
 
@@ -146,7 +142,6 @@ public class TrxService extends AbstractService
         }
         catch(Exception e)
         {
-            e.printStackTrace();
             return new ArrayList<>();
         }
 
@@ -188,7 +183,7 @@ public class TrxService extends AbstractService
 
         em.close();
 
-        return resultList.size() > 0;
+        return !resultList.isEmpty();
     }
 
     @Transactional
@@ -199,24 +194,40 @@ public class TrxService extends AbstractService
                                      String userID,
                                      String shipStatus)
     {
-        Query q = em.createNativeQuery("INSERT INTO TERMINAL_SHIPMENT(SHIP_REGION_CODE, " +
-                                       "DRIVER_CODE, SRC_TRX_NO, VEHICLE_CODE, USER_ID, SHIP_STATUS)" +
-                                       "  VALUES (?,?,?,?,?,?)");
-        q.setParameter(1, regionCode);
-        q.setParameter(2, driverCode);
-        q.setParameter(3, srcTrxNo);
-        q.setParameter(4, vehicleCode);
-        q.setParameter(5, userID);
+        Query q = em.createNativeQuery("""
+                               INSERT INTO TERMINAL_SHIPMENT(
+                                   SHIP_REGION_CODE,
+                                   DRIVER_CODE,
+                                   SRC_TRX_NO,
+                                   VEHICLE_CODE,
+                                   USER_ID,
+                                   SHIP_STATUS,
+                                   TRANSITION_FLAG)
+                               VALUES (
+                                   :SHIP_REGION_CODE,
+                                   :DRIVER_CODE,
+                                   :SRC_TRX_NO,
+                                   :VEHICLE_CODE,
+                                   :USER_ID,
+                                   :SHIP_STATUS,
+                                   :TRANSITION_FLAG
+                                   )""");
+        q.setParameter("SHIP_REGION_CODE", regionCode);
+        q.setParameter("DRIVER_CODE", driverCode);
+        q.setParameter("SRC_TRX_NO", srcTrxNo);
+        q.setParameter("VEHICLE_CODE", vehicleCode);
+        q.setParameter("USER_ID", userID);
         if(shipStatus == null)
             shipStatus = "AC";
-        q.setParameter(6, shipStatus);
+        int transitionFlag = shipStatus.equals("MG") ? 1 : 0;
+        q.setParameter("SHIP_STATUS", shipStatus);
+        q.setParameter("TRANSITION_FLAG", transitionFlag);
         try
         {
             q.executeUpdate();
         }
         catch(Exception exception)
         {
-            exception.printStackTrace();
             return false;
         }
 
@@ -236,7 +247,6 @@ public class TrxService extends AbstractService
         }
         catch(Exception exception)
         {
-            exception.printStackTrace();
             return false;
         }
 
@@ -275,7 +285,6 @@ public class TrxService extends AbstractService
         }
         catch(Exception e)
         {
-            e.printStackTrace();
             return new ArrayList<>();
         }
 
@@ -317,7 +326,6 @@ public class TrxService extends AbstractService
         }
         catch(Exception e)
         {
-            e.printStackTrace();
             return new ArrayList<>();
         }
 
@@ -359,7 +367,6 @@ public class TrxService extends AbstractService
         }
         catch(Exception e)
         {
-            e.printStackTrace();
             return false;
         }
 
@@ -371,7 +378,6 @@ public class TrxService extends AbstractService
         }
         catch(Exception e)
         {
-            e.printStackTrace();
             return false;
         }
         em.close();
@@ -413,7 +419,6 @@ public class TrxService extends AbstractService
         }
         catch(Exception e)
         {
-            e.printStackTrace();
             return false;
         }
 

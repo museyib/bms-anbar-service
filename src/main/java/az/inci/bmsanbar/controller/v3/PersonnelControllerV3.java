@@ -2,6 +2,7 @@ package az.inci.bmsanbar.controller.v3;
 
 import az.inci.bmsanbar.model.v2.Response;
 import az.inci.bmsanbar.services.v3.PersonnelServiceV3;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/v3/personnel")
 @RestController
+@Slf4j
 public class PersonnelControllerV3
 {
     private PersonnelServiceV3 service;
@@ -26,19 +28,13 @@ public class PersonnelControllerV3
     {
         try
         {
-            String perName = service.getPersonnelName(perCode);
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .data(perName)
-                                             .build());
+            String result = service.getPersonnelName(perCode);
+            return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .developerMessage("Server xətası")
-                                             .systemMessage(e.toString())
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 }

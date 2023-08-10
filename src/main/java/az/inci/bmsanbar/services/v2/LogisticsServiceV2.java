@@ -41,7 +41,7 @@ public class LogisticsServiceV2 extends AbstractService
 
         List<Object[]> resultList = query.getResultList();
 
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
         {
             shipDocInfo = new ShipDocInfo();
             Object[] result = resultList.get(0);
@@ -79,7 +79,7 @@ public class LogisticsServiceV2 extends AbstractService
 
         List<Object[]> resultList = query.getResultList();
 
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
         {
             shipDocInfo = new ShipDocInfo();
             Object[] result = resultList.get(0);
@@ -116,7 +116,7 @@ public class LogisticsServiceV2 extends AbstractService
 
         List<Object[]> resultList = query.getResultList();
 
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
         {
             shipDocInfo = new ShipDocInfo();
             Object[] result = resultList.get(0);
@@ -153,7 +153,7 @@ public class LogisticsServiceV2 extends AbstractService
 
         List<Object[]> resultList = query.getResultList();
 
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
         {
             shipDocInfo = new ShipDocInfo();
             Object[] result = resultList.get(0);
@@ -198,7 +198,7 @@ public class LogisticsServiceV2 extends AbstractService
 
         List<Object[]> resultList = query.getResultList();
 
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
         {
             shipDocInfo = new ShipDocInfo();
             Object[] result = resultList.get(0);

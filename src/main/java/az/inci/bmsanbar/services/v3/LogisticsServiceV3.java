@@ -42,7 +42,7 @@ public class LogisticsServiceV3 extends AbstractService
 
         List<Object[]> resultList = query.getResultList();
 
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
         {
             shipDocInfo = new ShipDocInfo();
             Object[] result = resultList.get(0);
@@ -80,7 +80,7 @@ public class LogisticsServiceV3 extends AbstractService
 
         List<Object[]> resultList = query.getResultList();
 
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
         {
             shipDocInfo = new ShipDocInfo();
             Object[] result = resultList.get(0);
@@ -117,7 +117,7 @@ public class LogisticsServiceV3 extends AbstractService
 
         List<Object[]> resultList = query.getResultList();
 
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
         {
             shipDocInfo = new ShipDocInfo();
             Object[] result = resultList.get(0);
@@ -154,7 +154,7 @@ public class LogisticsServiceV3 extends AbstractService
 
         List<Object[]> resultList = query.getResultList();
 
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
         {
             shipDocInfo = new ShipDocInfo();
             Object[] result = resultList.get(0);
@@ -198,7 +198,7 @@ public class LogisticsServiceV3 extends AbstractService
 
         List<Object[]> resultList = query.getResultList();
 
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
         {
             shipDocInfo = new ShipDocInfo();
             Object[] result = resultList.get(0);
@@ -273,15 +273,15 @@ public class LogisticsServiceV3 extends AbstractService
     @Transactional
     public void changeDocStatus(UpdateDeliveryRequest request)
     {
-        StoredProcedureQuery query = em.createStoredProcedureQuery("SP_CHANGE_SHIP_STATUS");
-        query.registerStoredProcedureParameter("TRX_NO", String.class, IN);
-        query.registerStoredProcedureParameter("STATUS", String.class, IN);
-        query.registerStoredProcedureParameter("DRIVER_CODE", String.class, IN);
-        query.registerStoredProcedureParameter("NOTE", String.class, IN);
-        query.registerStoredProcedureParameter("DELIVER_PERSON", String.class, IN);
 
         for(UpdateDeliveryRequestItem requestItem : request.getRequestItems())
         {
+            StoredProcedureQuery query = em.createStoredProcedureQuery("SP_CHANGE_SHIP_STATUS");
+            query.registerStoredProcedureParameter("TRX_NO", String.class, IN);
+            query.registerStoredProcedureParameter("STATUS", String.class, IN);
+            query.registerStoredProcedureParameter("DRIVER_CODE", String.class, IN);
+            query.registerStoredProcedureParameter("NOTE", String.class, IN);
+            query.registerStoredProcedureParameter("DELIVER_PERSON", String.class, IN);
             query.setParameter("TRX_NO", requestItem.getTrxNo());
             query.setParameter("STATUS", request.getStatus());
             query.setParameter("DRIVER_CODE", requestItem.getDriverCode());
@@ -297,14 +297,14 @@ public class LogisticsServiceV3 extends AbstractService
     @Transactional
     public void confirmShipment(List<UpdateDeliveryRequestItem> requestList)
     {
-        StoredProcedureQuery query = em.createStoredProcedureQuery("SP_CONFIRM_SHIPMENT");
-        query.registerStoredProcedureParameter("TRX_NO", String.class, IN);
-        query.registerStoredProcedureParameter("DRIVER_CODE", String.class, IN);
-        query.registerStoredProcedureParameter("NOTE", String.class, IN);
-        query.registerStoredProcedureParameter("DELIVER_PERSON", String.class, IN);
 
         for(UpdateDeliveryRequestItem request : requestList)
         {
+            StoredProcedureQuery query = em.createStoredProcedureQuery("SP_CONFIRM_SHIPMENT");
+            query.registerStoredProcedureParameter("TRX_NO", String.class, IN);
+            query.registerStoredProcedureParameter("DRIVER_CODE", String.class, IN);
+            query.registerStoredProcedureParameter("NOTE", String.class, IN);
+            query.registerStoredProcedureParameter("DELIVER_PERSON", String.class, IN);
             query.setParameter("TRX_NO", request.getTrxNo());
             query.setParameter("DRIVER_CODE", request.getDriverCode());
             query.setParameter("NOTE", request.getNote());

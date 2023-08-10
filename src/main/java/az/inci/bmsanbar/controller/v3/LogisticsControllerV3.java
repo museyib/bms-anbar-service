@@ -4,14 +4,19 @@ import az.inci.bmsanbar.model.ShipDoc;
 import az.inci.bmsanbar.model.v2.*;
 import az.inci.bmsanbar.services.v3.LogisticsServiceV3;
 import az.inci.bmsanbar.services.v3.ShipmentServiceV3;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static az.inci.bmsanbar.model.v2.Response.NOT_FOUND_VALID_SHIPMENT;
+import static az.inci.bmsanbar.model.v2.Response.NOT_VALID_SHIPMENT_DOC;
+
 @RequestMapping("/v3/logistics")
 @RestController
+@Slf4j
 public class LogisticsControllerV3
 {
     private LogisticsServiceV3 logisticsService;
@@ -38,29 +43,17 @@ public class LogisticsControllerV3
             {
                 ShipDocInfo result = logisticsService.getDocInfoByTrxNo(trxNo);
                 if(result != null)
-                    return ResponseEntity.ok(Response.builder()
-                                                     .statusCode(0)
-                                                     .data(result)
-                                                     .build());
+                    return ResponseEntity.ok(Response.getResultResponse(result));
                 else
-                    return ResponseEntity.ok(Response.builder()
-                                                     .statusCode(2)
-                                                     .developerMessage("Bu sənəd üzrə keçərli yükləmə tapılmadı!")
-                                                     .build());
+                    return ResponseEntity.ok(Response.getUserErrorResponse(NOT_FOUND_VALID_SHIPMENT));
             }
             else
-                return ResponseEntity.ok(Response.builder()
-                                                 .statusCode(2)
-                                                 .developerMessage("Yükləmə üçün keçərli sənəd deyil.")
-                                                 .build());
+                return ResponseEntity.ok(Response.getUserErrorResponse(NOT_VALID_SHIPMENT_DOC));
         }
         catch(Exception e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 
@@ -73,29 +66,17 @@ public class LogisticsControllerV3
             {
                 ShipDocInfo result = logisticsService.getDocInfoForSendingByTrxNo(trxNo);
                 if(result != null)
-                    return ResponseEntity.ok(Response.builder()
-                                                     .statusCode(0)
-                                                     .data(result)
-                                                     .build());
+                    return ResponseEntity.ok(Response.getResultResponse(result));
                 else
-                    return ResponseEntity.ok(Response.builder()
-                                                     .statusCode(2)
-                                                     .developerMessage("Bu sənəd üzrə keçərli yükləmə tapılmadı!")
-                                                     .build());
+                    return ResponseEntity.ok(Response.getUserErrorResponse(NOT_FOUND_VALID_SHIPMENT));
             }
             else
-                return ResponseEntity.ok(Response.builder()
-                                                 .statusCode(2)
-                                                 .developerMessage("Yükləmə üçün keçərli sənəd deyil.")
-                                                 .build());
+                return ResponseEntity.ok(Response.getUserErrorResponse(NOT_VALID_SHIPMENT_DOC));
         }
         catch(Exception e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 
@@ -108,29 +89,17 @@ public class LogisticsControllerV3
             {
                 ShipDocInfo result = logisticsService.getDocInfoForReturnByTrxNo(trxNo);
                 if(result != null)
-                    return ResponseEntity.ok(Response.builder()
-                                                     .statusCode(0)
-                                                     .data(result)
-                                                     .build());
+                    return ResponseEntity.ok(Response.getResultResponse(result));
                 else
-                    return ResponseEntity.ok(Response.builder()
-                                                     .statusCode(2)
-                                                     .developerMessage("Bu sənəd üzrə keçərli yükləmə tapılmadı!")
-                                                     .build());
+                    return ResponseEntity.ok(Response.getUserErrorResponse(NOT_FOUND_VALID_SHIPMENT));
             }
             else
-                return ResponseEntity.ok(Response.builder()
-                                                 .statusCode(2)
-                                                 .developerMessage("Yükləmə üçün keçərli sənəd deyil.")
-                                                 .build());
+                return ResponseEntity.ok(Response.getUserErrorResponse(NOT_VALID_SHIPMENT_DOC));
         }
         catch(Exception e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 
@@ -143,29 +112,17 @@ public class LogisticsControllerV3
             {
                 ShipDocInfo result = logisticsService.getDocInfoForDeliveryByTrxNo(trxNo);
                 if(result != null)
-                    return ResponseEntity.ok(Response.builder()
-                                                     .statusCode(0)
-                                                     .data(result)
-                                                     .build());
+                    return ResponseEntity.ok(Response.getResultResponse(result));
                 else
-                    return ResponseEntity.ok(Response.builder()
-                                                     .statusCode(2)
-                                                     .developerMessage("Bu sənəd üzrə keçərli yükləmə tapılmadı!")
-                                                     .build());
+                    return ResponseEntity.ok(Response.getUserErrorResponse(NOT_FOUND_VALID_SHIPMENT));
             }
             else
-                return ResponseEntity.ok(Response.builder()
-                                                 .statusCode(2)
-                                                 .developerMessage("Yükləmə üçün keçərli sənəd deyil.")
-                                                 .build());
+                return ResponseEntity.ok(Response.getUserErrorResponse(NOT_VALID_SHIPMENT_DOC));
         }
         catch(Exception e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 
@@ -178,29 +135,17 @@ public class LogisticsControllerV3
             {
                 ShipDocInfo result = logisticsService.getDocInfoForConfirmByTrxNo(trxNo);
                 if(result != null)
-                    return ResponseEntity.ok(Response.builder()
-                                                     .statusCode(0)
-                                                     .data(result)
-                                                     .build());
+                    return ResponseEntity.ok(Response.getResultResponse(result));
                 else
-                    return ResponseEntity.ok(Response.builder()
-                                                     .statusCode(2)
-                                                     .developerMessage("Bu sənəd üzrə keçərli yükləmə tapılmadı!")
-                                                     .build());
+                    return ResponseEntity.ok(Response.getUserErrorResponse(NOT_FOUND_VALID_SHIPMENT));
             }
             else
-                return ResponseEntity.ok(Response.builder()
-                                                 .statusCode(2)
-                                                 .developerMessage("Yükləmə üçün keçərli sənəd deyil.")
-                                                 .build());
+                return ResponseEntity.ok(Response.getUserErrorResponse(NOT_VALID_SHIPMENT_DOC));
         }
         catch(Exception e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 
@@ -211,18 +156,12 @@ public class LogisticsControllerV3
         try
         {
             List<ShipDoc> result = logisticsService.getDocList(startDate, endDate);
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .data(result)
-                                             .build());
+            return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 
@@ -232,18 +171,12 @@ public class LogisticsControllerV3
         try
         {
             logisticsService.changeDocStatus(request);
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .developerMessage("Uğurlu əməliyyat")
-                                             .build());
+            return ResponseEntity.ok(Response.getSuccessResponse());
         }
         catch(Exception e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 
@@ -253,18 +186,12 @@ public class LogisticsControllerV3
         try
         {
             logisticsService.confirmShipment(requestList);
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .developerMessage("Uğurlu əməliyyat")
-                                             .build());
+            return ResponseEntity.ok(Response.getSuccessResponse());
         }
         catch(Exception e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 
@@ -274,17 +201,12 @@ public class LogisticsControllerV3
         try
         {
             logisticsService.updateDocLocation(request);
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .build());
+            return ResponseEntity.ok(Response.getSuccessResponse());
         }
         catch(Exception e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 
@@ -296,18 +218,12 @@ public class LogisticsControllerV3
         try
         {
             List<ShipDoc> result = logisticsService.getNotConfirmedDocList(startDate, endDate, driverCode);
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .data(result)
-                                             .build());
+            return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 }

@@ -8,6 +8,7 @@ import az.inci.bmsanbar.model.v2.Response;
 import az.inci.bmsanbar.model.v2.TransferRequest;
 import az.inci.bmsanbar.model.v3.InternalUseRequest;
 import az.inci.bmsanbar.services.v3.InvMoveServiceV3;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @RequestMapping("/v3/inv-move")
 @RestController
+@Slf4j
 public class InvMoveControllerV3
 {
     private InvMoveServiceV3 service;
@@ -34,20 +36,13 @@ public class InvMoveControllerV3
     {
         try
         {
-            List<Trx> trxList = service.getSplitTrxList(bpCode, invCode, qty);
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .data(trxList)
-                                             .build());
+            List<Trx> result = service.getSplitTrxList(bpCode, invCode, qty);
+            return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)
         {
-            e.printStackTrace();
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 
@@ -58,17 +53,12 @@ public class InvMoveControllerV3
         try
         {
             service.createTransfer(request);
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .build());
+            return ResponseEntity.ok(Response.getSuccessResponse());
         }
         catch(Exception e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 
@@ -79,18 +69,12 @@ public class InvMoveControllerV3
         try
         {
             service.insertProductApproveData(request);
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .developerMessage("Uğurlu əməliyyat")
-                                             .build());
+            return ResponseEntity.ok(Response.getSuccessResponse());
         }
         catch(Exception e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 
@@ -100,19 +84,13 @@ public class InvMoveControllerV3
     {
         try
         {
-            List<Doc> docList = service.getApproveDocList();
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .data(docList)
-                                             .build());
+            List<Doc> result = service.getApproveDocList();
+            return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 
@@ -122,19 +100,13 @@ public class InvMoveControllerV3
     {
         try
         {
-            List<Trx> trxList = service.getApproveTrxList();
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .data(trxList)
-                                             .build());
+            List<Trx> result = service.getApproveTrxList();
+            return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 
@@ -145,24 +117,17 @@ public class InvMoveControllerV3
         try
         {
             service.createInternalUseDoc(request);
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .build());
+            return ResponseEntity.ok(Response.getSuccessResponse());
         }
         catch (OperationNotCompletedException e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(2)
-                                             .systemMessage(e.toString())
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getUserErrorResponse(e.toString()));
         }
         catch(Exception e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 }

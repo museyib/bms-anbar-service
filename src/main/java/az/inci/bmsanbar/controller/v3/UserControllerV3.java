@@ -9,6 +9,7 @@ import az.inci.bmsanbar.model.User;
 import az.inci.bmsanbar.model.v2.LoginRequest;
 import az.inci.bmsanbar.model.v2.Response;
 import az.inci.bmsanbar.services.v3.UserServiceV3;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ import java.util.List;
  */
 @RequestMapping("/v3/user")
 @RestController
+@Slf4j
 public class UserControllerV3
 {
     private UserServiceV3 service;
@@ -36,19 +38,13 @@ public class UserControllerV3
     {
         try
         {
-            List<User> userList = service.all();
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(0)
-                                             .data(userList)
-                                             .build());
+            List<User> result = service.all();
+            return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 
@@ -61,27 +57,18 @@ public class UserControllerV3
             boolean b = service.login(request.getUserId(), request.getPassword());
             if(b)
             {
-                User user = service.getById(request.getUserId());
-                return ResponseEntity.ok(Response.builder()
-                                                 .statusCode(0)
-                                                 .data(user)
-                                                 .build());
+                User result = service.getById(request.getUserId());
+                return ResponseEntity.ok(Response.getResultResponse(result));
             }
             else
             {
-                return ResponseEntity.ok(Response.builder()
-                                                 .statusCode(2)
-                                                 .developerMessage("İstifadəçi adı və ya şifrə yanlışdır.")
-                                                 .build());
+                return ResponseEntity.ok(Response.getUserErrorResponse("İstifadəçi adı və ya şifrə yanlışdır."));
             }
         }
         catch(Exception e)
         {
-            return ResponseEntity.ok(Response.builder()
-                                             .statusCode(1)
-                                             .systemMessage(e.toString())
-                                             .developerMessage("Server xətası")
-                                             .build());
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
         }
     }
 }

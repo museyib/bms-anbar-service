@@ -31,7 +31,7 @@ public class LogisticsService extends AbstractService
 
         List<Object[]> resultList = query.getResultList();
 
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
         {
             result = new String[resultList.get(0).length];
 
@@ -61,7 +61,7 @@ public class LogisticsService extends AbstractService
 
         List<Object[]> resultList = query.getResultList();
 
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
         {
             result = new String[resultList.get(0).length];
 
@@ -93,7 +93,7 @@ public class LogisticsService extends AbstractService
 
         List<Object[]> resultList = query.getResultList();
 
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
         {
             result = new String[resultList.get(0).length];
 
@@ -131,7 +131,7 @@ public class LogisticsService extends AbstractService
 
         List<Object[]> resultList = query.getResultList();
 
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
         {
             result = new String[resultList.get(0).length];
 
@@ -162,7 +162,7 @@ public class LogisticsService extends AbstractService
 
         List<Object[]> resultList = query.getResultList();
 
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
         {
             result = new String[resultList.get(0).length];
 
@@ -230,23 +230,25 @@ public class LogisticsService extends AbstractService
     @Transactional
     public boolean changeDocStatus(String trxNo, String status, String note, String deliverPerson)
     {
-        String sql;
-        if(status.equals("MC") || status.equals("MD"))
-            sql = "UPDATE SHIP_TRX SET SHIP_STATUS=?, DELIVER_NOTES=?, DELIVER_PERSON=?," +
-                  " DELIVER_TIME=CONVERT(DATETIME2(0), GETDATE()), DELIVER_FLAG=1 WHERE SRC_TRX_NO=? OR" +
-                  " SRC_TRX_NO = dbo.FN_GET_RELATED_TRX_NO(?); EXEC DBO.SP_UPDATE_SHIP_DOC_STATUS ?";
-        else
-            sql = "UPDATE SHIP_TRX SET SHIP_STATUS=?, DELIVER_NOTES=?, DELIVER_PERSON=?," +
-                  " DELIVER_TIME=CONVERT(DATETIME2(0), GETDATE()) WHERE SRC_TRX_NO=? OR" +
-                  " SRC_TRX_NO = dbo.FN_GET_RELATED_TRX_NO(?); EXEC DBO.SP_UPDATE_SHIP_DOC_STATUS ?";
+        int transitionFlag = status.equals("MD") ? 1 : 0;
+        int deliverFlag = (status.equals("MC") || status.equals("MD")) ? 1 : 0;
+        String sql = """
+                UPDATE SHIP_TRX
+                SET SHIP_STATUS = :SHIP_STATUS,
+                    DELIVER_NOTES = :DELIVER_NOTES,
+                    DELIVER_PERSON = :DELIVER_PERSON,
+                    DELIVER_TIME = CONVERT(DATETIME2(0),GETDATE()),
+                    DELIVER_FLAG = :DELIVER_FLAG,
+                    TRANSITION_FLAG = :TRANSITION_FLAG
+                WHERE SRC_TRX_NO = :TRX_NO; EXEC DBO.SP_UPDATE_SHIP_DOC_STATUS :TRX_NO""";
         Query query = em.createNativeQuery(sql);
 
-        query.setParameter(1, status);
-        query.setParameter(2, note);
-        query.setParameter(3, deliverPerson);
-        query.setParameter(4, trxNo);
-        query.setParameter(5, trxNo);
-        query.setParameter(6, trxNo);
+        query.setParameter("SHIP_STATUS", status);
+        query.setParameter("DELIVER_NOTES", note);
+        query.setParameter("DELIVER_PERSON", deliverPerson);
+        query.setParameter("DELIVER_FLAG", deliverFlag);
+        query.setParameter("TRANSITION_FLAG", transitionFlag);
+        query.setParameter("TRX_NO", trxNo);
 
         try
         {
@@ -254,7 +256,6 @@ public class LogisticsService extends AbstractService
         }
         catch(Exception e)
         {
-            e.printStackTrace();
             return false;
         }
 
@@ -287,7 +288,6 @@ public class LogisticsService extends AbstractService
         }
         catch(Exception e)
         {
-            e.printStackTrace();
             return false;
         }
 
