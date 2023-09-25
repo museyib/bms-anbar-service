@@ -11,4 +11,5 @@ public class UpdateDeliveryRequestItem
     private String note;
     private String deliverPerson;
     private String driverCode;
+    private boolean transitionFlag;
 }

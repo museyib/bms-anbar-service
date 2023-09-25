@@ -24,10 +24,9 @@ public class LogisticsService extends AbstractService
                 "JOIN SHIP_DOC SD ON ST.TRX_NO = SD.TRX_NO " +
                 "JOIN PER_MASTER PM ON SD.DRIVER_CODE = PM.PER_CODE " +
                 "WHERE ST.SHIP_STATUS IN ('AC', 'YC', 'MG') AND " +
-                "(ST.SRC_TRX_NO = ? OR ST.SRC_TRX_NO = dbo.FN_GET_RELATED_TRX_NO(?))");
+                "(ST.SRC_TRX_NO = ?)");
 
         query.setParameter(1, trxNo);
-        query.setParameter(2, trxNo);
 
         List<Object[]> resultList = query.getResultList();
 
@@ -54,10 +53,9 @@ public class LogisticsService extends AbstractService
                 "JOIN SHIP_DOC SD ON ST.TRX_NO = SD.TRX_NO " +
                 "JOIN PER_MASTER PM ON SD.DRIVER_CODE = PM.PER_CODE " +
                 "WHERE ST.SHIP_STATUS IN ('AC','PL') AND " +
-                "(ST.SRC_TRX_NO = ? OR ST.SRC_TRX_NO = dbo.FN_GET_RELATED_TRX_NO(?))");
+                "(ST.SRC_TRX_NO = ?)");
 
         query.setParameter(1, trxNo);
-        query.setParameter(2, trxNo);
 
         List<Object[]> resultList = query.getResultList();
 
@@ -86,10 +84,9 @@ public class LogisticsService extends AbstractService
                 "JOIN SHIP_DOC SD ON ST.TRX_NO = SD.TRX_NO " +
                 "JOIN PER_MASTER PM ON SD.DRIVER_CODE = PM.PER_CODE " +
                 "WHERE ST.SHIP_STATUS = 'YC' AND" +
-                "(ST.SRC_TRX_NO = ? OR ST.SRC_TRX_NO = dbo.FN_GET_RELATED_TRX_NO(?))");
+                "(ST.SRC_TRX_NO = ?)");
 
         query.setParameter(1, trxNo);
-        query.setParameter(2, trxNo);
 
         List<Object[]> resultList = query.getResultList();
 
@@ -124,10 +121,9 @@ public class LogisticsService extends AbstractService
                 "LEFT JOIN BP_MASTER_COORDINATE BMC ON (AD.BP_CODE = BMC.BP_CODE or ID.TRG_WHS_CODE=BMC.BP_CODE) " +
                 "LEFT JOIN WHS_MASTER WM ON ID.TRG_WHS_CODE = WM.WHS_CODE " +
                 "WHERE ST.SHIP_STATUS IN ('YC') AND" +
-                "(ST.SRC_TRX_NO = ? OR ST.SRC_TRX_NO = dbo.FN_GET_RELATED_TRX_NO(?))");
+                "(ST.SRC_TRX_NO = ?)");
 
         query.setParameter(1, trxNo);
-        query.setParameter(2, trxNo);
 
         List<Object[]> resultList = query.getResultList();
 
@@ -155,10 +151,9 @@ public class LogisticsService extends AbstractService
                 "ST.DELIVER_TIME FROM SHIP_TRX ST " +
                 "JOIN SHIP_DOC SD ON ST.TRX_NO = SD.TRX_NO " +
                 "JOIN PER_MASTER PM ON SD.DRIVER_CODE = PM.PER_CODE " +
-                "WHERE ST.SRC_TRX_NO = ? OR ST.SRC_TRX_NO = dbo.FN_GET_RELATED_TRX_NO(?)");
+                "WHERE ST.SRC_TRX_NO = ?");
 
         query.setParameter(1, trxNo);
-        query.setParameter(2, trxNo);
 
         List<Object[]> resultList = query.getResultList();
 

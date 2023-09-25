@@ -45,7 +45,6 @@ public class ShipmentServiceV3 extends AbstractService
             shipmentResponse.setDriverCode((String) result[0]);
             shipmentResponse.setDriverName((String) result[1]);
             shipmentResponse.setShipped(true);
-
         }
 
         em.close();
@@ -66,8 +65,7 @@ public class ShipmentServiceV3 extends AbstractService
                 JOIN SHIP_DOC SD ON ST.TRX_NO = SD.TRX_NO
                 JOIN PER_MASTER PM ON SD.DRIVER_CODE = PM.PER_CODE
                 WHERE SRC_TRX_NO = :SRC_TRX_NO
-                      AND DRIVER_CODE = :DRIVER_CODE
-                      AND ST.SHIP_STATUS IN ('AC', 'YC', 'MG')""");
+                      AND DRIVER_CODE = :DRIVER_CODE""");
         q.setParameter("SRC_TRX_NO", trxNo);
         q.setParameter("DRIVER_CODE", driverCode);
         List<Object[]> resultList = q.getResultList();

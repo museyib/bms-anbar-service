@@ -32,13 +32,20 @@ public class ShipmentControllerV3
 
     @GetMapping("/check-shipment")
     @ResponseBody
-    public ResponseEntity<Response> checkShipment(@RequestParam("trx-no") String trxNo)
+    public ResponseEntity<Response> checkShipment(@RequestParam("trx-no") String trxNo,
+                                                  @RequestParam(value = "driver-code", required = false) String driverCode)
     {
         try
         {
             if(service.isValid(trxNo))
             {
                 CheckShipmentResponse result = service.checkShipment(trxNo);
+                if(!result.isShipped() &&
+                   driverCode != null &&
+                   service.isShippedForDriver(trxNo, driverCode))
+                {
+                    return ResponseEntity.ok(Response.getUserErrorResponse("Eyni sənəd bir sürücü üçün yalnız bir dəfə yükləməyə verilə bilər."));
+                }
                 return ResponseEntity.ok(Response.getResultResponse(result));
             }
             else

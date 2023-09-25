@@ -305,10 +305,12 @@ public class LogisticsServiceV3 extends AbstractService
             query.registerStoredProcedureParameter("DRIVER_CODE", String.class, IN);
             query.registerStoredProcedureParameter("NOTE", String.class, IN);
             query.registerStoredProcedureParameter("DELIVER_PERSON", String.class, IN);
+            query.registerStoredProcedureParameter("TRANSITION_FLAG", Boolean.class, IN);
             query.setParameter("TRX_NO", request.getTrxNo());
             query.setParameter("DRIVER_CODE", request.getDriverCode());
             query.setParameter("NOTE", request.getNote());
             query.setParameter("DELIVER_PERSON", request.getDeliverPerson());
+            query.setParameter("TRANSITION_FLAG", request.isTransitionFlag());
 
             query.executeUpdate();
         }
