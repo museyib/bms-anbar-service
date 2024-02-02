@@ -212,7 +212,7 @@ public class InventoryControllerV3
         }
     }
 
-    @PostMapping(value = "/update-shelf-barcode", consumes = "application/json")
+    @PostMapping(value = "/update-shelf-barcode", consumes = "application/json;charset=UTF-8")
     @ResponseBody
     public ResponseEntity<Response> updateShelfBarcode(@RequestParam("whs-code") String whsCode,
                                                        @RequestParam("shelf-barcode") String shelfBarcode,

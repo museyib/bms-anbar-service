@@ -120,6 +120,7 @@ public class InventoryServiceV3 extends AbstractService
         q.setParameter("BAR_CODE", barcode);
         List<Object[]> resultList = q.getResultList();
         Inventory inventory = new Inventory();
+        inventory.setBarcode(barcode);
         resultList.stream().peek((result)->inventory.setInvCode(String.valueOf(result[0])))
                   .peek((result)->inventory.setInvName(String.valueOf(result[1])))
                   .peek((result)->inventory.setInvBrand(String.valueOf(result[2])))
