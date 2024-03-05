@@ -2,6 +2,7 @@ package az.inci.bmsanbar.controller.v3;
 
 import az.inci.bmsanbar.model.ShipDoc;
 import az.inci.bmsanbar.model.v2.*;
+import az.inci.bmsanbar.model.v3.ConfirmDeliveryRequest;
 import az.inci.bmsanbar.services.v3.LogisticsServiceV3;
 import az.inci.bmsanbar.services.v3.ShipmentServiceV3;
 import lombok.extern.slf4j.Slf4j;
@@ -172,6 +173,28 @@ public class LogisticsControllerV3
         {
             logisticsService.changeDocStatus(request);
             return ResponseEntity.ok(Response.getSuccessResponse());
+        }
+        catch(Exception e)
+        {
+            log.error(e.toString());
+            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+        }
+    }
+
+    @PostMapping(value = "/confirm-delivery", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<Response> confirmDelivery(@RequestBody ConfirmDeliveryRequest request)
+    {
+        try
+        {
+            boolean isValid = logisticsService.checkDeliveryConfirmationCode(request.getTrxNo(),
+                                                                             request.getConfirmatioinCode());
+            if(isValid)
+            {
+                logisticsService.confirmDelivery(request);
+                return ResponseEntity.ok(Response.getSuccessResponse());
+            }
+            else
+                return ResponseEntity.ok(Response.getUserErrorResponse("Təsdiq kodu düzgün deyil!"));
         }
         catch(Exception e)
         {

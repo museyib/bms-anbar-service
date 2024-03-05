@@ -188,9 +188,9 @@ public class LogisticsServiceV2 extends AbstractService
                 "JOIN PER_MASTER PM ON SD.DRIVER_CODE = PM.PER_CODE " +
                 "LEFT JOIN INV_DOC ID ON ST.SRC_TRX_NO=ID.TRX_NO " +
                 "LEFT JOIN ACC_DOC AD ON ST.SRC_TRX_NO=AD.TRX_NO " +
-                "LEFT JOIN BP_MASTER_COORDINATE BMC ON (AD.BP_CODE = BMC.BP_CODE or ID.TRG_WHS_CODE=BMC.BP_CODE) " +
+                "LEFT JOIN DELIVER_POINT_COORDINATE BMC ON (AD.BP_CODE = BMC.BP_CODE or ID.TRG_WHS_CODE=BMC.TARGET_CODE) " +
                 "LEFT JOIN WHS_MASTER WM ON ID.TRG_WHS_CODE = WM.WHS_CODE " +
-                "WHERE ST.SHIP_STATUS IN ('YC') AND " +
+                "WHERE ST.SHIP_STATUS IN ('AC','YC','MG') AND " +
                 "ST.SRC_TRX_NO = ? " +
                 "ORDER BY ST.TRX_ID DESC");
 

@@ -15,4 +15,5 @@ public class ShipDocInfo
     private String targetName;
     private double longitude;
     private double latitude;
+    private String trxId;
 }

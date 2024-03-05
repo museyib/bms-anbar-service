@@ -5,6 +5,7 @@ import az.inci.bmsanbar.model.v2.ShipDocInfo;
 import az.inci.bmsanbar.model.v2.UpdateDeliveryRequest;
 import az.inci.bmsanbar.model.v2.UpdateDeliveryRequestItem;
 import az.inci.bmsanbar.model.v2.UpdateDocLocationRequest;
+import az.inci.bmsanbar.model.v3.ConfirmDeliveryRequest;
 import az.inci.bmsanbar.services.AbstractService;
 import jakarta.persistence.Query;
 import jakarta.persistence.StoredProcedureQuery;
@@ -180,18 +181,22 @@ public class LogisticsServiceV3 extends AbstractService
                     SD.VEHICLE_CODE,
                     ISNULL(ST.DELIVER_NOTES, '') AS DELIVER_NOTES,
                     ST.SHIP_STATUS,
-                    ISNULL(AD.BP_CODE, ID.TRG_WHS_CODE) AS BP_CODE,
-                    ISNULL(AD.BP_NAME, WM.WHS_NAME) AS BP_NAME,
+                    ISNULL(AD.BP_CODE, ISNULL(ID.TRG_WHS_CODE, ISNULL(OT.EXP_CENTER_CODE, ET.EXP_CENTER_CODE))) AS TRG_CODE,
+                    ISNULL(AD.BP_NAME, ISNULL(WM.WHS_NAME, EC.EXP_CENTER_DESC)) AS TRG_NAME,
                     ISNULL(BMC.LONGITUDE, 0) AS LONGITUDE,
-                    ISNULL(BMC.LATITUDE, 0) AS LATITUDE
+                    ISNULL(BMC.LATITUDE, 0) AS LATITUDE,
+                    ST.TRX_ID
                 FROM SHIP_TRX ST
                 JOIN SHIP_DOC SD ON ST.TRX_NO = SD.TRX_NO
                 JOIN PER_MASTER PM ON SD.DRIVER_CODE = PM.PER_CODE
-                LEFT JOIN INV_DOC ID ON ST.SRC_TRX_NO=ID.TRX_NO
-                LEFT JOIN ACC_DOC AD ON ST.SRC_TRX_NO=AD.TRX_NO
-                LEFT JOIN BP_MASTER_COORDINATE BMC ON ISNULL(AD.BP_CODE, ID.TRG_WHS_CODE) = BMC.BP_CODE
+                LEFT JOIN INV_DOC ID ON ST.SRC_TRX_NO = ID.TRX_NO
+                LEFT JOIN ACC_DOC AD ON ST.SRC_TRX_NO = AD.TRX_NO
+                LEFT JOIN OEXP_TRX OT ON ST.SRC_TRX_NO = OT.TRX_NO
+                LEFT JOIN EXP_TRX ET ON ST.SRC_TRX_NO = ET.TRX_NO
+                LEFT JOIN DELIVER_POINT_COORDINATE BMC ON ISNULL(AD.BP_CODE, ID.TRG_WHS_CODE) = BMC.TARGET_CODE
                 LEFT JOIN WHS_MASTER WM ON ID.TRG_WHS_CODE = WM.WHS_CODE
-                WHERE ST.SHIP_STATUS IN ('YC') AND ST.SRC_TRX_NO = :SRC_TRX_NO
+                LEFT JOIN EXP_CENTER EC ON OT.EXP_CENTER_CODE = EC.EXP_CENTER_CODE OR ET.EXP_CENTER_CODE = EC.EXP_CENTER_CODE
+                WHERE ST.SHIP_STATUS IN ('AC','YC','MG') AND ST.SRC_TRX_NO = :SRC_TRX_NO
                 ORDER BY ST.TRX_ID DESC""");
 
         query.setParameter("SRC_TRX_NO", trxNo);
@@ -211,6 +216,7 @@ public class LogisticsServiceV3 extends AbstractService
             shipDocInfo.setTargetName((String) result[6]);
             shipDocInfo.setLongitude(Double.parseDouble((String) result[7]));
             shipDocInfo.setLatitude(Double.parseDouble((String) result[8]));
+            shipDocInfo.setTrxId(String.valueOf(result[9]));
         }
 
         em.close();
@@ -226,7 +232,7 @@ public class LogisticsServiceV3 extends AbstractService
                 SELECT ST.TRX_NO,
                     ST.SRC_TRX_NO,
                     dbo.fnFormatDate(ST.TRX_DATE, 'yyyy-MM-dd'),
-                    ISNULL(AD.BP_CODE, ISNULL(ID.TRG_WHS_CODE, ET.EXP_CENTER_CODE)) AS CUST_CODE,
+                    ISNULL(AD.BP_CODE, ISNULL(ID.TRG_WHS_CODE,  ISNULL(OT.EXP_CENTER_CODE, ET.EXP_CENTER_CODE))) AS CUST_CODE,
                     ISNULL(AD.BP_NAME, ISNULL(WM.WHS_NAME, EC.EXP_CENTER_DESC)) AS CUST_NAME,
                     ISNULL(AD.SBE_CODE, '') AS SBE_CODE,
                     ISNULL(AD.SBE_NAME, '') AS SBE_NAME,
@@ -237,8 +243,9 @@ public class LogisticsServiceV3 extends AbstractService
                 LEFT JOIN SHIP_DOC SD ON ST.TRX_NO = SD.TRX_NO
                 LEFT JOIN INV_DOC ID ON ST.SRC_TRX_NO = ID.TRX_NO
                 LEFT JOIN ACC_DOC AD ON ST.SRC_TRX_NO = AD.TRX_NO
+                LEFT JOIN OEXP_TRX OT ON ST.SRC_TRX_NO = OT.TRX_NO
                 LEFT JOIN EXP_TRX ET ON ST.SRC_TRX_NO = ET.TRX_NO
-                LEFT JOIN EXP_CENTER EC ON ET.EXP_CENTER_CODE = EC.EXP_CENTER_CODE
+                LEFT JOIN EXP_CENTER EC ON OT.EXP_CENTER_CODE = EC.EXP_CENTER_CODE OR ET.EXP_CENTER_CODE = EC.EXP_CENTER_CODE
                 LEFT JOIN WHS_MASTER WM ON ID.TRG_WHS_CODE = WM.WHS_CODE
                 LEFT JOIN PER_MASTER PM ON SD.DRIVER_CODE = PM.PER_CODE
                 WHERE ST.TRX_DATE BETWEEN :START_DATE AND :END_DATE
@@ -290,6 +297,26 @@ public class LogisticsServiceV3 extends AbstractService
 
             query.executeUpdate();
         }
+
+        em.close();
+    }
+
+    @Transactional
+    public void confirmDelivery(ConfirmDeliveryRequest request)
+    {
+        StoredProcedureQuery query = em.createStoredProcedureQuery("SP_CONFIRM_DELIVERY");
+        query.registerStoredProcedureParameter("TRX_NO", String.class, IN);
+        query.registerStoredProcedureParameter("DRIVER_CODE", String.class, IN);
+        query.registerStoredProcedureParameter("NOTE", String.class, IN);
+        query.registerStoredProcedureParameter("DELIVER_PERSON", String.class, IN);
+        query.registerStoredProcedureParameter("TRANSITION_FLAG", Boolean.class, IN);
+        query.setParameter("TRX_NO", request.getTrxNo());
+        query.setParameter("DRIVER_CODE", request.getDriverCode());
+        query.setParameter("NOTE", request.getNote());
+        query.setParameter("DELIVER_PERSON", request.getDeliverPerson());
+        query.setParameter("TRANSITION_FLAG", request.isTransitionFlag());
+
+        query.executeUpdate();
 
         em.close();
     }
@@ -394,5 +421,27 @@ public class LogisticsServiceV3 extends AbstractService
         em.close();
 
         return docList;
+    }
+
+    public  boolean checkDeliveryConfirmationCode(String trxNo, String confirmationCode)
+    {
+        boolean isValid = false;
+
+        Query query = em.createNativeQuery("""
+                SELECT dbo.FN_CHECK_DELIVERY_CONFIRMATION_CODE(:TRX_NO, :CONFIRMATION_CODE)""");
+
+        query.setParameter("TRX_NO", trxNo);
+        query.setParameter("CONFIRMATION_CODE", confirmationCode);
+
+        List<Boolean> resultList = query.getResultList();
+
+        if(!resultList.isEmpty())
+        {
+            isValid = resultList.get(0);
+        }
+
+        em.close();
+
+        return isValid;
     }
 }
