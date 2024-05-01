@@ -5,7 +5,7 @@
  */
 package az.inci.bmsanbar.services.v3;
 
-import az.inci.bmsanbar.model.Doc;
+import az.inci.bmsanbar.model.PickDoc;
 import az.inci.bmsanbar.services.AbstractService;
 import jakarta.persistence.Query;
 import jakarta.persistence.StoredProcedureQuery;
@@ -24,16 +24,16 @@ import static jakarta.persistence.ParameterMode.IN;
 @Service
 public class DocServiceV3 extends AbstractService
 {
-    public List<Doc> getPackDocList(String userId)
+    public List<PickDoc> getPackDocList(String userId)
     {
         StoredProcedureQuery q = em.createStoredProcedureQuery("SP_TERMINAL_GET_PACK_DOC_ALL");
         q.registerStoredProcedureParameter("USER_ID", String.class, IN);
         q.setParameter("USER_ID", userId);
-        List<Doc> docList = new ArrayList<>();
+        List<PickDoc> docList = new ArrayList<>();
         List<Object[]> resultList = q.getResultList();
         resultList.stream().map((result)->
                                 {
-                                    Doc doc = new Doc();
+                                    PickDoc doc = new PickDoc();
                                     doc.setTrxNo(String.valueOf(result[0]));
                                     doc.setTrxDate(String.valueOf(result[1]));
                                     doc.setDescription(String.valueOf(result[2]));

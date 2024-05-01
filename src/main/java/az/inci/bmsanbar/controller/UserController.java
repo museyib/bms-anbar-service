@@ -30,7 +30,6 @@ public class UserController
     }
 
     @RequestMapping(value = "/list", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<List<User>> all()
     {
         List<User> userList = service.all();
@@ -38,7 +37,6 @@ public class UserController
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<User> login(@RequestParam("id") String id,
                                       @RequestParam("password") String password)
     {

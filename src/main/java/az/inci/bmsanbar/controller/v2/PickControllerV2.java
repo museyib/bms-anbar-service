@@ -1,6 +1,6 @@
 package az.inci.bmsanbar.controller.v2;
 
-import az.inci.bmsanbar.model.Doc;
+import az.inci.bmsanbar.model.PickDoc;
 import az.inci.bmsanbar.model.v2.CollectTrxRequest;
 import az.inci.bmsanbar.model.v2.ResetPickRequest;
 import az.inci.bmsanbar.model.v2.Response;
@@ -24,13 +24,12 @@ public class PickControllerV2
     }
 
     @GetMapping(value = "/get-doc", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> pickDoc(@RequestParam("pick-user") String pickUser,
                                             @RequestParam("mode") int mode)
     {
         try
         {
-            Doc doc = service.getPickDoc(pickUser, mode);
+            PickDoc doc = service.getPickDoc(pickUser, mode);
             return ResponseEntity.ok(Response.builder()
                                              .statusCode(0)
                                              .data(doc)
@@ -47,7 +46,6 @@ public class PickControllerV2
     }
 
     @PostMapping(value = "/collect")
-    @ResponseBody
     public ResponseEntity<Response> collectTrx(@RequestBody List<CollectTrxRequest> data)
     {
         try
@@ -68,7 +66,6 @@ public class PickControllerV2
     }
 
     @PostMapping(value = "/reset")
-    @ResponseBody
     public ResponseEntity<Response> resetPickDoc(@RequestBody ResetPickRequest request)
     {
         try
@@ -96,7 +93,6 @@ public class PickControllerV2
     }
 
     @GetMapping(value = "/reset-allowed")
-    @ResponseBody
     public ResponseEntity<Response> resetAllowed(@RequestParam("user-id") String userId)
     {
         try

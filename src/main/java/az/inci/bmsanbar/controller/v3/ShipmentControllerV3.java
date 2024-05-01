@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static az.inci.bmsanbar.Utilities.getMessage;
+
 /**
  * @author User
  */
@@ -31,7 +33,6 @@ public class ShipmentControllerV3
     }
 
     @GetMapping("/check-shipment")
-    @ResponseBody
     public ResponseEntity<Response> checkShipment(@RequestParam("trx-no") String trxNo,
                                                   @RequestParam(value = "driver-code", required = false) String driverCode)
     {
@@ -53,13 +54,13 @@ public class ShipmentControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @GetMapping("/shipped-for-driver")
-    @ResponseBody
     public ResponseEntity<Response> isShippedForDriver(@RequestParam("trx-no") String trxNo,
                                                        @RequestParam("driver-code") String driverCode)
     {
@@ -70,13 +71,13 @@ public class ShipmentControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @PostMapping(value = "/create-shipment")
-    @ResponseBody
     public ResponseEntity<Response> insertShipDetails(@RequestBody ShipmentRequest shipmentRequest)
     {
         try
@@ -86,13 +87,13 @@ public class ShipmentControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @GetMapping(value = "/is-valid")
-    @ResponseBody
     public ResponseEntity<Response> isValid(@RequestParam("trx-no") String trxNo)
     {
         try
@@ -102,8 +103,9 @@ public class ShipmentControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 }

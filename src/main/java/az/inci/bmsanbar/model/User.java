@@ -11,7 +11,6 @@ import lombok.Data;
  * @author User
  */
 
-@SuppressWarnings("unused")
 @Data
 public class User
 {
@@ -31,6 +30,7 @@ public class User
     private boolean loadingFlag;
     private boolean approveFlag;
     private boolean approvePrdFlag;
+    private boolean purchaseOrdersFlag;
 
     public void setUserInfo(String field, boolean value)
     {
@@ -68,6 +68,9 @@ public class User
                 break;
             case "approvePrdBtn":
                 setApprovePrdFlag(!value);
+                break;
+            case "purchaseOrderBtn":
+                setPurchaseOrdersFlag(!value);
                 break;
         }
     }

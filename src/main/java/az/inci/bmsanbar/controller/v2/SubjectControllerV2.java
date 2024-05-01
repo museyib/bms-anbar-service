@@ -25,7 +25,6 @@ public class SubjectControllerV2
     }
 
     @GetMapping(value = "/sbe", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getQty()
     {
         try
@@ -48,7 +47,6 @@ public class SubjectControllerV2
     }
 
     @GetMapping(value = "/customer", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getCustomerList(@RequestParam("sbe-code") String sbeCode)
     {
         try
@@ -71,7 +69,6 @@ public class SubjectControllerV2
     }
 
     @GetMapping(value = "/whs", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getWhsList()
     {
         try
@@ -94,7 +91,6 @@ public class SubjectControllerV2
     }
 
     @GetMapping(value = "/whs/target", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getTrgWhsList(@RequestParam("user-id") String userId)
     {
         try
@@ -117,7 +113,6 @@ public class SubjectControllerV2
     }
 
     @GetMapping(value = "/exp-center", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getExpCenterList()
     {
         try

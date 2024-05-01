@@ -5,7 +5,7 @@
  */
 package az.inci.bmsanbar.services;
 
-import az.inci.bmsanbar.model.Doc;
+import az.inci.bmsanbar.model.PickDoc;
 import jakarta.persistence.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,12 +21,12 @@ import java.util.List;
 @Service
 public class DocService extends AbstractService
 {
-    public Doc getPickDocByTrxNo(String trxNo, String pickUser)
+    public PickDoc getPickDocByTrxNo(String trxNo, String pickUser)
     {
         Query q = em.createNativeQuery("EXEC DBO.SP_TERMINAL_GET_PICK_DOC ?, ?");
         q.setParameter(1, trxNo);
         q.setParameter(2, pickUser);
-        Doc doc = new Doc();
+        PickDoc doc = new PickDoc();
         List<Object[]> resultList = q.getResultList();
         if(resultList.size() > 0)
         {
@@ -46,11 +46,11 @@ public class DocService extends AbstractService
         return doc;
     }
 
-    public Doc getPackDocByTrxNo(String trxNo)
+    public PickDoc getPackDocByTrxNo(String trxNo)
     {
         Query q = em.createNativeQuery("EXEC DBO.SP_TERMINAL_GET_PACK_DOC ?");
         q.setParameter(1, trxNo);
-        Doc doc = new Doc();
+        PickDoc doc = new PickDoc();
         List<Object[]> resultList = q.getResultList();
         if(resultList.size() > 0)
         {
@@ -73,15 +73,15 @@ public class DocService extends AbstractService
         return doc;
     }
 
-    public List<Doc> getPackDocList(String userId)
+    public List<PickDoc> getPackDocList(String userId)
     {
         Query q = em.createNativeQuery("EXEC DBO.SP_TERMINAL_GET_PACK_DOC_ALL ?");
         q.setParameter(1, userId);
-        List<Doc> docList = new ArrayList<>();
+        List<PickDoc> docList = new ArrayList<>();
         List<Object[]> resultList = q.getResultList();
         resultList.stream().map((result)->
                                 {
-                                    Doc doc = new Doc();
+                                    PickDoc doc = new PickDoc();
                                     doc.setTrxNo(String.valueOf(result[0]));
                                     doc.setTrxDate(String.valueOf(result[1]));
                                     doc.setDescription(String.valueOf(result[2]));
@@ -102,17 +102,17 @@ public class DocService extends AbstractService
     }
 
     @Transactional
-    public List<Doc> getApproveDocList()
+    public List<PickDoc> getApproveDocList()
     {
         Query q = em.createNativeQuery(
                 "SELECT SYSTEM_NO, dbo.fnFormatDate(SYSTEM_DATE, 'dd-mm-yyyy'),"
                 + " NOTES FROM TERMINAL_APPROVE"
                 + " WHERE STATUS=0 GROUP BY SYSTEM_NO, SYSTEM_DATE, NOTES");
-        List<Doc> docList = new ArrayList<>();
+        List<PickDoc> docList = new ArrayList<>();
         List<Object[]> resultList = q.getResultList();
         resultList.stream().map((result)->
                                 {
-                                    Doc doc = new Doc();
+                                    PickDoc doc = new PickDoc();
                                     doc.setTrxNo(String.valueOf(result[0]));
                                     doc.setTrxDate(String.valueOf(result[1]));
                                     doc.setNotes(String.valueOf(result[2]));

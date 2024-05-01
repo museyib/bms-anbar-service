@@ -1,7 +1,7 @@
 package az.inci.bmsanbar.services.v2;
 
-import az.inci.bmsanbar.model.Doc;
-import az.inci.bmsanbar.model.Trx;
+import az.inci.bmsanbar.model.PickDoc;
+import az.inci.bmsanbar.model.PickTrx;
 import az.inci.bmsanbar.model.v2.ProductApproveRequest;
 import az.inci.bmsanbar.model.v2.ProductApproveRequestItem;
 import az.inci.bmsanbar.model.v2.TransferRequest;
@@ -22,9 +22,9 @@ import java.util.List;
 public class InvMoveServiceV2 extends AbstractService
 {
 
-    public List<Trx> getSplitTrxList(String bpCode, String invCode, double qty)
+    public List<PickTrx> getSplitTrxList(String bpCode, String invCode, double qty)
     {
-        List<Trx> trxList = new ArrayList<>();
+        List<PickTrx> trxList = new ArrayList<>();
         Query q = em.createNativeQuery("EXEC DBO.SP_TRX_FOR_RETURN ?,?,?");
         q.setParameter(1, bpCode);
         q.setParameter(2, invCode);
@@ -33,7 +33,7 @@ public class InvMoveServiceV2 extends AbstractService
 
         resultList.stream().map((result)->
                                 {
-                                    Trx trx = new Trx();
+                                    PickTrx trx = new PickTrx();
                                     trx.setPrevTrxId(Integer.parseInt((String) result[1]));
                                     trx.setPrevTrxNo((String) result[2]);
                                     trx.setTrxDate((String) result[3]);
@@ -104,17 +104,17 @@ public class InvMoveServiceV2 extends AbstractService
     }
 
     @Transactional
-    public List<Doc> getApproveDocList()
+    public List<PickDoc> getApproveDocList()
     {
         Query q = em.createNativeQuery(
                 "SELECT SYSTEM_NO, dbo.fnFormatDate(SYSTEM_DATE, 'dd-mm-yyyy'),"
                 + " NOTES FROM TERMINAL_APPROVE"
                 + " WHERE STATUS=0 GROUP BY SYSTEM_NO, SYSTEM_DATE, NOTES");
-        List<Doc> docList = new ArrayList<>();
+        List<PickDoc> docList = new ArrayList<>();
         List<Object[]> resultList = q.getResultList();
         resultList.stream().map((result)->
                                 {
-                                    Doc doc = new Doc();
+                                    PickDoc doc = new PickDoc();
                                     doc.setTrxNo(String.valueOf(result[0]));
                                     doc.setTrxDate(String.valueOf(result[1]));
                                     doc.setNotes(String.valueOf(result[2]));
@@ -128,17 +128,17 @@ public class InvMoveServiceV2 extends AbstractService
         return docList;
     }
 
-    public List<Trx> getApproveTrxList()
+    public List<PickTrx> getApproveTrxList()
     {
         Query q = em.createNativeQuery(
                 "SELECT SYSTEM_NO,INV_CODE,INV_NAME,BARCODE,INV_QTY,"
                 + "INTERNAL_COUNT,INV_BRAND_CODE FROM TERMINAL_APPROVE "
                 + " WHERE STATUS=0");
-        List<Trx> trxList = new ArrayList<>();
+        List<PickTrx> trxList = new ArrayList<>();
         List<Object[]> resultList = q.getResultList();
         resultList.stream().map((result)->
                                 {
-                                    Trx trx = new Trx();
+                                    PickTrx trx = new PickTrx();
                                     trx.setTrxNo(String.valueOf(result[0]));
                                     trx.setInvCode(String.valueOf(result[1]));
                                     trx.setInvName(String.valueOf(result[2]));
@@ -155,7 +155,7 @@ public class InvMoveServiceV2 extends AbstractService
     }
 
     @Transactional
-    public void createInternalUseDoc(List<Trx> trxList,
+    public void createInternalUseDoc(List<PickTrx> trxList,
                                      String userId,
                                      String whsCode,
                                      String expCenterCode,
@@ -167,7 +167,7 @@ public class InvMoveServiceV2 extends AbstractService
                 + "USER_ID, INV_BRAND_CODE,INV_NAME,BARCODE,INTERNAL_COUNT,WHS_CODE,EXP_CENTER_CODE)"
                 + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?)");
 
-        for(Trx trx : trxList)
+        for(PickTrx trx : trxList)
         {
             query.setParameter(1, trx.getTrxNo());
             query.setParameter(2, new Date(System.currentTimeMillis()));

@@ -6,7 +6,7 @@
 package az.inci.bmsanbar.controller;
 
 import az.inci.bmsanbar.model.Response;
-import az.inci.bmsanbar.model.Trx;
+import az.inci.bmsanbar.model.PickTrx;
 import az.inci.bmsanbar.services.TrxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,25 +33,22 @@ public class TrxController
     }
 
     @RequestMapping(value = "/pick", produces = "application/json;charset=UTF-8")
-    @ResponseBody
-    public ResponseEntity<List<Trx>> pickTrx(@RequestParam("pick-user") String pickUser,
-                                             @RequestParam("mode") int mode)
+    public ResponseEntity<List<PickTrx>> pickTrx(@RequestParam("pick-user") String pickUser,
+                                                 @RequestParam("mode") int mode)
     {
-        List<Trx> trxList = service.getPickItems(pickUser, mode);
+        List<PickTrx> trxList = service.getPickItems(pickUser, mode);
         return new ResponseEntity<>(trxList, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/pack", produces = "application/json;charset=UTF-8")
-    @ResponseBody
-    public ResponseEntity<List<Trx>> packTrx(@RequestParam("approve-user") String approveUser,
-                                             @RequestParam("mode") int mode)
+    public ResponseEntity<List<PickTrx>> packTrx(@RequestParam("approve-user") String approveUser,
+                                                 @RequestParam("mode") int mode)
     {
-        List<Trx> trxList = service.getPackItems(approveUser, mode);
+        List<PickTrx> trxList = service.getPackItems(approveUser, mode);
         return new ResponseEntity<>(trxList, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/collect", method = RequestMethod.POST)
-    @ResponseBody
     public ResponseEntity<Boolean> collectTrx(@RequestBody String data,
                                               @RequestParam("trx-no") String trxNo)
     {
@@ -60,7 +57,6 @@ public class TrxController
     }
 
     @RequestMapping("/shipped")
-    @ResponseBody
     public ResponseEntity<Boolean> isShipped(@RequestParam("trx-no") String trxNo)
     {
         boolean isShipped = service.isShipped(trxNo);
@@ -69,7 +65,6 @@ public class TrxController
 
     @RequestMapping(value = "/ship/insert-details",
             method = RequestMethod.POST)
-    @ResponseBody
     public ResponseEntity<Boolean> insertShipDetails(@RequestParam("region-code") String regionCode,
                                                      @RequestParam("driver-code") String driverCode,
                                                      @RequestParam("src-trx-no") String srcTrxNo,
@@ -82,7 +77,6 @@ public class TrxController
     }
 
     @RequestMapping(value = "/ship/create-doc", method = RequestMethod.POST)
-    @ResponseBody
     public ResponseEntity<Boolean> createShipDoc(@RequestParam("user-id") String userID)
     {
         boolean result = service.createShipDoc(userID);
@@ -90,26 +84,23 @@ public class TrxController
     }
 
     @RequestMapping(value = "/pack-waiting", produces = "application/json;charset=UTF-8")
-    @ResponseBody
-    public ResponseEntity<List<Trx>> waitingPackTrx(@RequestParam("trx-no") String trxNo)
+    public ResponseEntity<List<PickTrx>> waitingPackTrx(@RequestParam("trx-no") String trxNo)
     {
-        List<Trx> trxList = service.getWaitingPackItems(trxNo);
+        List<PickTrx> trxList = service.getWaitingPackItems(trxNo);
         return new ResponseEntity<>(trxList, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/split-trx", produces = "application/json;charset=UTF-8")
-    @ResponseBody
-    public ResponseEntity<List<Trx>> getSplitTrxList(@RequestParam("bp-code") String bpCode,
-                                                     @RequestParam("inv-code") String invCode,
-                                                     @RequestParam("qty") double qty)
+    public ResponseEntity<List<PickTrx>> getSplitTrxList(@RequestParam("bp-code") String bpCode,
+                                                         @RequestParam("inv-code") String invCode,
+                                                         @RequestParam("qty") double qty)
     {
-        List<Trx> trxList = service.getSplitTrxList(bpCode, invCode, qty);
+        List<PickTrx> trxList = service.getSplitTrxList(bpCode, invCode, qty);
         return new ResponseEntity<>(trxList, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/create-transfer", method = RequestMethod.POST)
-    @ResponseBody
-    public ResponseEntity<Boolean> createTransfer(@RequestBody List<Trx> trxList,
+    public ResponseEntity<Boolean> createTransfer(@RequestBody List<PickTrx> trxList,
                                                   @RequestParam("src-whs") String srcWhsCode,
                                                   @RequestParam("trg-whs") String trgWhsCode,
                                                   @RequestParam("user-id") String userId)
@@ -119,9 +110,8 @@ public class TrxController
     }
 
     @PostMapping(value = "/approve-prd/insert", consumes = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Boolean> insertProductApproveData(
-            @RequestBody List<Trx> trxList,
+            @RequestBody List<PickTrx> trxList,
             @RequestParam("user-id") String userId,
             @RequestParam(value = "notes", required = false) String notes,
             @RequestParam("status") int status)
@@ -132,17 +122,15 @@ public class TrxController
     }
 
     @RequestMapping(value = "/approve-prd/list", produces = "application/json;charset=UTF-8")
-    @ResponseBody
-    public ResponseEntity<List<Trx>> getApproveDocList()
+    public ResponseEntity<List<PickTrx>> getApproveDocList()
     {
-        List<Trx> trxList = service.getApproveTrxList();
+        List<PickTrx> trxList = service.getApproveTrxList();
         return new ResponseEntity<>(trxList, HttpStatus.OK);
     }
 
     @PostMapping(value = "/create-internal-use", consumes = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> createInternalUseDoc(
-            @RequestBody List<Trx> trxList,
+            @RequestBody List<PickTrx> trxList,
             @RequestParam("user-id") String userId,
             @RequestParam("whs-code") String whsCode,
             @RequestParam("exp-center-code") String expCenterCode,

@@ -1,7 +1,7 @@
 package az.inci.bmsanbar.services.v2;
 
-import az.inci.bmsanbar.model.Doc;
-import az.inci.bmsanbar.model.Trx;
+import az.inci.bmsanbar.model.PickDoc;
+import az.inci.bmsanbar.model.PickTrx;
 import az.inci.bmsanbar.model.v2.CollectTrxRequest;
 import az.inci.bmsanbar.services.AbstractService;
 import jakarta.persistence.Query;
@@ -17,9 +17,9 @@ public class PackServiceV2 extends AbstractService
 {
 
     @Transactional
-    public Doc getPackDoc(String approveUser, int mode)
+    public PickDoc getPackDoc(String approveUser, int mode)
     {
-        List<Trx> trxList = new ArrayList<>();
+        List<PickTrx> trxList = new ArrayList<>();
         Query q = em.createNativeQuery("EXEC DBO.SP_TERMINAL_GET_PACK_ITEMS ?,?,null,null,null");
         q.setParameter(1, approveUser);
         q.setParameter(2, mode);
@@ -27,7 +27,7 @@ public class PackServiceV2 extends AbstractService
 
         resultList.stream().map((result)->
                                 {
-                                    Trx trx = new Trx();
+                                    PickTrx trx = new PickTrx();
                                     trx.setTrxNo((String) result[0]);
                                     trx.setTrxDate((String) result[1]);
                                     trx.setTrxId((int) result[2]);
@@ -52,7 +52,7 @@ public class PackServiceV2 extends AbstractService
 
         em.close();
 
-        Doc doc = null;
+        PickDoc doc = null;
 
         if(!trxList.isEmpty())
         {
@@ -65,11 +65,11 @@ public class PackServiceV2 extends AbstractService
     }
 
     @Transactional
-    public Doc getPackDocByTrxNo(String trxNo)
+    public PickDoc getPackDocByTrxNo(String trxNo)
     {
         Query q = em.createNativeQuery("EXEC DBO.SP_TERMINAL_GET_PACK_DOC ?");
         q.setParameter(1, trxNo);
-        Doc doc = new Doc();
+        PickDoc doc = new PickDoc();
         List<Object[]> resultList = q.getResultList();
         if(resultList.size() > 0)
         {
@@ -112,9 +112,9 @@ public class PackServiceV2 extends AbstractService
         em.close();
     }
 
-    public List<Trx> getWaitingPackItems(String trxNo)
+    public List<PickTrx> getWaitingPackItems(String trxNo)
     {
-        List<Trx> trxList = new ArrayList<>();
+        List<PickTrx> trxList = new ArrayList<>();
         Query q = em.createNativeQuery("SELECT IPT.INV_CODE, " +
                                        "       UPPER(ISNULL(IPT.INV_NAME, IM.INV_NAME)) AS INV_NAME, " +
                                        "       IM.INV_BRAND_CODE, " +
@@ -139,7 +139,7 @@ public class PackServiceV2 extends AbstractService
 
         resultList.stream().map((result)->
                                 {
-                                    Trx trx = new Trx();
+                                    PickTrx trx = new PickTrx();
                                     trx.setInvCode((String) result[0]);
                                     trx.setInvName((String) result[1]);
                                     trx.setInvBrand((String) result[2]);
@@ -161,15 +161,15 @@ public class PackServiceV2 extends AbstractService
         return trxList;
     }
 
-    public List<Doc> getPackDocList(String userId)
+    public List<PickDoc> getPackDocList(String userId)
     {
         Query q = em.createNativeQuery("EXEC DBO.SP_TERMINAL_GET_PACK_DOC_ALL ?");
         q.setParameter(1, userId);
-        List<Doc> docList = new ArrayList<>();
+        List<PickDoc> docList = new ArrayList<>();
         List<Object[]> resultList = q.getResultList();
         resultList.stream().map((result)->
                                 {
-                                    Doc doc = new Doc();
+                                    PickDoc doc = new PickDoc();
                                     doc.setTrxNo((String) result[0]);
                                     doc.setTrxDate((String) result[1]);
                                     doc.setDescription((String) result[2]);

@@ -6,7 +6,7 @@
 package az.inci.bmsanbar.services;
 
 import az.inci.bmsanbar.model.Response;
-import az.inci.bmsanbar.model.Trx;
+import az.inci.bmsanbar.model.PickTrx;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.Query;
 import jakarta.persistence.StoredProcedureQuery;
@@ -30,9 +30,9 @@ public class TrxService extends AbstractService
 {
 
     @Transactional
-    public List<Trx> getPickItems(String pickUser, int mode)
+    public List<PickTrx> getPickItems(String pickUser, int mode)
     {
-        List<Trx> trxList = new ArrayList<>();
+        List<PickTrx> trxList = new ArrayList<>();
         Query q = em.createNativeQuery("EXEC DBO.SP_TERMINAL_GET_PICK_ITEMS ?,?,null,null,null");
         q.setParameter(1, pickUser);
         q.setParameter(2, mode);
@@ -48,7 +48,7 @@ public class TrxService extends AbstractService
 
         resultList.stream().map((result)->
                                 {
-                                    Trx trx = new Trx();
+                                    PickTrx trx = new PickTrx();
                                     trx.setTrxNo(String.valueOf(result[0]));
                                     trx.setTrxDate(String.valueOf(result[1]));
                                     trx.setTrxId(Integer.parseInt(String.valueOf(result[2])));
@@ -129,9 +129,9 @@ public class TrxService extends AbstractService
     }
 
     @Transactional
-    public List<Trx> getPackItems(String approveUser, int mode)
+    public List<PickTrx> getPackItems(String approveUser, int mode)
     {
-        List<Trx> trxList = new ArrayList<>();
+        List<PickTrx> trxList = new ArrayList<>();
         Query q = em.createNativeQuery("EXEC DBO.SP_TERMINAL_GET_PACK_ITEMS ?,?,null,null,null");
         q.setParameter(1, approveUser);
         q.setParameter(2, mode);
@@ -147,7 +147,7 @@ public class TrxService extends AbstractService
 
         resultList.stream().map((result)->
                                 {
-                                    Trx trx = new Trx();
+                                    PickTrx trx = new PickTrx();
                                     trx.setTrxNo(String.valueOf(result[0]));
                                     trx.setTrxDate(String.valueOf(result[1]));
                                     trx.setTrxId(Integer.parseInt(String.valueOf(result[2])));
@@ -255,9 +255,9 @@ public class TrxService extends AbstractService
         return true;
     }
 
-    public List<Trx> getWaitingPackItems(String trxNo)
+    public List<PickTrx> getWaitingPackItems(String trxNo)
     {
-        List<Trx> trxList = new ArrayList<>();
+        List<PickTrx> trxList = new ArrayList<>();
         Query q = em.createNativeQuery("SELECT IPT.INV_CODE, " +
                                        "       UPPER(ISNULL(IPT.INV_NAME, IM.INV_NAME)) AS INV_NAME, " +
                                        "       IM.INV_BRAND_CODE, " +
@@ -290,7 +290,7 @@ public class TrxService extends AbstractService
 
         resultList.stream().map((result)->
                                 {
-                                    Trx trx = new Trx();
+                                    PickTrx trx = new PickTrx();
                                     trx.setInvCode(String.valueOf(result[0]));
                                     trx.setInvName(String.valueOf(result[1]));
                                     trx.setInvBrand(String.valueOf(result[2]));
@@ -312,9 +312,9 @@ public class TrxService extends AbstractService
         return trxList;
     }
 
-    public List<Trx> getSplitTrxList(String bpCode, String invCode, double qty)
+    public List<PickTrx> getSplitTrxList(String bpCode, String invCode, double qty)
     {
-        List<Trx> trxList = new ArrayList<>();
+        List<PickTrx> trxList = new ArrayList<>();
         Query q = em.createNativeQuery("EXEC DBO.SP_TRX_FOR_RETURN ?,?,?");
         q.setParameter(1, bpCode);
         q.setParameter(2, invCode);
@@ -331,7 +331,7 @@ public class TrxService extends AbstractService
 
         resultList.stream().map((result)->
                                 {
-                                    Trx trx = new Trx();
+                                    PickTrx trx = new PickTrx();
                                     trx.setPrevTrxId(Integer.parseInt(String.valueOf(result[0])));
                                     trx.setPrevTrxNo(String.valueOf(result[1]));
                                     trx.setTrxDate(String.valueOf(result[2]));
@@ -348,14 +348,14 @@ public class TrxService extends AbstractService
     }
 
     @Transactional
-    public boolean createTransfer(List<Trx> trxList, String srcWhsCode, String trgWhsCode, String userId)
+    public boolean createTransfer(List<PickTrx> trxList, String srcWhsCode, String trgWhsCode, String userId)
     {
         Query q = em.createNativeQuery("INSERT INTO ANDROID_WHS_TRANSFER"
                                        + " (WHS_CODE_FROM, WHS_CODE_TO, INV_CODE, QUANTITY, USER_ID)"
                                        + " VALUES(?,?,?,?,?)");
         try
         {
-            for(Trx trx : trxList)
+            for(PickTrx trx : trxList)
             {
                 q.setParameter(1, srcWhsCode);
                 q.setParameter(2, trgWhsCode);
@@ -385,7 +385,7 @@ public class TrxService extends AbstractService
     }
 
     @Transactional
-    public boolean insertProductApproveData(List<Trx> trxList, String userId, String notes, int status)
+    public boolean insertProductApproveData(List<PickTrx> trxList, String userId, String notes, int status)
     {
         Query query = em.createNativeQuery(
                 "INSERT INTO TERMINAL_APPROVE("
@@ -395,7 +395,7 @@ public class TrxService extends AbstractService
 
         try
         {
-            for(Trx trx : trxList)
+            for(PickTrx trx : trxList)
             {
                 query.setParameter(1, trx.getTrxNo());
                 query.setParameter(2, trx.getTrxDate());
@@ -427,17 +427,17 @@ public class TrxService extends AbstractService
         return true;
     }
 
-    public List<Trx> getApproveTrxList()
+    public List<PickTrx> getApproveTrxList()
     {
         Query q = em.createNativeQuery(
                 "SELECT SYSTEM_NO,INV_CODE,INV_NAME,BARCODE,INV_QTY,"
                 + "INTERNAL_COUNT,INV_BRAND_CODE FROM TERMINAL_APPROVE "
                 + " WHERE STATUS=0");
-        List<Trx> trxList = new ArrayList<>();
+        List<PickTrx> trxList = new ArrayList<>();
         List<Object[]> resultList = q.getResultList();
         resultList.stream().map((result)->
                                 {
-                                    Trx trx = new Trx();
+                                    PickTrx trx = new PickTrx();
                                     trx.setTrxNo(String.valueOf(result[0]));
                                     trx.setInvCode(String.valueOf(result[1]));
                                     trx.setInvName(String.valueOf(result[2]));
@@ -454,7 +454,7 @@ public class TrxService extends AbstractService
     }
 
     @Transactional
-    public Response createInternalUseDoc(List<Trx> trxList,
+    public Response createInternalUseDoc(List<PickTrx> trxList,
                                          String userId,
                                          String whsCode,
                                          String expCenterCode,
@@ -469,7 +469,7 @@ public class TrxService extends AbstractService
 
         try
         {
-            for(Trx trx : trxList)
+            for(PickTrx trx : trxList)
             {
                 query.setParameter(1, trx.getTrxNo());
                 query.setParameter(2, new Date(System.currentTimeMillis()));

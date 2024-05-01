@@ -1,7 +1,7 @@
 package az.inci.bmsanbar.services;
 
-import az.inci.bmsanbar.model.Doc;
-import az.inci.bmsanbar.model.Trx;
+import az.inci.bmsanbar.model.PickDoc;
+import az.inci.bmsanbar.model.PickTrx;
 import jakarta.persistence.Query;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
@@ -18,9 +18,9 @@ public class PickService extends AbstractService
 {
 
     @Transactional
-    public Doc getPickDoc(String pickUser, int mode)
+    public PickDoc getPickDoc(String pickUser, int mode)
     {
-        List<Trx> trxList = new ArrayList<>();
+        List<PickTrx> trxList = new ArrayList<>();
         Query q = em.createNativeQuery("EXEC DBO.SP_TERMINAL_GET_PICK_ITEMS ?,?,null,null,null");
         q.setParameter(1, pickUser);
         q.setParameter(2, mode);
@@ -32,12 +32,12 @@ public class PickService extends AbstractService
         catch(Exception e)
         {
             e.printStackTrace();
-            return new Doc();
+            return new PickDoc();
         }
 
         resultList.stream().map((result)->
                                 {
-                                    Trx trx = new Trx();
+                                    PickTrx trx = new PickTrx();
                                     trx.setTrxNo(String.valueOf(result[0]));
                                     trx.setTrxDate(String.valueOf(result[1]));
                                     trx.setTrxId(Integer.parseInt(String.valueOf(result[2])));
@@ -61,7 +61,7 @@ public class PickService extends AbstractService
 
         em.close();
 
-        Doc doc = null;
+        PickDoc doc = null;
 
         if(!trxList.isEmpty())
         {
@@ -74,12 +74,12 @@ public class PickService extends AbstractService
     }
 
     @Transactional
-    public Doc getPickDocByTrxNo(String trxNo, String pickUser)
+    public PickDoc getPickDocByTrxNo(String trxNo, String pickUser)
     {
         Query q = em.createNativeQuery("EXEC DBO.SP_TERMINAL_GET_PICK_DOC ?, ?");
         q.setParameter(1, trxNo);
         q.setParameter(2, pickUser);
-        Doc doc = new Doc();
+        PickDoc doc = new PickDoc();
         List<Object[]> resultList = q.getResultList();
         if(resultList.size() > 0)
         {

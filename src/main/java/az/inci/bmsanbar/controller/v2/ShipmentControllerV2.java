@@ -31,7 +31,6 @@ public class ShipmentControllerV2
     }
 
     @GetMapping("/check-shipment")
-    @ResponseBody
     public ResponseEntity<Response> checkShipment(@RequestParam("trx-no") String trxNo)
     {
         try
@@ -61,7 +60,6 @@ public class ShipmentControllerV2
     }
 
     @GetMapping("/shipped-for-driver")
-    @ResponseBody
     public ResponseEntity<Response> isShippedForDriver(@RequestParam("trx-no") String trxNo,
                                                        @RequestParam("driver-code") String driverCode)
     {
@@ -84,7 +82,6 @@ public class ShipmentControllerV2
     }
 
     @PostMapping(value = "/create-shipment")
-    @ResponseBody
     public ResponseEntity<Response> insertShipDetails(@RequestParam("user-id") String userId,
                                                       @RequestBody List<ShipmentRequest> shipmentRequest)
     {
@@ -108,7 +105,6 @@ public class ShipmentControllerV2
     }
 
     @GetMapping(value = "/is-valid")
-    @ResponseBody
     public ResponseEntity<Response> isValid(@RequestParam("trx-no") String trxNo)
     {
         try

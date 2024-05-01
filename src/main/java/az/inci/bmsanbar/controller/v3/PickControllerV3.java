@@ -1,6 +1,6 @@
 package az.inci.bmsanbar.controller.v3;
 
-import az.inci.bmsanbar.model.Doc;
+import az.inci.bmsanbar.model.PickDoc;
 import az.inci.bmsanbar.model.v2.CollectTrxRequest;
 import az.inci.bmsanbar.model.v2.ResetPickRequest;
 import az.inci.bmsanbar.model.v2.Response;
@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static az.inci.bmsanbar.Utilities.getMessage;
 
 @RequestMapping("/v3/pick")
 @RestController
@@ -26,24 +28,23 @@ public class PickControllerV3
     }
 
     @GetMapping(value = "/get-doc", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> pickDoc(@RequestParam("pick-user") String pickUser,
                                             @RequestParam("mode") int mode)
     {
         try
         {
-            Doc result = service.getPickDoc(pickUser, mode);
+            PickDoc result = service.getPickDoc(pickUser, mode);
             return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @PostMapping(value = "/collect")
-    @ResponseBody
     public ResponseEntity<Response> collectTrx(@RequestBody List<CollectTrxRequest> data)
     {
         try
@@ -53,13 +54,13 @@ public class PickControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @PostMapping(value = "/reset")
-    @ResponseBody
     public ResponseEntity<Response> resetPickDoc(@RequestBody ResetPickRequest request)
     {
         try
@@ -72,13 +73,13 @@ public class PickControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @GetMapping(value = "/reset-allowed")
-    @ResponseBody
     public ResponseEntity<Response> resetAllowed(@RequestParam("user-id") String userId)
     {
         try
@@ -88,13 +89,13 @@ public class PickControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @GetMapping(value = "/report", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getReport(@RequestParam("start-date") String startDate,
                                               @RequestParam("end-date") String endDate,
                                               @RequestParam("user-id") String pickUser)
@@ -106,13 +107,13 @@ public class PickControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @GetMapping(value = "/report-actual", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getReportActual(@RequestParam("start-date") String startDate,
                                                     @RequestParam("end-date") String endDate,
                                                     @RequestParam("user-id") String pickUser)
@@ -124,8 +125,9 @@ public class PickControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 }

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static az.inci.bmsanbar.Utilities.getMessage;
+
 @RequestMapping("/v3/inv")
 @RestController
 @Slf4j
@@ -28,7 +30,6 @@ public class InventoryControllerV3
     }
 
     @GetMapping(value = "/qty", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getQty(@RequestParam("whs-code") String whsCode,
                                            @RequestParam("inv-code") String invCode)
     {
@@ -39,13 +40,13 @@ public class InventoryControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @GetMapping(value = "/info-by-barcode", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getInfoByBarcode(@RequestParam("barcode") String barcode,
                                                      @RequestParam("user-id") String userId)
     {
@@ -56,13 +57,13 @@ public class InventoryControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @GetMapping(value = "/info-by-inv-code", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getInfoByInvCode(@RequestParam("inv-code") String invCode,
                                                      @RequestParam("user-id") String userId)
     {
@@ -73,13 +74,13 @@ public class InventoryControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @GetMapping(value = "/search", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getSearchResult(@RequestParam("keyword") String keyword,
                                                     @RequestParam("in") String field)
     {
@@ -90,13 +91,13 @@ public class InventoryControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @GetMapping(value = "/by-barcode", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getInvByBarcode(@RequestParam("barcode") String barcode)
     {
         try
@@ -106,13 +107,13 @@ public class InventoryControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @GetMapping(value = "/pick-report", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getPickReport(@RequestParam("start-date") String startDate,
                                                   @RequestParam("end-date") String endDate,
                                                   @RequestParam("user-id") String pickUser)
@@ -124,13 +125,13 @@ public class InventoryControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @GetMapping(value = "/pack-report", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getPackReport(@RequestParam("start-date") String startDate,
                                                   @RequestParam("end-date") String endDate,
                                                   @RequestParam("user-id") String approveUser)
@@ -142,13 +143,13 @@ public class InventoryControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @GetMapping(value = "/attribute-list", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getAttributeList(@RequestParam("inv-code") String invCode)
     {
         try
@@ -158,13 +159,13 @@ public class InventoryControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @GetMapping(value = "/attribute-list-by-whs", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getAttributeListByWhs(@RequestParam("inv-code") String invCode,
                                                           @RequestParam("user-id") String userId)
     {
@@ -175,13 +176,13 @@ public class InventoryControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @GetMapping(value = "/barcode-list", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getBarcodeList(@RequestParam("inv-code") String invCode)
     {
         try
@@ -191,13 +192,13 @@ public class InventoryControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @PostMapping(value = "/update-attributes", consumes = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> updateInvAttributes(@RequestBody List<InvAttribute> attributeList)
     {
         try
@@ -207,13 +208,13 @@ public class InventoryControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @PostMapping(value = "/update-shelf-barcode", consumes = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> updateShelfBarcode(@RequestParam("whs-code") String whsCode,
                                                        @RequestParam("shelf-barcode") String shelfBarcode,
                                                        @RequestBody List<String> invBarcodeList)
@@ -226,17 +227,17 @@ public class InventoryControllerV3
                 if(!result)
                     return ResponseEntity.ok(Response.getUserErrorResponse("Barkod üzrə mal tapılmadı: " + invBarcode));
             }
+            return ResponseEntity.ok(Response.getSuccessResponse());
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
-        return ResponseEntity.ok(Response.getSuccessResponse());
     }
 
 //    @PostMapping(value = "/update-barcodes", consumes = "application/json;charset=UTF-8")
-//    @ResponseBody
 //    public ResponseEntity<Response> updateInvBarcodes(@RequestBody List<InvBarcode> barcodeList)
 //    {
 //        try
@@ -252,7 +253,6 @@ public class InventoryControllerV3
 //    }
 
     @GetMapping(produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getInvList()
     {
         try
@@ -262,13 +262,13 @@ public class InventoryControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @GetMapping(value = "/by-user-producer-list", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getInvListByUser(@RequestParam("user-id") String userId)
     {
         try
@@ -278,13 +278,13 @@ public class InventoryControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @GetMapping(value = "/whs-sum", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getWhsSumByUser(@RequestParam("user-id") String userId,
                                                     @RequestParam("whs-code") String whsCode)
     {
@@ -295,13 +295,13 @@ public class InventoryControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @GetMapping(value = "/inv-barcode", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getInvBarcode(@RequestParam("barcode") String barcode)
     {
         try
@@ -311,8 +311,9 @@ public class InventoryControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 }

@@ -1,7 +1,7 @@
 package az.inci.bmsanbar.services.v3;
 
-import az.inci.bmsanbar.model.Doc;
-import az.inci.bmsanbar.model.Trx;
+import az.inci.bmsanbar.model.PickDoc;
+import az.inci.bmsanbar.model.PickTrx;
 import az.inci.bmsanbar.model.v2.CollectTrxRequest;
 import az.inci.bmsanbar.services.AbstractService;
 import jakarta.persistence.Query;
@@ -20,9 +20,9 @@ public class PackServiceV3 extends AbstractService
 {
 
     @Transactional
-    public Doc getPackDoc(String approveUser, int mode)
+    public PickDoc getDoc(String approveUser, int mode)
     {
-        List<Trx> trxList = new ArrayList<>();
+        List<PickTrx> trxList = new ArrayList<>();
         StoredProcedureQuery query = em.createStoredProcedureQuery("SP_TERMINAL_GET_PACK_ITEMS");
         query.registerStoredProcedureParameter("USER_ID", String.class, IN);
         query.registerStoredProcedureParameter("MODE", Integer.class, IN);
@@ -38,7 +38,7 @@ public class PackServiceV3 extends AbstractService
 
         resultList.stream().map((result)->
                                 {
-                                    Trx trx = new Trx();
+                                    PickTrx trx = new PickTrx();
                                     trx.setTrxNo((String) result[0]);
                                     trx.setTrxDate((String) result[1]);
                                     trx.setTrxId((int) result[2]);
@@ -63,12 +63,12 @@ public class PackServiceV3 extends AbstractService
 
         em.close();
 
-        Doc doc = null;
+        PickDoc doc = null;
 
         if(!trxList.isEmpty())
         {
             String trxNo = trxList.get(0).getTrxNo();
-            doc = getPackDocByTrxNo(trxNo);
+            doc = getDocByTrxNo(trxNo);
             doc.setTrxList(trxList);
         }
 
@@ -76,12 +76,12 @@ public class PackServiceV3 extends AbstractService
     }
 
     @Transactional
-    public Doc getPackDocByTrxNo(String trxNo)
+    public PickDoc getDocByTrxNo(String trxNo)
     {
         StoredProcedureQuery query = em.createStoredProcedureQuery("SP_TERMINAL_GET_PACK_DOC");
         query.registerStoredProcedureParameter("TRX_NO", String.class, IN);
         query.setParameter("TRX_NO", trxNo);
-        Doc doc = new Doc();
+        PickDoc doc = new PickDoc();
         List<Object[]> resultList = query.getResultList();
         if(!resultList.isEmpty())
         {
@@ -131,9 +131,9 @@ public class PackServiceV3 extends AbstractService
         em.close();
     }
 
-    public List<Trx> getWaitingPackItems(String trxNo)
+    public List<PickTrx> getWaitingPackItems(String trxNo)
     {
-        List<Trx> trxList = new ArrayList<>();
+        List<PickTrx> trxList = new ArrayList<>();
         Query query = em.createNativeQuery("""
                            SELECT IPT.INV_CODE,
                                UPPER(ISNULL(IPT.INV_NAME, IM.INV_NAME)) AS INV_NAME,
@@ -159,7 +159,7 @@ public class PackServiceV3 extends AbstractService
 
         resultList.stream().map((result)->
                                 {
-                                    Trx trx = new Trx();
+                                    PickTrx trx = new PickTrx();
                                     trx.setInvCode((String) result[0]);
                                     trx.setInvName((String) result[1]);
                                     trx.setInvBrand((String) result[2]);
@@ -181,16 +181,16 @@ public class PackServiceV3 extends AbstractService
         return trxList;
     }
 
-    public List<Doc> getPackDocList(String userId)
+    public List<PickDoc> getDocList(String userId)
     {
         StoredProcedureQuery query = em.createStoredProcedureQuery("SP_TERMINAL_GET_PACK_DOC_ALL");
         query.registerStoredProcedureParameter("USER_ID", String.class, IN);
         query.setParameter("USER_ID", userId);
-        List<Doc> docList = new ArrayList<>();
+        List<PickDoc> docList = new ArrayList<>();
         List<Object[]> resultList = query.getResultList();
         resultList.stream().map((result)->
                                 {
-                                    Doc doc = new Doc();
+                                    PickDoc doc = new PickDoc();
                                     doc.setTrxNo((String) result[0]);
                                     doc.setTrxDate((String) result[1]);
                                     doc.setDescription((String) result[2]);

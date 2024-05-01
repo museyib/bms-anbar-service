@@ -15,7 +15,6 @@ import java.nio.file.Paths;
 public class UpdateControllerV2
 {
     @GetMapping("/download")
-    @ResponseBody
     public ResponseEntity<Response> download(@RequestParam("file-name") String fileName)
     {
         try

@@ -31,7 +31,6 @@ public class UserControllerV2
     }
 
     @GetMapping(value = "/list", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> all()
     {
         try
@@ -53,7 +52,6 @@ public class UserControllerV2
     }
 
     @PostMapping(value = "/login", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> login(@RequestBody LoginRequest request)
     {
         try

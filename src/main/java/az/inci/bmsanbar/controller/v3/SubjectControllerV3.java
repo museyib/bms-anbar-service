@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static az.inci.bmsanbar.Utilities.getMessage;
+
 @RequestMapping("/v3/src")
 @RestController
 @Slf4j
@@ -27,7 +29,6 @@ public class SubjectControllerV3
     }
 
     @GetMapping(value = "/sbe", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getQty()
     {
         try
@@ -37,13 +38,13 @@ public class SubjectControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @GetMapping(value = "/customer", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getCustomerList(@RequestParam("sbe-code") String sbeCode)
     {
         try
@@ -53,13 +54,13 @@ public class SubjectControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @GetMapping(value = "/whs", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getWhsList()
     {
         try
@@ -69,13 +70,13 @@ public class SubjectControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @GetMapping(value = "/whs/target", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getTrgWhsList(@RequestParam("user-id") String userId)
     {
         try
@@ -85,13 +86,13 @@ public class SubjectControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @GetMapping(value = "/exp-center", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getExpCenterList()
     {
         try
@@ -101,8 +102,9 @@ public class SubjectControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 }

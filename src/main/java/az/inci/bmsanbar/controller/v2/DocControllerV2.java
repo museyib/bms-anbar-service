@@ -5,7 +5,7 @@
  */
 package az.inci.bmsanbar.controller.v2;
 
-import az.inci.bmsanbar.model.Doc;
+import az.inci.bmsanbar.model.PickDoc;
 import az.inci.bmsanbar.model.v2.Response;
 import az.inci.bmsanbar.services.DocService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +30,11 @@ public class DocControllerV2
     }
 
     @GetMapping(value = "/pack/all", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> packDocList(@RequestParam("user-id") String userId)
     {
         try
         {
-            List<Doc> docList = service.getPackDocList(userId);
+            List<PickDoc> docList = service.getPackDocList(userId);
             return ResponseEntity.ok(Response.builder()
                                              .statusCode(0)
                                              .data(docList)
@@ -52,7 +51,6 @@ public class DocControllerV2
     }
 
     @GetMapping(value = "/taxed")
-    @ResponseBody
     public ResponseEntity<Response> isTaxed(@RequestParam("trx-no") String trxNo)
     {
         try

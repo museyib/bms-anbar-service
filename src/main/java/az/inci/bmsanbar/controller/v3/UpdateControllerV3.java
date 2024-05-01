@@ -11,13 +11,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static az.inci.bmsanbar.Utilities.getMessage;
+
 @RequestMapping("/v3")
 @RestController
 @Slf4j
 public class UpdateControllerV3
 {
     @GetMapping("/download")
-    @ResponseBody
     public ResponseEntity<Response> download(@RequestParam("file-name") String fileName)
     {
         try
@@ -29,8 +30,9 @@ public class UpdateControllerV3
         }
         catch(IOException e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 }

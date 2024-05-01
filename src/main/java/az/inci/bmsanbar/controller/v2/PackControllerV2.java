@@ -1,7 +1,7 @@
 package az.inci.bmsanbar.controller.v2;
 
-import az.inci.bmsanbar.model.Doc;
-import az.inci.bmsanbar.model.Trx;
+import az.inci.bmsanbar.model.PickDoc;
+import az.inci.bmsanbar.model.PickTrx;
 import az.inci.bmsanbar.model.v2.CollectTrxRequest;
 import az.inci.bmsanbar.model.v2.Response;
 import az.inci.bmsanbar.services.v2.PackServiceV2;
@@ -24,13 +24,12 @@ public class PackControllerV2
     }
 
     @GetMapping(value = "/get-doc", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getPackDoc(@RequestParam("approve-user") String approveUser,
                                                @RequestParam("mode") int mode)
     {
         try
         {
-            Doc doc = service.getPackDoc(approveUser, mode);
+            PickDoc doc = service.getPackDoc(approveUser, mode);
             return ResponseEntity.ok(Response.builder()
                                              .statusCode(0)
                                              .data(doc)
@@ -48,7 +47,6 @@ public class PackControllerV2
     }
 
     @PostMapping(value = "/collect")
-    @ResponseBody
     public ResponseEntity<Response> collectTrx(@RequestBody List<CollectTrxRequest> data,
                                                @RequestParam("trx-no") String trxNo)
     {
@@ -70,12 +68,11 @@ public class PackControllerV2
     }
 
     @GetMapping(value = "/waiting-docs", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> packDocList(@RequestParam("user-id") String userId)
     {
         try
         {
-            List<Doc> doc = service.getPackDocList(userId);
+            List<PickDoc> doc = service.getPackDocList(userId);
             return ResponseEntity.ok(Response.builder()
                                              .statusCode(0)
                                              .data(doc)
@@ -92,12 +89,11 @@ public class PackControllerV2
     }
 
     @GetMapping(value = "/waiting-doc-items", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> waitingPackTrx(@RequestParam("trx-no") String trxNo)
     {
         try
         {
-            List<Trx> trxList = service.getWaitingPackItems(trxNo);
+            List<PickTrx> trxList = service.getWaitingPackItems(trxNo);
             return ResponseEntity.ok(Response.builder()
                                              .statusCode(0)
                                              .data(trxList)

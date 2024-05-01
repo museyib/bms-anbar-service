@@ -8,10 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
+import static az.inci.bmsanbar.Utilities.getMessage;
 
 @RequestMapping("/v3/not-picked-reason")
 @RestController
@@ -27,7 +28,6 @@ public class NotPickedReasonControllerV3
     }
 
     @GetMapping(produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getReasonList()
     {
         try
@@ -37,8 +37,9 @@ public class NotPickedReasonControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 }

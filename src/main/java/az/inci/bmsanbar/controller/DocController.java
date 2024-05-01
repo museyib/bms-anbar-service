@@ -5,7 +5,7 @@
  */
 package az.inci.bmsanbar.controller;
 
-import az.inci.bmsanbar.model.Doc;
+import az.inci.bmsanbar.model.PickDoc;
 import az.inci.bmsanbar.services.DocService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,40 +30,35 @@ public class DocController
     }
 
     @RequestMapping(value = "/pick", produces = "application/json;charset=UTF-8")
-    @ResponseBody
-    public ResponseEntity<Doc> pickDoc(@RequestParam("trx-no") String trxNo,
-                                       @RequestParam("pick-user") String pickUser)
+    public ResponseEntity<PickDoc> pickDoc(@RequestParam("trx-no") String trxNo,
+                                           @RequestParam("pick-user") String pickUser)
     {
-        Doc doc = service.getPickDocByTrxNo(trxNo, pickUser);
+        PickDoc doc = service.getPickDocByTrxNo(trxNo, pickUser);
         return new ResponseEntity<>(doc, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/pack", produces = "application/json;charset=UTF-8")
-    @ResponseBody
-    public ResponseEntity<Doc> packDoc(@RequestParam("trx-no") String trxNo)
+    public ResponseEntity<PickDoc> packDoc(@RequestParam("trx-no") String trxNo)
     {
-        Doc doc = service.getPackDocByTrxNo(trxNo);
+        PickDoc doc = service.getPackDocByTrxNo(trxNo);
         return new ResponseEntity<>(doc, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/pack/all", produces = "application/json;charset=UTF-8")
-    @ResponseBody
-    public ResponseEntity<List<Doc>> packDocList(@RequestParam("user-id") String userId)
+    public ResponseEntity<List<PickDoc>> packDocList(@RequestParam("user-id") String userId)
     {
-        List<Doc> doc = service.getPackDocList(userId);
+        List<PickDoc> doc = service.getPackDocList(userId);
         return new ResponseEntity<>(doc, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/approve-prd/list", produces = "application/json;charset=UTF-8")
-    @ResponseBody
-    public ResponseEntity<List<Doc>> getApproveDocList()
+    public ResponseEntity<List<PickDoc>> getApproveDocList()
     {
-        List<Doc> trxList = service.getApproveDocList();
+        List<PickDoc> trxList = service.getApproveDocList();
         return new ResponseEntity<>(trxList, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/pick/reset", method = RequestMethod.POST)
-    @ResponseBody
     public ResponseEntity<Boolean> resetPickDoc(@RequestParam("trx-no") String trxNo,
                                                 @RequestParam("user-id") String userId)
     {
@@ -72,7 +67,6 @@ public class DocController
     }
 
     @RequestMapping(value = "/shipment-is-valid")
-    @ResponseBody
     public ResponseEntity<Boolean> shipmentIsValid(@RequestParam("trx-no") String trxNo)
     {
         boolean result = service.shipmentIsValid(trxNo);
@@ -80,7 +74,6 @@ public class DocController
     }
 
     @RequestMapping(value = "/taxed")
-    @ResponseBody
     public ResponseEntity<Boolean> isTaxed(@RequestParam("trx-no") String trxNo)
     {
         boolean result = service.isTaxed(trxNo);

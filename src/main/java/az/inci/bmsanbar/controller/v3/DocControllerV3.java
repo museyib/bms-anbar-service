@@ -5,7 +5,7 @@
  */
 package az.inci.bmsanbar.controller.v3;
 
-import az.inci.bmsanbar.model.Doc;
+import az.inci.bmsanbar.model.PickDoc;
 import az.inci.bmsanbar.model.v2.Response;
 import az.inci.bmsanbar.services.v3.DocServiceV3;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static az.inci.bmsanbar.Utilities.getMessage;
 
 /**
  * @author User
@@ -32,23 +34,22 @@ public class DocControllerV3
     }
 
     @GetMapping(value = "/pack/all", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> packDocList(@RequestParam("user-id") String userId)
     {
         try
         {
-            List<Doc> result = service.getPackDocList(userId);
+            List<PickDoc> result = service.getPackDocList(userId);
             return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @GetMapping(value = "/taxed")
-    @ResponseBody
     public ResponseEntity<Response> isTaxed(@RequestParam("trx-no") String trxNo)
     {
         try
@@ -58,8 +59,9 @@ public class DocControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 }

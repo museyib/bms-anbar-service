@@ -1,8 +1,8 @@
 package az.inci.bmsanbar.services.v3;
 
 import az.inci.bmsanbar.exception.OperationNotCompletedException;
-import az.inci.bmsanbar.model.Doc;
-import az.inci.bmsanbar.model.Trx;
+import az.inci.bmsanbar.model.PickDoc;
+import az.inci.bmsanbar.model.PickTrx;
 import az.inci.bmsanbar.model.v2.ProductApproveRequest;
 import az.inci.bmsanbar.model.v2.ProductApproveRequestItem;
 import az.inci.bmsanbar.model.v2.TransferRequest;
@@ -26,9 +26,9 @@ import static jakarta.persistence.ParameterMode.IN;
 @Service
 public class InvMoveServiceV3 extends AbstractService
 {
-    public List<Trx> getSplitTrxList(String bpCode, String invCode, double qty)
+    public List<PickTrx> getSplitTrxList(String bpCode, String invCode, double qty)
     {
-        List<Trx> trxList = new ArrayList<>();
+        List<PickTrx> trxList = new ArrayList<>();
         Query query = em.createNativeQuery("EXEC DBO.SP_TRX_FOR_RETURN :BP_CODE, :INV_CODE, :QTY");
 //        StoredProcedureQuery query = em.createStoredProcedureQuery("SP_TRX_FOR_RETURN");
 //        query.registerStoredProcedureParameter("BP_CODE", String.class, IN);
@@ -40,7 +40,7 @@ public class InvMoveServiceV3 extends AbstractService
         List<Object[]> resultList = query.getResultList();
         resultList.stream().map((result) ->
                                 {
-                                    Trx trx = new Trx();
+                                    PickTrx trx = new PickTrx();
                                     trx.setPrevTrxId(Integer.parseInt(String.valueOf(result[1])));
                                     trx.setPrevTrxNo((String) result[2]);
                                     trx.setTrxDate(String.valueOf(result[3]));
@@ -143,7 +143,7 @@ public class InvMoveServiceV3 extends AbstractService
     }
 
     @Transactional
-    public List<Doc> getApproveDocList()
+    public List<PickDoc> getApproveDocList()
     {
         Query query = em.createNativeQuery("""
                 SELECT SYSTEM_NO,
@@ -152,11 +152,11 @@ public class InvMoveServiceV3 extends AbstractService
                 FROM TERMINAL_APPROVE
                 WHERE STATUS = 0
                 GROUP BY SYSTEM_NO, SYSTEM_DATE, NOTES""");
-        List<Doc> docList = new ArrayList<>();
+        List<PickDoc> docList = new ArrayList<>();
         List<Object[]> resultList = query.getResultList();
         resultList.stream().map((result)->
                                 {
-                                    Doc doc = new Doc();
+                                    PickDoc doc = new PickDoc();
                                     doc.setTrxNo(String.valueOf(result[0]));
                                     doc.setTrxDate(String.valueOf(result[1]));
                                     doc.setNotes(String.valueOf(result[2]));
@@ -168,7 +168,7 @@ public class InvMoveServiceV3 extends AbstractService
         return docList;
     }
 
-    public List<Trx> getApproveTrxList()
+    public List<PickTrx> getApproveTrxList()
     {
         Query q = em.createNativeQuery("""
                 SELECT SYSTEM_NO,
@@ -180,11 +180,11 @@ public class InvMoveServiceV3 extends AbstractService
                     INV_BRAND_CODE
                 FROM TERMINAL_APPROVE
                 WHERE STATUS = 0""");
-        List<Trx> trxList = new ArrayList<>();
+        List<PickTrx> trxList = new ArrayList<>();
         List<Object[]> resultList = q.getResultList();
         resultList.stream().map((result)->
                                 {
-                                    Trx trx = new Trx();
+                                    PickTrx trx = new PickTrx();
                                     trx.setTrxNo(String.valueOf(result[0]));
                                     trx.setInvCode(String.valueOf(result[1]));
                                     trx.setInvName(String.valueOf(result[2]));

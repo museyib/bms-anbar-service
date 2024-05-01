@@ -26,7 +26,6 @@ public class InventoryController
     }
 
     @RequestMapping(value = "/qty", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<BigDecimal> getQty(@RequestParam("whs-code") String whsCode,
                                              @RequestParam("inv-code") String invCode)
     {
@@ -35,7 +34,6 @@ public class InventoryController
     }
 
     @RequestMapping(value = "/info-by-barcode", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<String> getInfoByBarcode(@RequestParam("barcode") String barcode,
                                                    @RequestParam(value = "user-id", required = false) String userId)
     {
@@ -44,7 +42,6 @@ public class InventoryController
     }
 
     @RequestMapping(value = "/info-by-inv-code", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<String> getInfoByInvCode(@RequestParam("inv-code") String invCode,
                                                    @RequestParam(value = "user-id", required = false) String userId)
     {
@@ -53,7 +50,6 @@ public class InventoryController
     }
 
     @RequestMapping(value = "/search", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<List<Inventory>> getSearchResult(@RequestParam("keyword") String keyword,
                                                            @RequestParam(value = "in", required = false) String field)
     {
@@ -62,7 +58,6 @@ public class InventoryController
     }
 
     @RequestMapping(value = "/by-barcode", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Inventory> getInvByBarcode(@RequestParam("barcode") String barcode)
     {
         Inventory inventory = service.getInvByBarcode(barcode);
@@ -70,7 +65,6 @@ public class InventoryController
     }
 
     @RequestMapping(value = "/pick-report", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Integer> getPickReport(@RequestParam("start-date") String startDate,
                                                  @RequestParam("end-date") String endDate,
                                                  @RequestParam("user-id") String pickUser)
@@ -80,7 +74,6 @@ public class InventoryController
     }
 
     @RequestMapping(value = "/pack-report", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Integer> getPackReport(@RequestParam("start-date") String startDate,
                                                  @RequestParam("end-date") String endDate,
                                                  @RequestParam("user-id") String approveUser)
@@ -90,7 +83,6 @@ public class InventoryController
     }
 
     @RequestMapping(value = "/attribute-list", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<List<InvAttribute>> getAttributeList(@RequestParam("inv-code") String invCode)
     {
         List<InvAttribute> attributeList = service.getAttributeList(invCode);
@@ -98,7 +90,6 @@ public class InventoryController
     }
 
     @RequestMapping(value = "/attribute-list-by-whs", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<List<InvAttribute>> getAttributeListByWhs(@RequestParam("inv-code") String invCode,
                                                                     @RequestParam("user-id") String userId)
     {
@@ -107,7 +98,6 @@ public class InventoryController
     }
 
     @RequestMapping(value = "/barcode-list", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<List<InvBarcode>> getBarcodeList(@RequestParam("inv-code") String invCode)
     {
         List<InvBarcode> barcodeList = service.getBarcodeList(invCode);
@@ -117,7 +107,6 @@ public class InventoryController
     @RequestMapping(value = "/update-attributes",
             consumes = "application/json;charset=UTF-8",
             method = RequestMethod.POST)
-    @ResponseBody
     public ResponseEntity<Boolean> updateInvAttributes(@RequestBody List<InvAttribute> attributeList)
     {
         boolean result = service.updateInvAttributes(attributeList);
@@ -125,7 +114,6 @@ public class InventoryController
     }
 
     @RequestMapping(value = "/update-shelf-barcode", consumes = "application/json", method = RequestMethod.POST)
-    @ResponseBody
     public ResponseEntity<Response> updateShelfBarcode(@RequestParam("whs-code") String whsCode,
                                                        @RequestParam("shelf-barcode") String shelfBarcode,
                                                        @RequestBody List<String> attributeList)
@@ -137,7 +125,6 @@ public class InventoryController
 //    @RequestMapping(value = "/update-barcodes",
 //            consumes = "application/json;charset=UTF-8",
 //            method = RequestMethod.POST)
-//    @ResponseBody
 //    public ResponseEntity<Boolean> updateInvBarcodes(@RequestBody List<InvBarcode> barcodeList)
 //    {
 //        boolean result = service.updateInvBarcodes(barcodeList);
@@ -145,7 +132,6 @@ public class InventoryController
 //    }
 
     @RequestMapping(produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<List<Inventory>> getInvList()
     {
         List<Inventory> inventoryList = service.getInvList();
@@ -153,7 +139,6 @@ public class InventoryController
     }
 
     @RequestMapping(value = "/by-user-producer-list", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<List<Inventory>> getInvListByUser(@RequestParam("user-id") String userId)
     {
         List<Inventory> inventoryList = service.getInvListByUser(userId);
@@ -161,7 +146,6 @@ public class InventoryController
     }
 
     @RequestMapping(value = "/whs-sum", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<List<Inventory>> getWhsSumByUser(@RequestParam("user-id") String userId,
                                                            @RequestParam("whs-code") String whsCode)
     {
@@ -170,7 +154,6 @@ public class InventoryController
     }
 
     @RequestMapping(value = "/inv-barcode", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<InvBarcode> getInvBarcode(@RequestParam("barcode") String barcode)
     {
         InvBarcode invBarcode = service.getInvBarcode(barcode);

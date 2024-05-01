@@ -1,7 +1,7 @@
 package az.inci.bmsanbar.controller.v2;
 
-import az.inci.bmsanbar.model.Doc;
-import az.inci.bmsanbar.model.Trx;
+import az.inci.bmsanbar.model.PickDoc;
+import az.inci.bmsanbar.model.PickTrx;
 import az.inci.bmsanbar.model.v2.ProductApproveRequest;
 import az.inci.bmsanbar.model.v2.Response;
 import az.inci.bmsanbar.model.v2.TransferRequest;
@@ -27,14 +27,13 @@ public class InvMoveControllerV2
     }
 
     @GetMapping(value = "/split-trx", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getSplitTrxList(@RequestParam("bp-code") String bpCode,
                                                     @RequestParam("inv-code") String invCode,
                                                     @RequestParam("qty") double qty)
     {
         try
         {
-            List<Trx> trxList = service.getSplitTrxList(bpCode, invCode, qty);
+            List<PickTrx> trxList = service.getSplitTrxList(bpCode, invCode, qty);
             return ResponseEntity.ok(Response.builder()
                                              .statusCode(0)
                                              .data(trxList)
@@ -52,7 +51,6 @@ public class InvMoveControllerV2
     }
 
     @PostMapping(value = "/create-transfer")
-    @ResponseBody
     public ResponseEntity<Response> createTransfer(@RequestBody TransferRequest request)
     {
         try
@@ -73,7 +71,6 @@ public class InvMoveControllerV2
     }
 
     @PostMapping(value = "/approve-prd/insert", consumes = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> insertProductApproveData(@RequestBody ProductApproveRequest request)
     {
         try
@@ -95,12 +92,11 @@ public class InvMoveControllerV2
     }
 
     @GetMapping(value = "/approve-prd/doc-list", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getApproveDocList()
     {
         try
         {
-            List<Doc> docList = service.getApproveDocList();
+            List<PickDoc> docList = service.getApproveDocList();
             return ResponseEntity.ok(Response.builder()
                                              .statusCode(0)
                                              .data(docList)
@@ -117,12 +113,11 @@ public class InvMoveControllerV2
     }
 
     @GetMapping(value = "/approve-prd/trx-list", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getApproveTrxList()
     {
         try
         {
-            List<Trx> trxList = service.getApproveTrxList();
+            List<PickTrx> trxList = service.getApproveTrxList();
             return ResponseEntity.ok(Response.builder()
                                              .statusCode(0)
                                              .data(trxList)
@@ -139,8 +134,7 @@ public class InvMoveControllerV2
     }
 
     @PostMapping(value = "/create-internal-use", consumes = "application/json;charset=UTF-8")
-    @ResponseBody
-    public ResponseEntity<Response> createInternalUseDoc(@RequestBody List<Trx> trxList,
+    public ResponseEntity<Response> createInternalUseDoc(@RequestBody List<PickTrx> trxList,
                                                          @RequestParam("user-id") String userId,
                                                          @RequestParam("whs-code") String whsCode,
                                                          @RequestParam("exp-center-code") String expCenterCode,

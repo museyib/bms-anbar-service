@@ -13,7 +13,7 @@ import java.util.List;
  * @author User
  */
 @Data
-public class Doc
+public class PickDoc
 {
     private String trxNo;
     private String trxDate;
@@ -34,5 +34,5 @@ public class Doc
     private String srcWhsCode;
     private String srcWhsName;
     private String whsCode;
-    private List<Trx> trxList;
+    private List<PickTrx> trxList;
 }

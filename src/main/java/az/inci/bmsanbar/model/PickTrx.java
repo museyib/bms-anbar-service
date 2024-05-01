@@ -10,7 +10,7 @@ import lombok.Data;
 import java.util.Objects;
 
 @Data
-public class Trx
+public class PickTrx
 {
     private int position;
     private int trxId;
@@ -51,7 +51,7 @@ public class Trx
     {
         if(this == o) return true;
         if(o == null || getClass() != o.getClass()) return false;
-        Trx trx = (Trx) o;
+        PickTrx trx = (PickTrx) o;
         return trxId == trx.trxId;
     }
 

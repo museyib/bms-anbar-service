@@ -1,7 +1,7 @@
 package az.inci.bmsanbar.controller.v3;
 
-import az.inci.bmsanbar.model.Doc;
-import az.inci.bmsanbar.model.Trx;
+import az.inci.bmsanbar.model.PickDoc;
+import az.inci.bmsanbar.model.PickTrx;
 import az.inci.bmsanbar.model.v2.CollectTrxRequest;
 import az.inci.bmsanbar.model.v2.Response;
 import az.inci.bmsanbar.services.v3.PackServiceV3;
@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static az.inci.bmsanbar.Utilities.getMessage;
 
 @RequestMapping("/v3/pack")
 @RestController
@@ -26,24 +28,23 @@ public class PackControllerV3
     }
 
     @GetMapping(value = "/get-doc", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getPackDoc(@RequestParam("approve-user") String approveUser,
                                                @RequestParam("mode") int mode)
     {
         try
         {
-            Doc result = service.getPackDoc(approveUser, mode);
+            PickDoc result = service.getDoc(approveUser, mode);
             return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @PostMapping(value = "/collect")
-    @ResponseBody
     public ResponseEntity<Response> collectTrx(@RequestParam("trx-no") String trxNo,
                                                @RequestBody List<CollectTrxRequest> data)
     {
@@ -54,45 +55,45 @@ public class PackControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @GetMapping(value = "/waiting-docs", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> packDocList(@RequestParam("user-id") String userId)
     {
         try
         {
-            List<Doc> result = service.getPackDocList(userId);
+            List<PickDoc> result = service.getDocList(userId);
             return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @GetMapping(value = "/waiting-doc-items", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> waitingPackTrx(@RequestParam("trx-no") String trxNo)
     {
         try
         {
-            List<Trx> result = service.getWaitingPackItems(trxNo);
+            List<PickTrx> result = service.getWaitingPackItems(trxNo);
             return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @GetMapping(value = "/report", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getReport(@RequestParam("start-date") String startDate,
                                               @RequestParam("end-date") String endDate,
                                               @RequestParam("user-id") String pickUser)
@@ -104,13 +105,13 @@ public class PackControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @GetMapping(value = "/report-actual", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> getReportActual(@RequestParam("start-date") String startDate,
                                                     @RequestParam("end-date") String endDate,
                                                     @RequestParam("user-id") String pickUser)
@@ -122,8 +123,9 @@ public class PackControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 }

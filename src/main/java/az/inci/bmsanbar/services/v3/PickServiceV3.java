@@ -1,7 +1,7 @@
 package az.inci.bmsanbar.services.v3;
 
-import az.inci.bmsanbar.model.Doc;
-import az.inci.bmsanbar.model.Trx;
+import az.inci.bmsanbar.model.PickDoc;
+import az.inci.bmsanbar.model.PickTrx;
 import az.inci.bmsanbar.model.v2.CollectTrxRequest;
 import az.inci.bmsanbar.services.AbstractService;
 import jakarta.persistence.Query;
@@ -20,9 +20,9 @@ public class PickServiceV3 extends AbstractService
 {
 
     @Transactional
-    public Doc getPickDoc(String pickUser, int mode)
+    public PickDoc getPickDoc(String pickUser, int mode)
     {
-        List<Trx> trxList = new ArrayList<>();
+        List<PickTrx> trxList = new ArrayList<>();
         StoredProcedureQuery query = em.createStoredProcedureQuery("SP_TERMINAL_GET_PICK_ITEMS");
         query.registerStoredProcedureParameter("USER_ID", String.class, IN);
         query.registerStoredProcedureParameter("MODE", Integer.class, IN);
@@ -38,7 +38,7 @@ public class PickServiceV3 extends AbstractService
 
         resultList.stream().map((result)->
                                 {
-                                    Trx trx = new Trx();
+                                    PickTrx trx = new PickTrx();
                                     trx.setTrxNo((String) result[0]);
                                     trx.setTrxDate((String) result[1]);
                                     trx.setTrxId((int) result[2]);
@@ -62,7 +62,7 @@ public class PickServiceV3 extends AbstractService
 
         em.close();
 
-        Doc doc = null;
+        PickDoc doc = null;
 
         if(!trxList.isEmpty())
         {
@@ -75,14 +75,14 @@ public class PickServiceV3 extends AbstractService
     }
 
     @Transactional
-    public Doc getPickDocByTrxNo(String trxNo, String pickUser)
+    public PickDoc getPickDocByTrxNo(String trxNo, String pickUser)
     {
         StoredProcedureQuery query = em.createStoredProcedureQuery("SP_TERMINAL_GET_PICK_DOC");
         query.registerStoredProcedureParameter("TRX_NO", String.class, IN);
         query.registerStoredProcedureParameter("USER_ID", String.class, IN);
         query.setParameter("TRX_NO", trxNo);
         query.setParameter("USER_ID", pickUser);
-        Doc doc = new Doc();
+        PickDoc doc = new PickDoc();
         List<Object[]> resultList = query.getResultList();
         if(!resultList.isEmpty())
         {

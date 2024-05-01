@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -28,7 +27,6 @@ public class SrcController
     }
 
     @RequestMapping(value = "/sbe", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<List<Sbe>> getQty()
     {
         List<Sbe> list = service.getSbeList();
@@ -36,7 +34,6 @@ public class SrcController
     }
 
     @RequestMapping(value = "/customer", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<List<Customer>> getCustomerList(@RequestParam("sbe-code") String sbeCode)
     {
         List<Customer> list = service.getCustomerList(sbeCode);
@@ -44,7 +41,6 @@ public class SrcController
     }
 
     @RequestMapping(value = "/whs", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<List<Whs>> getWhsList()
     {
         List<Whs> list = service.getWhsList();
@@ -52,7 +48,6 @@ public class SrcController
     }
 
     @RequestMapping(value = "/whs/target", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<List<Whs>> getTrgWhsList(@RequestParam("user-id") String userId)
     {
         List<Whs> list = service.getTrgWhsList(userId);
@@ -60,7 +55,6 @@ public class SrcController
     }
 
     @RequestMapping(value = "/exp-center", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<List<ExpCenter>> getExpCenterList()
     {
         List<ExpCenter> list = service.getExpCenterList();

@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static az.inci.bmsanbar.Utilities.getMessage;
+
 /**
  * @author User
  */
@@ -33,7 +35,6 @@ public class UserControllerV3
     }
 
     @GetMapping(value = "/list", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> all()
     {
         try
@@ -43,13 +44,13 @@ public class UserControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 
     @PostMapping(value = "/login", produces = "application/json;charset=UTF-8")
-    @ResponseBody
     public ResponseEntity<Response> login(@RequestBody LoginRequest request)
     {
         try
@@ -67,8 +68,9 @@ public class UserControllerV3
         }
         catch(Exception e)
         {
-            log.error(e.toString());
-            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
         }
     }
 }
