@@ -114,10 +114,12 @@ public class PickServiceV3 extends AbstractService
             query.registerStoredProcedureParameter("QTY", Double.class, IN);
             query.registerStoredProcedureParameter("SECONDS", Integer.class, IN);
             query.registerStoredProcedureParameter("PICK_STATUS", String.class, IN);
+            query.registerStoredProcedureParameter("DEVICE_ID", String.class, IN);
             query.setParameter("TRX_ID", data.getTrxId());
             query.setParameter("QTY", data.getQty());
             query.setParameter("SECONDS", data.getSeconds());
             query.setParameter("PICK_STATUS", data.getPickStatus());
+            query.setParameter("DEVICE_ID", data.getDeviceId());
             query.execute();
         }
 
