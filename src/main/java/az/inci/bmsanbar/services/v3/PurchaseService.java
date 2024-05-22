@@ -35,6 +35,7 @@ public class PurchaseService extends AbstractService {
                 WHERE
                     TRX_TYPE_ID = 10 AND
                     REC_STATUS = 3 AND
+                    TERMINAL_FLAG = 1 AND
                     SBE_CODE = '100'
                 ORDER BY TRX_NO DESC""");
         query.setParameter("USER_ID", userId);

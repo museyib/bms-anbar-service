@@ -47,23 +47,25 @@ public class UserServiceV3 extends AbstractService
         StoredProcedureQuery q = em.createStoredProcedureQuery("SP_USER_INFO_FOR_PICK");
         q.registerStoredProcedureParameter("USER_ID", String.class, IN);
         q.setParameter("USER_ID", id);
-        User user = new User();
+        User user = null;
         String field;
         boolean value;
         List<Object[]> resultList = q.getResultList();
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
         {
+            user = new User();
             user.setId(String.valueOf(resultList.get(0)[0]));
             user.setName(String.valueOf(resultList.get(0)[1]));
             user.setPassword(String.valueOf(resultList.get(0)[2]));
             user.setPickGroup(String.valueOf(resultList.get(0)[6]));
             user.setWhsCode(String.valueOf(resultList.get(0)[7]));
-        }
-        for(Object[] result : resultList)
-        {
-            field = String.valueOf(result[3]);
-            value = Boolean.parseBoolean(String.valueOf(result[4]));
-            user.setUserInfo(field, value);
+
+            for(Object[] result : resultList)
+            {
+                field = String.valueOf(result[3]);
+                value = Boolean.parseBoolean(String.valueOf(result[4]));
+                user.setUserInfo(field, value);
+            }
         }
         em.close();
         return user;
