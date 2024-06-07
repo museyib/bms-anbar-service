@@ -16,4 +16,5 @@ public class ShipDocInfo
     private double longitude;
     private double latitude;
     private String trxId;
+    private boolean deliverFlag;
 }

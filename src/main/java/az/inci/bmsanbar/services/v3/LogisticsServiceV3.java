@@ -6,6 +6,7 @@ import az.inci.bmsanbar.model.v2.UpdateDeliveryRequest;
 import az.inci.bmsanbar.model.v2.UpdateDeliveryRequestItem;
 import az.inci.bmsanbar.model.v2.UpdateDocLocationRequest;
 import az.inci.bmsanbar.model.v3.ConfirmDeliveryRequest;
+import az.inci.bmsanbar.model.v3.WaitingDocToShip;
 import az.inci.bmsanbar.services.AbstractService;
 import jakarta.persistence.Query;
 import jakarta.persistence.StoredProcedureQuery;
@@ -17,7 +18,6 @@ import java.util.List;
 
 import static jakarta.persistence.ParameterMode.IN;
 
-@SuppressWarnings({"SqlResolve", "unchecked", "SqlNoDataSourceInspection"})
 @Service
 public class LogisticsServiceV3 extends AbstractService
 {
@@ -69,7 +69,8 @@ public class LogisticsServiceV3 extends AbstractService
                     PM.PER_NAME,
                     SD.VEHICLE_CODE,
                     ISNULL(ST.DELIVER_NOTES, '') AS DELIVER_NOTES,
-                    ST.SHIP_STATUS
+                    ST.SHIP_STATUS,
+                    ST.DELIVER_FLAG
                 FROM SHIP_TRX ST
                 JOIN SHIP_DOC SD ON ST.TRX_NO = SD.TRX_NO
                 JOIN PER_MASTER PM ON SD.DRIVER_CODE = PM.PER_CODE
@@ -90,6 +91,7 @@ public class LogisticsServiceV3 extends AbstractService
             shipDocInfo.setVehicleCode((String) result[2]);
             shipDocInfo.setDeliverNotes((String) result[3]);
             shipDocInfo.setShipStatus((String) result[4]);
+            shipDocInfo.setDeliverFlag(Boolean.parseBoolean(String.valueOf(result[5])));
         }
 
         em.close();
@@ -392,13 +394,13 @@ public class LogisticsServiceV3 extends AbstractService
                 LEFT JOIN WHS_MASTER WM ON ID.TRG_WHS_CODE = WM.WHS_CODE
                 LEFT JOIN PER_MASTER PM ON SD.DRIVER_CODE = PM.PER_CODE
                 WHERE ST.TRX_DATE BETWEEN :START_DATE AND :END_DATE
-                        AND SD.DRIVER_CODE = :DRIVER_CODE
+                        AND SD.DRIVER_CODE LIKE :DRIVER_CODE
                         AND ST.SHIP_STATUS NOT IN('MC', 'MD')
                 ORDER BY ST.TRX_NO DESC""");
 
         query.setParameter("START_DATE", startDate);
         query.setParameter("END_DATE", endDate);
-        query.setParameter("DRIVER_CODE", driverCode);
+        query.setParameter("DRIVER_CODE", "%" + driverCode + "%");
 
         List<Object[]> resultList = query.getResultList();
 
@@ -443,5 +445,50 @@ public class LogisticsServiceV3 extends AbstractService
         em.close();
 
         return isValid;
+    }
+
+    public List<WaitingDocToShip> getWaitingDocListToShip(String driverCode)
+    {
+        List<WaitingDocToShip> docList = new ArrayList<>();
+
+        Query query = em.createNativeQuery("""
+                SELECT AD.TRX_NO,
+                    dbo.fnFormatDate(AD.TRX_DATE, 'yyyy-MM-dd') AS TRX_DATE,
+                    AD.WHS_CODE,
+                    AD.BP_CODE,
+                    AD.BP_NAME,
+                    AD.SBE_CODE,
+                    AD.SBE_NAME
+                FROM ACC_DOC AD
+                JOIN BP_DRIVER BD
+                    ON AD.BP_CODE = BD.BP_CODE
+                        AND BD.DRIVER_CODE LIKE :DRIVER_CODE
+                LEFT JOIN SHIP_TRX ST
+                    ON AD.TRX_NO = ST.SRC_TRX_NO
+                WHERE AD.TRX_TYPE_ID = 25
+                    AND ST.TRX_NO IS NULL
+                    AND AD.TRX_DATE >= DATEADD(DAY, -5, GETDATE())
+                    AND AD.WHS_CODE IN ('01', '11', '08', 'T20', '13', '20')""");
+
+        query.setParameter("DRIVER_CODE", "%" + driverCode + "%");
+
+        List<Object[]> resultList = query.getResultList();
+
+        resultList.stream().map((result)->
+        {
+            WaitingDocToShip doc = new WaitingDocToShip();
+            doc.setTrxNo((String) result[0]);
+            doc.setTrxDate((String) result[1]);
+            doc.setWhsCode((String) result[2]);
+            doc.setBpCode((String) result[3]);
+            doc.setBpName((String) result[4]);
+            doc.setSbeCode((String) result[5]);
+            doc.setSbeName((String) result[6]);
+            return doc;
+        }).forEachOrdered(docList::add);
+
+        em.close();
+
+        return docList;
     }
 }

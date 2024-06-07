@@ -3,6 +3,7 @@ package az.inci.bmsanbar.controller.v3;
 import az.inci.bmsanbar.model.ShipDoc;
 import az.inci.bmsanbar.model.v2.*;
 import az.inci.bmsanbar.model.v3.ConfirmDeliveryRequest;
+import az.inci.bmsanbar.model.v3.WaitingDocToShip;
 import az.inci.bmsanbar.services.v3.LogisticsServiceV3;
 import az.inci.bmsanbar.services.v3.ShipmentServiceV3;
 import lombok.extern.slf4j.Slf4j;
@@ -140,8 +141,12 @@ public class LogisticsControllerV3
             if(shipmentService.isValid(trxNo))
             {
                 ShipDocInfo result = logisticsService.getDocInfoForConfirmByTrxNo(trxNo);
-                if(result != null)
-                    return ResponseEntity.ok(Response.getResultResponse(result));
+                if(result != null) {
+                    if (result.isDeliverFlag())
+                        return ResponseEntity.ok(Response.getResultResponse(result));
+                    else
+                        return ResponseEntity.ok(Response.getUserErrorResponse("Bu sənədin çatdırılma nöqtəsində təsdiqlənməsi olmayıb!"));
+                }
                 else
                     return ResponseEntity.ok(Response.getUserErrorResponse(NOT_FOUND_VALID_SHIPMENT));
             }
@@ -252,6 +257,22 @@ public class LogisticsControllerV3
         try
         {
             List<ShipDoc> result = logisticsService.getNotConfirmedDocList(startDate, endDate, driverCode);
+            return ResponseEntity.ok(Response.getResultResponse(result));
+        }
+        catch(Exception e)
+        {
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
+        }
+    }
+
+    @GetMapping(value = "/waiting-doc-list-to-ship", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<Response> getWaitingDocListToShip(@RequestParam("driver-code") String driverCode)
+    {
+        try
+        {
+            List<WaitingDocToShip> result = logisticsService.getWaitingDocListToShip(driverCode);
             return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)
