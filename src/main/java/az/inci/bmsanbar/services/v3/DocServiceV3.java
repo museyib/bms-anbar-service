@@ -20,7 +20,6 @@ import static jakarta.persistence.ParameterMode.IN;
  * @author User
  */
 
-@SuppressWarnings("unchecked")
 @Service
 public class DocServiceV3 extends AbstractService
 {
@@ -58,7 +57,7 @@ public class DocServiceV3 extends AbstractService
         Query q = em.createNativeQuery("SELECT TAXED_FLAG FROM ACC_DOC WHERE TRX_NO = :TRX_NO");
         q.setParameter("TRX_NO", trxNo);
         List<Object> resultList = q.getResultList();
-        if(resultList.size() > 0)
+        if(!resultList.isEmpty())
             return Boolean.parseBoolean(String.valueOf(resultList.get(0)));
 
         em.close();

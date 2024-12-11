@@ -22,7 +22,7 @@ import static jakarta.persistence.ParameterMode.IN;
  * @author User
  */
 
-@SuppressWarnings({"unchecked", "SqlResolve", "SqlNoDataSourceInspection"})
+@SuppressWarnings({"SqlResolve", "SqlNoDataSourceInspection"})
 @Service
 public class ShipmentServiceV3 extends AbstractService
 {

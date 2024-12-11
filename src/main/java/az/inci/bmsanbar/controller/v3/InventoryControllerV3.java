@@ -5,6 +5,7 @@ import az.inci.bmsanbar.model.InvBarcode;
 import az.inci.bmsanbar.model.Inventory;
 import az.inci.bmsanbar.model.v2.InvInfo;
 import az.inci.bmsanbar.model.v2.Response;
+import az.inci.bmsanbar.model.v3.LatestMovementItem;
 import az.inci.bmsanbar.services.v3.InventoryServiceV3;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -307,6 +308,24 @@ public class InventoryControllerV3
         try
         {
             InvBarcode result = service.getInvBarcode(barcode);
+            return ResponseEntity.ok(Response.getResultResponse(result));
+        }
+        catch(Exception e)
+        {
+            String message = getMessage(e);
+            log.error(message);
+            return ResponseEntity.ok(Response.getServerErrorResponse(message));
+        }
+    }
+
+    @GetMapping(value = "/latest-movements", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<Response> getLatestMovements(@RequestParam("inv-code") String invCode,
+                                                       @RequestParam("whs-code") String whsCode,
+                                                       @RequestParam("top") int top)
+    {
+        try
+        {
+            List<LatestMovementItem> result = service.getLatestMovementItems(invCode, whsCode, top);
             return ResponseEntity.ok(Response.getResultResponse(result));
         }
         catch(Exception e)

@@ -11,7 +11,6 @@ import java.util.List;
 @Service
 public class UomServiceV3 extends AbstractService
 {
-    @SuppressWarnings("unchecked")
     public List<Uom> getUomList()
     {
         List<Uom> uomList = new ArrayList<>();

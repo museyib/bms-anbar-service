@@ -142,10 +142,11 @@ public class LogisticsControllerV3
             {
                 ShipDocInfo result = logisticsService.getDocInfoForConfirmByTrxNo(trxNo);
                 if(result != null) {
-                    if (result.isDeliverFlag())
-                        return ResponseEntity.ok(Response.getResultResponse(result));
-                    else
-                        return ResponseEntity.ok(Response.getUserErrorResponse("Bu sənədin çatdırılma nöqtəsində təsdiqlənməsi olmayıb!"));
+                    return ResponseEntity.ok(Response.getResultResponse(result));
+//                    if (result.isDeliverFlag())
+//                        return ResponseEntity.ok(Response.getResultResponse(result));
+//                    else
+//                        return ResponseEntity.ok(Response.getUserErrorResponse("Bu sənədin çatdırılma nöqtəsində təsdiqlənməsi olmayıb!"));
                 }
                 else
                     return ResponseEntity.ok(Response.getUserErrorResponse(NOT_FOUND_VALID_SHIPMENT));

@@ -22,7 +22,6 @@ import java.util.List;
 
 import static jakarta.persistence.ParameterMode.IN;
 
-@SuppressWarnings("unchecked")
 @Service
 public class InvMoveServiceV3 extends AbstractService
 {

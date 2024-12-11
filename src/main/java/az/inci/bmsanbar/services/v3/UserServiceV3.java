@@ -19,7 +19,7 @@ import static jakarta.persistence.ParameterMode.IN;
 /**
  * @author User
  */
-@SuppressWarnings({"unchecked", "SqlNoDataSourceInspection", "SqlResolve"})
+@SuppressWarnings({"SqlNoDataSourceInspection", "SqlResolve"})
 @Service
 public class UserServiceV3 extends AbstractService
 {

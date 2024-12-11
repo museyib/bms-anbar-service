@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings({"SqlResolve", "SqlNoDataSourceInspection", "unchecked"})
+@SuppressWarnings({"SqlResolve", "SqlNoDataSourceInspection"})
 @Service
 public class SubjectServiceV3 extends AbstractService
 {
@@ -47,7 +47,7 @@ public class SubjectServiceV3 extends AbstractService
                 JOIN BP_MASTER BM ON SB.BP_CODE=BM.BP_CODE
                 JOIN SBE_MASTER SM ON SB.SBE_CODE=SM.SBE_CODE
                 WHERE SM.SBE_CODE = :SBE_CODE""");
-        q.setParameter(1, sbeCode);
+        q.setParameter("SBE_CODE", sbeCode);
 
         List<Object[]> resultList = q.getResultList();
 

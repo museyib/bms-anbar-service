@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@SuppressWarnings("unchecked")
 @Service
 public class PersonnelServiceV3 extends AbstractService
 {
@@ -17,7 +16,7 @@ public class PersonnelServiceV3 extends AbstractService
         query.setParameter("PER_CODE", perCode);
 
         List<String> result = query.getResultList();
-        if(result.size() > 0)
+        if(!result.isEmpty())
         {
             info = result.get(0);
         }

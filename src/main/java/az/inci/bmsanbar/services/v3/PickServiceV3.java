@@ -14,7 +14,6 @@ import java.util.List;
 
 import static jakarta.persistence.ParameterMode.IN;
 
-@SuppressWarnings("unchecked")
 @Service
 public class PickServiceV3 extends AbstractService
 {

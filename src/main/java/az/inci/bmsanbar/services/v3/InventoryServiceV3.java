@@ -5,6 +5,7 @@ import az.inci.bmsanbar.model.InvAttribute;
 import az.inci.bmsanbar.model.InvBarcode;
 import az.inci.bmsanbar.model.Inventory;
 import az.inci.bmsanbar.model.v2.InvInfo;
+import az.inci.bmsanbar.model.v3.LatestMovementItem;
 import az.inci.bmsanbar.services.AbstractService;
 import jakarta.persistence.Query;
 import jakarta.persistence.StoredProcedureQuery;
@@ -17,7 +18,7 @@ import java.util.List;
 
 import static jakarta.persistence.ParameterMode.IN;
 
-@SuppressWarnings({"SqlResolve", "SqlNoDataSourceInspection", "unchecked"})
+@SuppressWarnings({"SqlResolve", "SqlNoDataSourceInspection"})
 @Service
 public class InventoryServiceV3 extends AbstractService
 {
@@ -38,6 +39,7 @@ public class InventoryServiceV3 extends AbstractService
             invInfo.setInfo(String.valueOf(result.get(0)[2]));
             invInfo.setWhsQty(Double.parseDouble(String.valueOf(result.get(0)[3])));
             invInfo.setDefaultUomCode(String.valueOf(result.get(0)[4]));
+            invInfo.setWhsCode(String.valueOf(result.get(0)[5]));
         }
 
         em.close();
@@ -62,6 +64,7 @@ public class InventoryServiceV3 extends AbstractService
             invInfo.setInfo(String.valueOf(result.get(0)[2]));
             invInfo.setWhsQty(Double.parseDouble(String.valueOf(result.get(0)[3])));
             invInfo.setDefaultUomCode(String.valueOf(result.get(0)[4]));
+            invInfo.setWhsCode(String.valueOf(result.get(0)[5]));
         }
 
         em.close();
@@ -586,5 +589,30 @@ public class InventoryServiceV3 extends AbstractService
         em.close();
 
         return invBarcode;
+    }
+
+    public List<LatestMovementItem> getLatestMovementItems(String invCode, String whsCode, int top)
+    {
+        List<LatestMovementItem> latestMovementItemList = new ArrayList<>();
+        String queryString = String.format("""
+                SELECT TOP %d TRX_NO, CONVERT(DATETIME2(0), LOG_DATE) AS LOG_DATE, INV_MVMT FROM WHS_LOG
+                WHERE WHS_CODE = :WHS_CODE AND INV_CODE = :INV_CODE ORDER BY LOG_DATE DESC""",
+                top);
+        Query query = em.createNativeQuery(queryString);
+
+        query.setParameter("WHS_CODE", whsCode);
+        query.setParameter("INV_CODE", invCode);
+
+        List<Object[]> resultList = query.getResultList();
+        for (Object[] result : resultList)
+        {
+            LatestMovementItem latestMovementItem = new LatestMovementItem();
+            latestMovementItem.setTrxNo(String.valueOf(result[0]));
+            latestMovementItem.setTrxDate(String.valueOf(result[1]));
+            latestMovementItem.setQuantity(Double.parseDouble(String.valueOf(result[2])));
+            latestMovementItemList.add(latestMovementItem);
+        }
+        em.close();
+        return latestMovementItemList;
     }
 }
