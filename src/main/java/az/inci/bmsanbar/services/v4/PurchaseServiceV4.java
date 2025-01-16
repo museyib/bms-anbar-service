@@ -1,4 +1,4 @@
-package az.inci.bmsanbar.services.v3;
+package az.inci.bmsanbar.services.v4;
 
 import az.inci.bmsanbar.model.v3.PurchaseDoc;
 import az.inci.bmsanbar.model.v3.PurchaseTrx;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class PurchaseService extends AbstractService {
+public class PurchaseServiceV4 extends AbstractService {
 
     public List<PurchaseDoc> getDocList(String userId)
     {

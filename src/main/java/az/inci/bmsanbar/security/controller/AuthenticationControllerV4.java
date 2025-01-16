@@ -12,13 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static az.inci.bmsanbar.Utilities.getMessage;
-
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v3")
+@RequestMapping("/v4")
 @Slf4j
-public class AuthenticationController
+public class AuthenticationControllerV4
 {
     private final AuthenticationService authenticationService;
 

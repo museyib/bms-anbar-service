@@ -30,3 +30,5 @@ build/
 
 ### VS Code ###
 .vscode/
+/BMSAnbar.apk
+/BMSLogistic.apk

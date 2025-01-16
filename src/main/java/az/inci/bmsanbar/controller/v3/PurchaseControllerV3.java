@@ -4,7 +4,7 @@ import az.inci.bmsanbar.model.v2.Response;
 import az.inci.bmsanbar.model.v3.PurchaseDoc;
 import az.inci.bmsanbar.model.v3.PurchaseTrx;
 import az.inci.bmsanbar.model.v3.UpdatePurchaseTrxRequest;
-import az.inci.bmsanbar.services.v3.PurchaseService;
+import az.inci.bmsanbar.services.v3.PurchaseServiceV3;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,10 +19,10 @@ import static az.inci.bmsanbar.Utilities.getMessage;
 @Slf4j
 public class PurchaseControllerV3 {
 
-    private PurchaseService service;
+    private PurchaseServiceV3 service;
 
     @Autowired
-    public void setService(PurchaseService service) {
+    public void setService(PurchaseServiceV3 service) {
         this.service = service;
     }
 

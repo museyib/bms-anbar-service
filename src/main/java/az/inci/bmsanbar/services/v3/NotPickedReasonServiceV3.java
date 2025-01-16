@@ -1,6 +1,7 @@
-package az.inci.bmsanbar.services;
+package az.inci.bmsanbar.services.v3;
 
 import az.inci.bmsanbar.model.v3.NotPickedReason;
+import az.inci.bmsanbar.services.AbstractService;
 import jakarta.persistence.Query;
 import org.springframework.stereotype.Service;
 

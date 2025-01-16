@@ -2,7 +2,7 @@ package az.inci.bmsanbar.controller.v3;
 
 import az.inci.bmsanbar.model.v2.Response;
 import az.inci.bmsanbar.model.v3.NotPickedReason;
-import az.inci.bmsanbar.services.NotPickedReasonServiceV3;
+import az.inci.bmsanbar.services.v3.NotPickedReasonServiceV3;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

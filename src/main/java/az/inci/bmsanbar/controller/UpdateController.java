@@ -18,7 +18,7 @@ public class UpdateController
     @RequestMapping("/download")
     public ResponseEntity<byte[]> download(@RequestParam("file-name") String fileName)
     {
-        File file = new File(String.format("D:\\BMS Anbar\\%s.apk", fileName));
+        File file = new File(fileName.concat(".apk"));
         Path path = Paths.get(file.getPath());
 
         byte[] bytes = new byte[0];
