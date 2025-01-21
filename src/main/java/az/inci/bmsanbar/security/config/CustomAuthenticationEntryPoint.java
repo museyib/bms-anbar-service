@@ -1,6 +1,6 @@
 package az.inci.bmsanbar.security.config;
 
-import az.inci.bmsanbar.model.v2.Response;
+import az.inci.bmsanbar.model.v4.Response;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

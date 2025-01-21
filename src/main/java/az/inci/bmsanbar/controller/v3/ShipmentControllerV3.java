@@ -5,7 +5,7 @@
  */
 package az.inci.bmsanbar.controller.v3;
 
-import az.inci.bmsanbar.model.v2.Response;
+import az.inci.bmsanbar.model.v4.Response;
 import az.inci.bmsanbar.model.v3.CheckShipmentResponse;
 import az.inci.bmsanbar.model.v3.ShipmentRequest;
 import az.inci.bmsanbar.services.v3.ShipmentServiceV3;

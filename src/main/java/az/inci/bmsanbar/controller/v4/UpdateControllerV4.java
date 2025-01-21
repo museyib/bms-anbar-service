@@ -1,6 +1,6 @@
 package az.inci.bmsanbar.controller.v4;
 
-import az.inci.bmsanbar.model.v2.Response;
+import az.inci.bmsanbar.model.v4.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +22,7 @@ import static az.inci.bmsanbar.Utilities.getMessage;
 public class UpdateControllerV4
 {
     @GetMapping("/download")
-    public ResponseEntity<Response> download(@RequestParam("file-name") String fileName)
+    public ResponseEntity<Response<byte[]>> download(@RequestParam("file-name") String fileName)
     {
         try
         {

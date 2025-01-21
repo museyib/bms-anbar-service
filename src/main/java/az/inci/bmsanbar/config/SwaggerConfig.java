@@ -16,8 +16,8 @@ public class SwaggerConfig {
     public GroupedOpenApi publicApi()
     {
         return GroupedOpenApi.builder()
-                .group("public-apis")
-                .pathsToMatch("/**")
+                .group("Anbar API V4")
+                .pathsToMatch("/v4/**")
                 .build();
     }
 
@@ -25,7 +25,7 @@ public class SwaggerConfig {
     public OpenAPI customOpenApi()
     {
         return new OpenAPI()
-                .info(new Info().title("API Title").version("API Version"))
+                .info(new Info().title("Anbar").version("v4"))
                 .addSecurityItem(new SecurityRequirement().addList("Bearer"))
                 .components(
                         new Components()

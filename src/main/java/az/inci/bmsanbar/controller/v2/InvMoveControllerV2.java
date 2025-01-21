@@ -3,7 +3,7 @@ package az.inci.bmsanbar.controller.v2;
 import az.inci.bmsanbar.model.PickDoc;
 import az.inci.bmsanbar.model.PickTrx;
 import az.inci.bmsanbar.model.v2.ProductApproveRequest;
-import az.inci.bmsanbar.model.v2.Response;
+import az.inci.bmsanbar.model.v4.Response;
 import az.inci.bmsanbar.model.v2.TransferRequest;
 import az.inci.bmsanbar.services.v2.InvMoveServiceV2;
 import org.springframework.beans.factory.annotation.Autowired;

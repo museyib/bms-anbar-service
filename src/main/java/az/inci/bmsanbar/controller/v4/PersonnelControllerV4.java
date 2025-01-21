@@ -1,6 +1,6 @@
 package az.inci.bmsanbar.controller.v4;
 
-import az.inci.bmsanbar.model.v2.Response;
+import az.inci.bmsanbar.model.v4.Response;
 import az.inci.bmsanbar.services.v4.PersonnelServiceV4;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ public class PersonnelControllerV4
     }
 
     @GetMapping(value = "/get-name", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Response> getPersonnelName(@RequestParam("per-code") String perCode)
+    public ResponseEntity<Response<String>> getPersonnelName(@RequestParam("per-code") String perCode)
     {
         String result = service.getPersonnelName(perCode);
         return ResponseEntity.ok(Response.getResultResponse(result));

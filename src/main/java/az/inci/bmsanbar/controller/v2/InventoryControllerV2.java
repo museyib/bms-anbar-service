@@ -4,7 +4,7 @@ import az.inci.bmsanbar.model.InvAttribute;
 import az.inci.bmsanbar.model.InvBarcode;
 import az.inci.bmsanbar.model.Inventory;
 import az.inci.bmsanbar.model.v2.InvInfo;
-import az.inci.bmsanbar.model.v2.Response;
+import az.inci.bmsanbar.model.v4.Response;
 import az.inci.bmsanbar.services.v2.InventoryServiceV2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

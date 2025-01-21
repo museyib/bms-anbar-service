@@ -1,6 +1,6 @@
 package az.inci.bmsanbar.security.controller;
 
-import az.inci.bmsanbar.model.v2.Response;
+import az.inci.bmsanbar.model.v4.Response;
 import az.inci.bmsanbar.security.domain.AuthenticationRequest;
 import az.inci.bmsanbar.security.domain.AuthenticationResponse;
 import az.inci.bmsanbar.security.service.AuthenticationService;

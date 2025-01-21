@@ -3,7 +3,7 @@ package az.inci.bmsanbar.controller.v3;
 import az.inci.bmsanbar.model.PickDoc;
 import az.inci.bmsanbar.model.v2.CollectTrxRequest;
 import az.inci.bmsanbar.model.v2.ResetPickRequest;
-import az.inci.bmsanbar.model.v2.Response;
+import az.inci.bmsanbar.model.v4.Response;
 import az.inci.bmsanbar.services.v3.PickServiceV3;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

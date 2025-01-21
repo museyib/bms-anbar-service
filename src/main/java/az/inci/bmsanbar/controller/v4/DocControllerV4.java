@@ -1,7 +1,7 @@
 package az.inci.bmsanbar.controller.v4;
 
 import az.inci.bmsanbar.model.PickDoc;
-import az.inci.bmsanbar.model.v2.Response;
+import az.inci.bmsanbar.model.v4.Response;
 import az.inci.bmsanbar.services.v4.DocServiceV4;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,14 +25,14 @@ public class DocControllerV4
     }
 
     @GetMapping(value = "/pack/all", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Response> packDocList(@RequestParam("user-id") String userId)
+    public ResponseEntity<Response<List<PickDoc>>> packDocList(@RequestParam("user-id") String userId)
     {
         List<PickDoc> result = service.getPackDocList(userId);
         return ResponseEntity.ok(Response.getResultResponse(result));
     }
 
     @GetMapping(value = "/taxed")
-    public ResponseEntity<Response> isTaxed(@RequestParam("trx-no") String trxNo)
+    public ResponseEntity<Response<Boolean>> isTaxed(@RequestParam("trx-no") String trxNo)
     {
         boolean result = service.isTaxed(trxNo);
         return ResponseEntity.ok(Response.getResultResponse(result));

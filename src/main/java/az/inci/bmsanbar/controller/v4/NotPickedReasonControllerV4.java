@@ -1,6 +1,6 @@
 package az.inci.bmsanbar.controller.v4;
 
-import az.inci.bmsanbar.model.v2.Response;
+import az.inci.bmsanbar.model.v4.Response;
 import az.inci.bmsanbar.model.v3.NotPickedReason;
 import az.inci.bmsanbar.services.v4.NotPickedReasonServiceV4;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class NotPickedReasonControllerV4
     }
 
     @GetMapping(produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Response> getReasonList()
+    public ResponseEntity<Response<List<NotPickedReason>>> getReasonList()
     {
         List<NotPickedReason> result = service.getReasonList();
         return ResponseEntity.ok(Response.getResultResponse(result));

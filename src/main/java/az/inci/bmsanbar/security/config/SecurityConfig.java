@@ -28,8 +28,12 @@ public class SecurityConfig
                                      "/v4/authenticate",
                                      "/v4/app-version/**",
                                      "/download",
+                                     "/swagger/**",
+                                     "/swagger-ui.html",
+                                     "/swagger-ui/**",
                                      "/v2/download",
                                      "/v3/download",
+                                     "/v3/api-docs*/**",
                                      "/error").permitAll()
                                      .requestMatchers("/v4/**").authenticated()
                                      .anyRequest().denyAll())

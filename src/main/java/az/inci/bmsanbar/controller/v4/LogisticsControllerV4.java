@@ -1,7 +1,11 @@
 package az.inci.bmsanbar.controller.v4;
 
 import az.inci.bmsanbar.model.ShipDoc;
-import az.inci.bmsanbar.model.v2.*;
+import az.inci.bmsanbar.model.v2.ShipDocInfo;
+import az.inci.bmsanbar.model.v2.UpdateDeliveryRequest;
+import az.inci.bmsanbar.model.v2.UpdateDeliveryRequestItem;
+import az.inci.bmsanbar.model.v2.UpdateDocLocationRequest;
+import az.inci.bmsanbar.model.v4.*;
 import az.inci.bmsanbar.model.v3.ConfirmDeliveryRequest;
 import az.inci.bmsanbar.model.v3.WaitingDocToShip;
 import az.inci.bmsanbar.services.v4.LogisticsServiceV4;
@@ -12,8 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static az.inci.bmsanbar.model.v2.Response.NOT_FOUND_VALID_SHIPMENT;
-import static az.inci.bmsanbar.model.v2.Response.NOT_VALID_SHIPMENT_DOC;
+import static az.inci.bmsanbar.model.v4.Response.NOT_FOUND_VALID_SHIPMENT;
+import static az.inci.bmsanbar.model.v4.Response.NOT_VALID_SHIPMENT_DOC;
 
 @RequestMapping("/v4/logistics")
 @RestController
@@ -35,7 +39,7 @@ public class LogisticsControllerV4
     }
 
     @GetMapping(value = "/doc-info", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Response> getDocInfoByTrxNo(@RequestParam("trx-no") String trxNo)
+    public ResponseEntity<Response<ShipDocInfo>> getDocInfoByTrxNo(@RequestParam("trx-no") String trxNo)
     {
         if(shipmentService.isValid(trxNo))
         {
@@ -50,7 +54,7 @@ public class LogisticsControllerV4
     }
 
     @GetMapping(value = "/doc-info-for-sending", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Response> getDocInfoForSendingByTrxNo(@RequestParam("trx-no") String trxNo)
+    public ResponseEntity<Response<ShipDocInfo>> getDocInfoForSendingByTrxNo(@RequestParam("trx-no") String trxNo)
     {
         if(shipmentService.isValid(trxNo))
         {
@@ -65,7 +69,7 @@ public class LogisticsControllerV4
     }
 
     @GetMapping(value = "/doc-info-for-return", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Response> getDocInfoForReturn(@RequestParam("trx-no") String trxNo)
+    public ResponseEntity<Response<ShipDocInfo>> getDocInfoForReturn(@RequestParam("trx-no") String trxNo)
     {
         if(shipmentService.isValid(trxNo))
         {
@@ -80,7 +84,7 @@ public class LogisticsControllerV4
     }
 
     @GetMapping(value = "/doc-info-for-delivery", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Response> getDocInfoForDeliveryByTrxNo(@RequestParam("trx-no") String trxNo)
+    public ResponseEntity<Response<ShipDocInfo>> getDocInfoForDeliveryByTrxNo(@RequestParam("trx-no") String trxNo)
     {
         if(shipmentService.isValid(trxNo))
         {
@@ -95,7 +99,7 @@ public class LogisticsControllerV4
     }
 
     @GetMapping(value = "/doc-info-for-confirm", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Response> getDocInfoForConfirmByTrxNo(@RequestParam("trx-no") String trxNo)
+    public ResponseEntity<Response<ShipDocInfo>> getDocInfoForConfirmByTrxNo(@RequestParam("trx-no") String trxNo)
     {
         if(shipmentService.isValid(trxNo))
         {
@@ -115,7 +119,7 @@ public class LogisticsControllerV4
     }
 
     @GetMapping(value = "/doc-list", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Response> getDocList(@RequestParam("start-date") String startDate,
+    public ResponseEntity<Response<List<ShipDoc>>> getDocList(@RequestParam("start-date") String startDate,
                                                @RequestParam("end-date") String endDate)
     {
         List<ShipDoc> result = logisticsService.getDocList(startDate, endDate);
@@ -123,14 +127,14 @@ public class LogisticsControllerV4
     }
 
     @PostMapping(value = "/change-doc-status", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Response> changeDocStatus(@RequestBody UpdateDeliveryRequest request)
+    public ResponseEntity<Response<Void>> changeDocStatus(@RequestBody UpdateDeliveryRequest request)
     {
         logisticsService.changeDocStatus(request);
         return ResponseEntity.ok(Response.getSuccessResponse());
     }
 
     @PostMapping(value = "/confirm-delivery", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Response> confirmDelivery(@RequestBody ConfirmDeliveryRequest request)
+    public ResponseEntity<Response<Boolean>> confirmDelivery(@RequestBody ConfirmDeliveryRequest request)
     {
         boolean isValid = logisticsService.checkDeliveryConfirmationCode(request.getTrxNo(),
                 request.getConfirmatioinCode());
@@ -144,21 +148,21 @@ public class LogisticsControllerV4
     }
 
     @PostMapping(value = "/confirm-shipment", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Response> confirmShipment(@RequestBody List<UpdateDeliveryRequestItem> requestList)
+    public ResponseEntity<Response<Void>> confirmShipment(@RequestBody List<UpdateDeliveryRequestItem> requestList)
     {
         logisticsService.confirmShipment(requestList);
         return ResponseEntity.ok(Response.getSuccessResponse());
     }
 
     @PostMapping(value = "/update-location")
-    public ResponseEntity<Response> updateDocLocation(@RequestBody UpdateDocLocationRequest request)
+    public ResponseEntity<Response<Void>> updateDocLocation(@RequestBody UpdateDocLocationRequest request)
     {
         logisticsService.updateDocLocation(request);
         return ResponseEntity.ok(Response.getSuccessResponse());
     }
 
     @GetMapping(value = "/not-confirmed-doc-list", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Response> getNotConfirmedDocList(@RequestParam("start-date") String startDate,
+    public ResponseEntity<Response<List<ShipDoc>>> getNotConfirmedDocList(@RequestParam("start-date") String startDate,
                                                            @RequestParam("end-date") String endDate,
                                                            @RequestParam("driver-code") String driverCode)
     {
@@ -167,7 +171,7 @@ public class LogisticsControllerV4
     }
 
     @GetMapping(value = "/waiting-doc-list-to-ship", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Response> getWaitingDocListToShip(@RequestParam("driver-code") String driverCode)
+    public ResponseEntity<Response<List<WaitingDocToShip>>> getWaitingDocListToShip(@RequestParam("driver-code") String driverCode)
     {
         List<WaitingDocToShip> result = logisticsService.getWaitingDocListToShip(driverCode);
         return ResponseEntity.ok(Response.getResultResponse(result));

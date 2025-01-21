@@ -4,7 +4,7 @@ import az.inci.bmsanbar.model.InvAttribute;
 import az.inci.bmsanbar.model.InvBarcode;
 import az.inci.bmsanbar.model.Inventory;
 import az.inci.bmsanbar.model.v2.InvInfo;
-import az.inci.bmsanbar.model.v2.Response;
+import az.inci.bmsanbar.model.v4.Response;
 import az.inci.bmsanbar.model.v3.LatestMovementItem;
 import az.inci.bmsanbar.services.v3.InventoryServiceV3;
 import lombok.extern.slf4j.Slf4j;

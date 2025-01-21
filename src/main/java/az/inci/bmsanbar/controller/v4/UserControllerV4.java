@@ -2,7 +2,7 @@ package az.inci.bmsanbar.controller.v4;
 
 import az.inci.bmsanbar.model.User;
 import az.inci.bmsanbar.model.v2.LoginRequest;
-import az.inci.bmsanbar.model.v2.Response;
+import az.inci.bmsanbar.model.v4.Response;
 import az.inci.bmsanbar.services.v4.UserServiceV4;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,14 +23,14 @@ public class UserControllerV4
     }
 
     @GetMapping(value = "/list", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Response> all()
+    public ResponseEntity<Response<List<User>>> all()
     {
         List<User> result = service.all();
         return ResponseEntity.ok(Response.getResultResponse(result));
     }
 
     @PostMapping(value = "/login", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Response> login(@RequestBody LoginRequest request)
+    public ResponseEntity<Response<User>> login(@RequestBody LoginRequest request)
     {
         boolean b = service.login(request.getUserId(), request.getPassword());
         if(b)

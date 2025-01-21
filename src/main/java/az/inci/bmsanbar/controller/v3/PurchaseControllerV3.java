@@ -1,6 +1,6 @@
 package az.inci.bmsanbar.controller.v3;
 
-import az.inci.bmsanbar.model.v2.Response;
+import az.inci.bmsanbar.model.v4.Response;
 import az.inci.bmsanbar.model.v3.PurchaseDoc;
 import az.inci.bmsanbar.model.v3.PurchaseTrx;
 import az.inci.bmsanbar.model.v3.UpdatePurchaseTrxRequest;

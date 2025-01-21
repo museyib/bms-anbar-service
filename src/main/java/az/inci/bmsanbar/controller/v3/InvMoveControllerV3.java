@@ -4,7 +4,7 @@ import az.inci.bmsanbar.exception.OperationNotCompletedException;
 import az.inci.bmsanbar.model.PickDoc;
 import az.inci.bmsanbar.model.PickTrx;
 import az.inci.bmsanbar.model.v2.ProductApproveRequest;
-import az.inci.bmsanbar.model.v2.Response;
+import az.inci.bmsanbar.model.v4.Response;
 import az.inci.bmsanbar.model.v2.TransferRequest;
 import az.inci.bmsanbar.model.v3.InternalUseRequest;
 import az.inci.bmsanbar.services.v3.InvMoveServiceV3;

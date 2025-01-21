@@ -1,6 +1,6 @@
 package az.inci.bmsanbar.controller.v4;
 
-import az.inci.bmsanbar.model.v2.Response;
+import az.inci.bmsanbar.model.v4.Response;
 import az.inci.bmsanbar.model.v3.PurchaseDoc;
 import az.inci.bmsanbar.model.v3.PurchaseTrx;
 import az.inci.bmsanbar.model.v3.UpdatePurchaseTrxRequest;
@@ -23,21 +23,21 @@ public class PurchaseControllerV4 {
     }
 
     @GetMapping("/doc")
-    public ResponseEntity<Response> getAll(@RequestParam("user-id") String userId)
+    public ResponseEntity<Response<List<PurchaseDoc>>> getAll(@RequestParam("user-id") String userId)
     {
         List<PurchaseDoc> result = service.getDocList(userId);
         return ResponseEntity.ok(Response.getResultResponse(result));
     }
 
     @GetMapping("/trx-list")
-    public ResponseEntity<Response> getTrxList(@RequestParam("trx-no") String trxNo)
+    public ResponseEntity<Response<List<PurchaseTrx>>> getTrxList(@RequestParam("trx-no") String trxNo)
     {
         List<PurchaseTrx> result = service.getTrxList(trxNo);
         return ResponseEntity.ok(Response.getResultResponse(result));
     }
 
     @PostMapping("/update-qty")
-    public ResponseEntity<Response> updateQty(@RequestBody UpdatePurchaseTrxRequest request)
+    public ResponseEntity<Response<Void>> updateQty(@RequestBody UpdatePurchaseTrxRequest request)
     {
         service.updatePurchaseQty(request);
         return ResponseEntity.ok(Response.getSuccessResponse());

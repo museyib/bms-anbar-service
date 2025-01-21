@@ -3,7 +3,7 @@ package az.inci.bmsanbar.controller.v4;
 import az.inci.bmsanbar.model.PickDoc;
 import az.inci.bmsanbar.model.v2.CollectTrxRequest;
 import az.inci.bmsanbar.model.v2.ResetPickRequest;
-import az.inci.bmsanbar.model.v2.Response;
+import az.inci.bmsanbar.model.v4.Response;
 import az.inci.bmsanbar.services.v4.PickServiceV4;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ public class PickControllerV4
     }
 
     @GetMapping(value = "/get-doc", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Response> pickDoc(@RequestParam("pick-user") String pickUser,
+    public ResponseEntity<Response<PickDoc>> pickDoc(@RequestParam("pick-user") String pickUser,
                                             @RequestParam("mode") int mode)
     {
         PickDoc result = service.getPickDoc(pickUser, mode);
@@ -32,7 +32,7 @@ public class PickControllerV4
     }
 
     @GetMapping(value = "/get-doc-by-no", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Response> pickDocByTrxNo(@RequestParam("trx-no") String trxNo,
+    public ResponseEntity<Response<PickDoc>> pickDocByTrxNo(@RequestParam("trx-no") String trxNo,
                                                    @RequestParam("pick-user") String pickUser)
     {
         PickDoc result = service.getPickDocByTrxNo(trxNo, pickUser);
@@ -40,14 +40,14 @@ public class PickControllerV4
     }
 
     @PostMapping(value = "/collect")
-    public ResponseEntity<Response> collectTrx(@RequestBody List<CollectTrxRequest> data)
+    public ResponseEntity<Response<Void>> collectTrx(@RequestBody List<CollectTrxRequest> data)
     {
         service.collectTrx(data);
         return ResponseEntity.ok(Response.getSuccessResponse());
     }
 
     @PostMapping(value = "/reset")
-    public ResponseEntity<Response> resetPickDoc(@RequestBody ResetPickRequest request)
+    public ResponseEntity<Response<Boolean>> resetPickDoc(@RequestBody ResetPickRequest request)
     {
         boolean result = service.resetPickDoc(request.getTrxNo(), request.getUserId());
         if(result)
@@ -57,14 +57,14 @@ public class PickControllerV4
     }
 
     @GetMapping(value = "/reset-allowed")
-    public ResponseEntity<Response> resetAllowed(@RequestParam("user-id") String userId)
+    public ResponseEntity<Response<Boolean>> resetAllowed(@RequestParam("user-id") String userId)
     {
         boolean result = service.resetAllowed(userId);
         return ResponseEntity.ok(Response.getResultResponse(result));
     }
 
     @GetMapping(value = "/report", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Response> getReport(@RequestParam("start-date") String startDate,
+    public ResponseEntity<Response<Integer>> getReport(@RequestParam("start-date") String startDate,
                                               @RequestParam("end-date") String endDate,
                                               @RequestParam("user-id") String pickUser)
     {
@@ -73,7 +73,7 @@ public class PickControllerV4
     }
 
     @GetMapping(value = "/report-actual", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Response> getReportActual(@RequestParam("start-date") String startDate,
+    public ResponseEntity<Response<Integer>> getReportActual(@RequestParam("start-date") String startDate,
                                                     @RequestParam("end-date") String endDate,
                                                     @RequestParam("user-id") String pickUser)
     {

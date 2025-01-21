@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static az.inci.bmsanbar.Utilities.getMessage;
-import static az.inci.bmsanbar.model.v2.Response.NOT_FOUND_VALID_SHIPMENT;
-import static az.inci.bmsanbar.model.v2.Response.NOT_VALID_SHIPMENT_DOC;
+import static az.inci.bmsanbar.model.v4.Response.NOT_FOUND_VALID_SHIPMENT;
+import static az.inci.bmsanbar.model.v4.Response.NOT_VALID_SHIPMENT_DOC;
 
 @RequestMapping("/v3/logistics")
 @RestController

@@ -1,6 +1,6 @@
 package az.inci.bmsanbar.controller.v4;
 
-import az.inci.bmsanbar.model.v2.Response;
+import az.inci.bmsanbar.model.v4.Response;
 import az.inci.bmsanbar.services.v4.AppVersionServiceV4;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ public class AppVersionControllerV4 {
     }
 
     @GetMapping("/check")
-    public ResponseEntity<Response> checkForNewVersion(@RequestParam("app-name") String appName,
+    public ResponseEntity<Response<Boolean>> checkForNewVersion(@RequestParam("app-name") String appName,
                                                        @RequestParam("current-version") int currentVersion) {
         return ResponseEntity.ok(Response.getResultResponse(appVersionService.checkForNewVersion(appName,currentVersion)));
     }
