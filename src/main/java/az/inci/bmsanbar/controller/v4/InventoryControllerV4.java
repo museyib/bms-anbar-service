@@ -3,10 +3,13 @@ package az.inci.bmsanbar.controller.v4;
 import az.inci.bmsanbar.model.InvAttribute;
 import az.inci.bmsanbar.model.InvBarcode;
 import az.inci.bmsanbar.model.Inventory;
+import az.inci.bmsanbar.model.User;
 import az.inci.bmsanbar.model.v2.InvInfo;
+import az.inci.bmsanbar.model.v4.Request;
 import az.inci.bmsanbar.model.v4.Response;
 import az.inci.bmsanbar.model.v3.LatestMovementItem;
 import az.inci.bmsanbar.services.v4.InventoryServiceV4;
+import az.inci.bmsanbar.services.v4.UserServiceV4;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +22,7 @@ import java.util.List;
 public class InventoryControllerV4
 {
     private InventoryServiceV4 service;
+    private UserServiceV4 userService;
 
     @Autowired
     public void setService(InventoryServiceV4 service)
@@ -26,9 +30,14 @@ public class InventoryControllerV4
         this.service = service;
     }
 
+    @Autowired
+    public void setUserService(UserServiceV4 userService) {
+        this.userService = userService;
+    }
+
     @GetMapping(value = "/qty", produces = "application/json;charset=UTF-8")
     public ResponseEntity<Response<BigDecimal>> getQty(@RequestParam("whs-code") String whsCode,
-                                           @RequestParam("inv-code") String invCode)
+                                                       @RequestParam("inv-code") String invCode)
     {
         BigDecimal result = service.getQty(whsCode, invCode);
         return ResponseEntity.ok(Response.getResultResponse(result));
@@ -36,7 +45,7 @@ public class InventoryControllerV4
 
     @GetMapping(value = "/info-by-barcode", produces = "application/json;charset=UTF-8")
     public ResponseEntity<Response<InvInfo>> getInfoByBarcode(@RequestParam("barcode") String barcode,
-                                                     @RequestParam("user-id") String userId)
+                                                              @RequestParam("user-id") String userId)
     {
         InvInfo result = service.getInfoByBarcode(barcode, userId);
         return ResponseEntity.ok(Response.getResultResponse(result));
@@ -44,7 +53,7 @@ public class InventoryControllerV4
 
     @GetMapping(value = "/info-by-inv-code", produces = "application/json;charset=UTF-8")
     public ResponseEntity<Response<InvInfo>> getInfoByInvCode(@RequestParam("inv-code") String invCode,
-                                                     @RequestParam("user-id") String userId)
+                                                              @RequestParam("user-id") String userId)
     {
         InvInfo result = service.getInfoByInvCode(invCode, userId);
         return ResponseEntity.ok(Response.getResultResponse(result));
@@ -52,7 +61,7 @@ public class InventoryControllerV4
 
     @GetMapping(value = "/search", produces = "application/json;charset=UTF-8")
     public ResponseEntity<Response<List<Inventory>>> getSearchResult(@RequestParam("keyword") String keyword,
-                                                    @RequestParam("in") String field)
+                                                                     @RequestParam("in") String field)
     {
         List<Inventory> result = service.getSearchResult(keyword, field);
         return ResponseEntity.ok(Response.getResultResponse(result));
@@ -67,8 +76,8 @@ public class InventoryControllerV4
 
     @GetMapping(value = "/pick-report", produces = "application/json;charset=UTF-8")
     public ResponseEntity<Response<Integer>> getPickReport(@RequestParam("start-date") String startDate,
-                                                  @RequestParam("end-date") String endDate,
-                                                  @RequestParam("user-id") String pickUser)
+                                                           @RequestParam("end-date") String endDate,
+                                                           @RequestParam("user-id") String pickUser)
     {
         Integer result = service.getPickReport(startDate, endDate, pickUser);
         return ResponseEntity.ok(Response.getResultResponse(result));
@@ -76,8 +85,8 @@ public class InventoryControllerV4
 
     @GetMapping(value = "/pack-report", produces = "application/json;charset=UTF-8")
     public ResponseEntity<Response<Integer>> getPackReport(@RequestParam("start-date") String startDate,
-                                                  @RequestParam("end-date") String endDate,
-                                                  @RequestParam("user-id") String approveUser)
+                                                           @RequestParam("end-date") String endDate,
+                                                           @RequestParam("user-id") String approveUser)
     {
         Integer result = service.getPackReport(startDate, endDate, approveUser);
         return ResponseEntity.ok(Response.getResultResponse(result));
@@ -92,7 +101,7 @@ public class InventoryControllerV4
 
     @GetMapping(value = "/attribute-list-by-whs", produces = "application/json;charset=UTF-8")
     public ResponseEntity<Response<List<InvAttribute>>> getAttributeListByWhs(@RequestParam("inv-code") String invCode,
-                                                          @RequestParam("user-id") String userId)
+                                                                              @RequestParam("user-id") String userId)
     {
         List<InvAttribute> result = service.getAttributeList(invCode, userId);
         return ResponseEntity.ok(Response.getResultResponse(result));
@@ -114,8 +123,8 @@ public class InventoryControllerV4
 
     @PostMapping(value = "/update-shelf-barcode", consumes = "application/json;charset=UTF-8")
     public ResponseEntity<Response<Void>> updateShelfBarcode(@RequestParam("whs-code") String whsCode,
-                                                       @RequestParam("shelf-barcode") String shelfBarcode,
-                                                       @RequestBody List<String> invBarcodeList)
+                                                             @RequestParam("shelf-barcode") String shelfBarcode,
+                                                             @RequestBody List<String> invBarcodeList)
     {
         for(String invBarcode : invBarcodeList)
         {
@@ -126,20 +135,37 @@ public class InventoryControllerV4
         return ResponseEntity.ok(Response.getSuccessResponse());
     }
 
-//    @PostMapping(value = "/update-barcodes", consumes = "application/json;charset=UTF-8")
-//    public ResponseEntity<Response> updateInvBarcodes(@RequestBody List<InvBarcode> barcodeList)
-//    {
-//        try
-//        {
-//            service.updateInvBarcodes(barcodeList);
-//            return ResponseEntity.ok(Response.getSuccessResponse());
-//        }
-//        catch(Exception e)
-//        {
-//            log.error(e.toString());
-//            return ResponseEntity.ok(Response.getServerErrorResponse(e.toString()));
-//        }
-//    }
+    @PostMapping(value = "/update-barcodes", consumes = "application/json;charset=UTF-8")
+    public ResponseEntity<Response<Void>> updateInvBarcodes(@RequestBody Request<List<InvBarcode>> request)
+    {
+        boolean permissionGranted;
+
+        User user = userService.getById(request.getUserId());
+        permissionGranted = user.isBarcodeFlag();
+
+        if (permissionGranted)
+            service.updateInvBarcodes(request.getData());
+        else
+            return ResponseEntity.ok(Response.getUserErrorResponse("Səlahiyyətiniz yoxdur."));
+
+        return ResponseEntity.ok(Response.getSuccessResponse());
+    }
+
+    @PostMapping(value = "/update-barcode", consumes = "application/json;charset=UTF-8")
+    public ResponseEntity<Response<Void>> updateInvBarcode(@RequestBody Request<List<InvBarcode>> request)
+    {
+        boolean permissionGranted;
+
+        User user = userService.getById(request.getUserId());
+        permissionGranted = user.isBarcodeFlag();
+
+        if (permissionGranted)
+            service.updateInvBarcodes(request.getData());
+        else
+            return ResponseEntity.ok(Response.getUserErrorResponse("Səlahiyyətiniz yoxdur."));
+
+        return ResponseEntity.ok(Response.getSuccessResponse());
+    }
 
     @GetMapping(produces = "application/json;charset=UTF-8")
     public ResponseEntity<Response<List<Inventory>>> getInvList()
@@ -157,7 +183,7 @@ public class InventoryControllerV4
 
     @GetMapping(value = "/whs-sum", produces = "application/json;charset=UTF-8")
     public ResponseEntity<Response<List<Inventory>>> getWhsSumByUser(@RequestParam("user-id") String userId,
-                                                    @RequestParam("whs-code") String whsCode)
+                                                                     @RequestParam("whs-code") String whsCode)
     {
         List<Inventory> result = service.getWhsSumByUser(userId, whsCode);
         return ResponseEntity.ok(Response.getResultResponse(result));
@@ -172,8 +198,8 @@ public class InventoryControllerV4
 
     @GetMapping(value = "/latest-movements", produces = "application/json;charset=UTF-8")
     public ResponseEntity<Response<List<LatestMovementItem>>> getLatestMovements(@RequestParam("inv-code") String invCode,
-                                                       @RequestParam("whs-code") String whsCode,
-                                                       @RequestParam("top") int top)
+                                                                                 @RequestParam("whs-code") String whsCode,
+                                                                                 @RequestParam("top") int top)
     {
         List<LatestMovementItem> result = service.getLatestMovementItems(invCode, whsCode, top);
         return ResponseEntity.ok(Response.getResultResponse(result));

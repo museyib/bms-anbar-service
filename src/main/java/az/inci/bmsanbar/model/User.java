@@ -31,6 +31,7 @@ public class User
     private boolean approveFlag;
     private boolean approvePrdFlag;
     private boolean purchaseOrdersFlag;
+    private boolean barcodeFlag;
 
     public void setUserInfo(String field, boolean value)
     {
@@ -71,6 +72,9 @@ public class User
                 break;
             case "purchaseOrderBtn":
                 setPurchaseOrdersFlag(!value);
+                break;
+            case "barcodeBtn":
+                setBarcodeFlag(!value);
                 break;
         }
     }
