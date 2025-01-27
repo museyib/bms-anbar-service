@@ -1,6 +1,6 @@
 package az.inci.bmsanbar.services.v4;
 
-import az.inci.bmsanbar.model.Uom;
+import az.inci.bmsanbar.model.v4.Uom;
 import az.inci.bmsanbar.services.AbstractService;
 import jakarta.persistence.Query;
 import org.springframework.stereotype.Service;

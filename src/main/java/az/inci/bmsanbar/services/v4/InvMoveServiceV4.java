@@ -1,14 +1,14 @@
 package az.inci.bmsanbar.services.v4;
 
 import az.inci.bmsanbar.exception.OperationNotCompletedException;
-import az.inci.bmsanbar.model.PickDoc;
-import az.inci.bmsanbar.model.PickTrx;
-import az.inci.bmsanbar.model.v2.ProductApproveRequest;
-import az.inci.bmsanbar.model.v2.ProductApproveRequestItem;
-import az.inci.bmsanbar.model.v2.TransferRequest;
-import az.inci.bmsanbar.model.v2.TransferRequestItem;
-import az.inci.bmsanbar.model.v3.InternalUseRequest;
-import az.inci.bmsanbar.model.v3.InternalUseRequestItem;
+import az.inci.bmsanbar.model.v4.PickDoc;
+import az.inci.bmsanbar.model.v4.PickTrx;
+import az.inci.bmsanbar.model.v4.ProductApproveRequest;
+import az.inci.bmsanbar.model.v4.ProductApproveRequestItem;
+import az.inci.bmsanbar.model.v4.TransferRequest;
+import az.inci.bmsanbar.model.v4.TransferRequestItem;
+import az.inci.bmsanbar.model.v4.InternalUseRequest;
+import az.inci.bmsanbar.model.v4.InternalUseRequestItem;
 import az.inci.bmsanbar.services.AbstractService;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.Query;

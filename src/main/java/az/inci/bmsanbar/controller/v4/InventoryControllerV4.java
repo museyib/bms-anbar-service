@@ -1,13 +1,13 @@
 package az.inci.bmsanbar.controller.v4;
 
-import az.inci.bmsanbar.model.InvAttribute;
-import az.inci.bmsanbar.model.InvBarcode;
-import az.inci.bmsanbar.model.Inventory;
-import az.inci.bmsanbar.model.User;
-import az.inci.bmsanbar.model.v2.InvInfo;
+import az.inci.bmsanbar.model.v4.InvAttribute;
+import az.inci.bmsanbar.model.v4.InvBarcode;
+import az.inci.bmsanbar.model.v4.Inventory;
+import az.inci.bmsanbar.model.v4.User;
+import az.inci.bmsanbar.model.v4.InvInfo;
 import az.inci.bmsanbar.model.v4.Request;
 import az.inci.bmsanbar.model.v4.Response;
-import az.inci.bmsanbar.model.v3.LatestMovementItem;
+import az.inci.bmsanbar.model.v4.LatestMovementItem;
 import az.inci.bmsanbar.services.v4.InventoryServiceV4;
 import az.inci.bmsanbar.services.v4.UserServiceV4;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,8 +1,8 @@
 package az.inci.bmsanbar.services.v4;
 
-import az.inci.bmsanbar.model.v3.PurchaseDoc;
-import az.inci.bmsanbar.model.v3.PurchaseTrx;
-import az.inci.bmsanbar.model.v3.UpdatePurchaseTrxRequest;
+import az.inci.bmsanbar.model.v4.PurchaseDoc;
+import az.inci.bmsanbar.model.v4.PurchaseTrx;
+import az.inci.bmsanbar.model.v4.UpdatePurchaseTrxRequest;
 import az.inci.bmsanbar.services.AbstractService;
 import jakarta.persistence.Query;
 import org.springframework.stereotype.Service;

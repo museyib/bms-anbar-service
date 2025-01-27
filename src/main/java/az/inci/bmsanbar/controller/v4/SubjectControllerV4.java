@@ -1,9 +1,9 @@
 package az.inci.bmsanbar.controller.v4;
 
-import az.inci.bmsanbar.model.Customer;
-import az.inci.bmsanbar.model.ExpCenter;
-import az.inci.bmsanbar.model.Sbe;
-import az.inci.bmsanbar.model.Whs;
+import az.inci.bmsanbar.model.v4.Customer;
+import az.inci.bmsanbar.model.v4.ExpCenter;
+import az.inci.bmsanbar.model.v4.Sbe;
+import az.inci.bmsanbar.model.v4.Whs;
 import az.inci.bmsanbar.model.v4.Response;
 import az.inci.bmsanbar.services.v4.SubjectServiceV4;
 import org.springframework.beans.factory.annotation.Autowired;

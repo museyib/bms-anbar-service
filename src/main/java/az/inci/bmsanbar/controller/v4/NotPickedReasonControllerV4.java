@@ -1,7 +1,7 @@
 package az.inci.bmsanbar.controller.v4;
 
 import az.inci.bmsanbar.model.v4.Response;
-import az.inci.bmsanbar.model.v3.NotPickedReason;
+import az.inci.bmsanbar.model.v4.NotPickedReason;
 import az.inci.bmsanbar.services.v4.NotPickedReasonServiceV4;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

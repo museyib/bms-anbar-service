@@ -1,6 +1,6 @@
 package az.inci.bmsanbar.controller.v4;
 
-import az.inci.bmsanbar.model.PickDoc;
+import az.inci.bmsanbar.model.v4.PickDoc;
 import az.inci.bmsanbar.model.v4.Response;
 import az.inci.bmsanbar.services.v4.DocServiceV4;
 import org.springframework.beans.factory.annotation.Autowired;

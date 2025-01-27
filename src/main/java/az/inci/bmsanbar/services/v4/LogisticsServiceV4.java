@@ -1,12 +1,12 @@
 package az.inci.bmsanbar.services.v4;
 
-import az.inci.bmsanbar.model.ShipDoc;
-import az.inci.bmsanbar.model.v2.ShipDocInfo;
-import az.inci.bmsanbar.model.v2.UpdateDeliveryRequest;
-import az.inci.bmsanbar.model.v2.UpdateDeliveryRequestItem;
-import az.inci.bmsanbar.model.v2.UpdateDocLocationRequest;
-import az.inci.bmsanbar.model.v3.ConfirmDeliveryRequest;
-import az.inci.bmsanbar.model.v3.WaitingDocToShip;
+import az.inci.bmsanbar.model.v4.ShipDoc;
+import az.inci.bmsanbar.model.v4.ShipDocInfo;
+import az.inci.bmsanbar.model.v4.UpdateDeliveryRequest;
+import az.inci.bmsanbar.model.v4.UpdateDeliveryRequestItem;
+import az.inci.bmsanbar.model.v4.UpdateDocLocationRequest;
+import az.inci.bmsanbar.model.v4.ConfirmDeliveryRequest;
+import az.inci.bmsanbar.model.v4.WaitingDocToShip;
 import az.inci.bmsanbar.services.AbstractService;
 import jakarta.persistence.Query;
 import jakarta.persistence.StoredProcedureQuery;

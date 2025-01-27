@@ -1,13 +1,13 @@
 package az.inci.bmsanbar.controller.v4;
 
-import az.inci.bmsanbar.model.ShipDoc;
-import az.inci.bmsanbar.model.v2.ShipDocInfo;
-import az.inci.bmsanbar.model.v2.UpdateDeliveryRequest;
-import az.inci.bmsanbar.model.v2.UpdateDeliveryRequestItem;
-import az.inci.bmsanbar.model.v2.UpdateDocLocationRequest;
+import az.inci.bmsanbar.model.v4.ShipDoc;
+import az.inci.bmsanbar.model.v4.ShipDocInfo;
+import az.inci.bmsanbar.model.v4.UpdateDeliveryRequest;
+import az.inci.bmsanbar.model.v4.UpdateDeliveryRequestItem;
+import az.inci.bmsanbar.model.v4.UpdateDocLocationRequest;
 import az.inci.bmsanbar.model.v4.*;
-import az.inci.bmsanbar.model.v3.ConfirmDeliveryRequest;
-import az.inci.bmsanbar.model.v3.WaitingDocToShip;
+import az.inci.bmsanbar.model.v4.ConfirmDeliveryRequest;
+import az.inci.bmsanbar.model.v4.WaitingDocToShip;
 import az.inci.bmsanbar.services.v4.LogisticsServiceV4;
 import az.inci.bmsanbar.services.v4.ShipmentServiceV4;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,10 +106,6 @@ public class LogisticsControllerV4
             ShipDocInfo result = logisticsService.getDocInfoForConfirmByTrxNo(trxNo);
             if(result != null) {
                 return ResponseEntity.ok(Response.getResultResponse(result));
-//                    if (result.isDeliverFlag())
-//                        return ResponseEntity.ok(Response.getResultResponse(result));
-//                    else
-//                        return ResponseEntity.ok(Response.getUserErrorResponse("Bu sənədin çatdırılma nöqtəsində təsdiqlənməsi olmayıb!"));
             }
             else
                 return ResponseEntity.ok(Response.getUserErrorResponse(NOT_FOUND_VALID_SHIPMENT));

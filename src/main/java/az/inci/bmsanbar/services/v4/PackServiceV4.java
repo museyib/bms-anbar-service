@@ -1,8 +1,8 @@
 package az.inci.bmsanbar.services.v4;
 
-import az.inci.bmsanbar.model.PickDoc;
-import az.inci.bmsanbar.model.PickTrx;
-import az.inci.bmsanbar.model.v2.CollectTrxRequest;
+import az.inci.bmsanbar.model.v4.PickDoc;
+import az.inci.bmsanbar.model.v4.PickTrx;
+import az.inci.bmsanbar.model.v4.CollectTrxRequest;
 import az.inci.bmsanbar.services.AbstractService;
 import jakarta.persistence.Query;
 import jakarta.persistence.StoredProcedureQuery;

@@ -1,11 +1,11 @@
 package az.inci.bmsanbar.services.v4;
 
 
-import az.inci.bmsanbar.model.InvAttribute;
-import az.inci.bmsanbar.model.InvBarcode;
-import az.inci.bmsanbar.model.Inventory;
-import az.inci.bmsanbar.model.v2.InvInfo;
-import az.inci.bmsanbar.model.v3.LatestMovementItem;
+import az.inci.bmsanbar.model.v4.InvAttribute;
+import az.inci.bmsanbar.model.v4.InvBarcode;
+import az.inci.bmsanbar.model.v4.Inventory;
+import az.inci.bmsanbar.model.v4.InvInfo;
+import az.inci.bmsanbar.model.v4.LatestMovementItem;
 import az.inci.bmsanbar.services.AbstractService;
 import jakarta.persistence.Query;
 import jakarta.persistence.StoredProcedureQuery;

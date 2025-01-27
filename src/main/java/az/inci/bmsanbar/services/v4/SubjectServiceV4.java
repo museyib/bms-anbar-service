@@ -1,9 +1,9 @@
 package az.inci.bmsanbar.services.v4;
 
-import az.inci.bmsanbar.model.Customer;
-import az.inci.bmsanbar.model.ExpCenter;
-import az.inci.bmsanbar.model.Sbe;
-import az.inci.bmsanbar.model.Whs;
+import az.inci.bmsanbar.model.v4.Customer;
+import az.inci.bmsanbar.model.v4.ExpCenter;
+import az.inci.bmsanbar.model.v4.Sbe;
+import az.inci.bmsanbar.model.v4.Whs;
 import az.inci.bmsanbar.services.AbstractService;
 import jakarta.persistence.Query;
 import org.springframework.stereotype.Service;

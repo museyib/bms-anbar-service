@@ -5,7 +5,7 @@
  */
 package az.inci.bmsanbar.services.v4;
 
-import az.inci.bmsanbar.model.User;
+import az.inci.bmsanbar.model.v4.User;
 import az.inci.bmsanbar.services.AbstractService;
 import jakarta.persistence.Query;
 import jakarta.persistence.StoredProcedureQuery;

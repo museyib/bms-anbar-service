@@ -5,9 +5,9 @@
  */
 package az.inci.bmsanbar.services.v4;
 
-import az.inci.bmsanbar.model.v3.CheckShipmentResponse;
-import az.inci.bmsanbar.model.v3.ShipmentRequest;
-import az.inci.bmsanbar.model.v3.ShipmentRequestItem;
+import az.inci.bmsanbar.model.v4.CheckShipmentResponse;
+import az.inci.bmsanbar.model.v4.ShipmentRequest;
+import az.inci.bmsanbar.model.v4.ShipmentRequestItem;
 import az.inci.bmsanbar.services.AbstractService;
 import jakarta.persistence.Query;
 import jakarta.persistence.StoredProcedureQuery;

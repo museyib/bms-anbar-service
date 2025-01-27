@@ -1,9 +1,9 @@
 package az.inci.bmsanbar.controller.v4;
 
 import az.inci.bmsanbar.model.v4.Response;
-import az.inci.bmsanbar.model.v3.PurchaseDoc;
-import az.inci.bmsanbar.model.v3.PurchaseTrx;
-import az.inci.bmsanbar.model.v3.UpdatePurchaseTrxRequest;
+import az.inci.bmsanbar.model.v4.PurchaseDoc;
+import az.inci.bmsanbar.model.v4.PurchaseTrx;
+import az.inci.bmsanbar.model.v4.UpdatePurchaseTrxRequest;
 import az.inci.bmsanbar.services.v4.PurchaseServiceV4;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

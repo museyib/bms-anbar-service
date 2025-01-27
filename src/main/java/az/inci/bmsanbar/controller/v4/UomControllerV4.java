@@ -1,6 +1,6 @@
 package az.inci.bmsanbar.controller.v4;
 
-import az.inci.bmsanbar.model.Uom;
+import az.inci.bmsanbar.model.v4.Uom;
 import az.inci.bmsanbar.model.v4.Response;
 import az.inci.bmsanbar.services.v4.UomServiceV4;
 import org.springframework.beans.factory.annotation.Autowired;
