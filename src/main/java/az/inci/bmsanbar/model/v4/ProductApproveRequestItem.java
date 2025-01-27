@@ -5,8 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ProductApproveRequestItem
-{
+public class ProductApproveRequestItem {
     private String invCode;
     private String invName;
     private String invBrand;

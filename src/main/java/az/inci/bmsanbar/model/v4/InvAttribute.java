@@ -3,8 +3,7 @@ package az.inci.bmsanbar.model.v4;
 import lombok.Data;
 
 @Data
-public class InvAttribute
-{
+public class InvAttribute {
     private String invCode;
     private String attributeId;
     private String attributeType;

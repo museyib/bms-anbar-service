@@ -5,8 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ProductApproveRequest
-{
+public class ProductApproveRequest {
     private String trxNo;
     private String trxDate;
     private String notes;

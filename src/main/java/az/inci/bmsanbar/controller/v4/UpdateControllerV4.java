@@ -15,8 +15,7 @@ import java.nio.file.Paths;
 
 @RequestMapping("/v4")
 @RestController
-public class UpdateControllerV4
-{
+public class UpdateControllerV4 {
     @GetMapping("/download")
     public ResponseEntity<Response<byte[]>> download(@RequestParam("file-name") String fileName) throws IOException {
         File file = new File(fileName.concat(".apk"));

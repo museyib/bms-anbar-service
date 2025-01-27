@@ -3,8 +3,7 @@ package az.inci.bmsanbar.model.v4;
 import lombok.Data;
 
 @Data
-public class Inventory
-{
+public class Inventory {
     private String invCode;
     private String invName;
     private String invBrand;

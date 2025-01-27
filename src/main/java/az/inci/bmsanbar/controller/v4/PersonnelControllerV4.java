@@ -11,19 +11,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/v4/personnel")
 @RestController
-public class PersonnelControllerV4
-{
+public class PersonnelControllerV4 {
     private PersonnelServiceV4 service;
 
     @Autowired
-    public void setService(PersonnelServiceV4 service)
-    {
+    public void setService(PersonnelServiceV4 service) {
         this.service = service;
     }
 
     @GetMapping(value = "/get-name", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Response<String>> getPersonnelName(@RequestParam("per-code") String perCode)
-    {
+    public ResponseEntity<Response<String>> getPersonnelName(@RequestParam("per-code") String perCode) {
         String result = service.getPersonnelName(perCode);
         return ResponseEntity.ok(Response.getResultResponse(result));
     }

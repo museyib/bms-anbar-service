@@ -1,7 +1,6 @@
 package az.inci.bmsanbar.security.domain;
 
-public enum Role
-{
+public enum Role {
     USER,
     ADMIN
 }

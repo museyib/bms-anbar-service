@@ -13,8 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
     @Bean
-    public GroupedOpenApi publicApi()
-    {
+    public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
                 .group("Anbar API V4")
                 .pathsToMatch("/v4/**")
@@ -22,8 +21,7 @@ public class SwaggerConfig {
     }
 
     @Bean
-    public OpenAPI customOpenApi()
-    {
+    public OpenAPI customOpenApi() {
         return new OpenAPI()
                 .info(new Info().title("Anbar").version("v4"))
                 .addSecurityItem(new SecurityRequirement().addList("Bearer"))

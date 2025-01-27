@@ -16,13 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/v4")
 @Slf4j
-public class AuthenticationControllerV4
-{
+public class AuthenticationControllerV4 {
     private final AuthenticationService authenticationService;
 
     @PostMapping("authenticate")
-    public ResponseEntity<Response> authenticate(@RequestBody AuthenticationRequest request)
-    {
+    public ResponseEntity<Response<AuthenticationResponse>> authenticate(@RequestBody AuthenticationRequest request) {
         AuthenticationResponse result = authenticationService.authenticate(request);
         return ResponseEntity.ok(Response.getResultResponse(result));
     }

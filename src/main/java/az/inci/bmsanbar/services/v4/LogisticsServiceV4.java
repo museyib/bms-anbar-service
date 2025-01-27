@@ -1,12 +1,6 @@
 package az.inci.bmsanbar.services.v4;
 
-import az.inci.bmsanbar.model.v4.ShipDoc;
-import az.inci.bmsanbar.model.v4.ShipDocInfo;
-import az.inci.bmsanbar.model.v4.UpdateDeliveryRequest;
-import az.inci.bmsanbar.model.v4.UpdateDeliveryRequestItem;
-import az.inci.bmsanbar.model.v4.UpdateDocLocationRequest;
-import az.inci.bmsanbar.model.v4.ConfirmDeliveryRequest;
-import az.inci.bmsanbar.model.v4.WaitingDocToShip;
+import az.inci.bmsanbar.model.v4.*;
 import az.inci.bmsanbar.services.AbstractService;
 import jakarta.persistence.Query;
 import jakarta.persistence.StoredProcedureQuery;
@@ -19,10 +13,8 @@ import java.util.List;
 import static jakarta.persistence.ParameterMode.IN;
 
 @Service
-public class LogisticsServiceV4 extends AbstractService
-{
-    public ShipDocInfo getDocInfoByTrxNo(String trxNo)
-    {
+public class LogisticsServiceV4 extends AbstractService {
+    public ShipDocInfo getDocInfoByTrxNo(String trxNo) {
         ShipDocInfo shipDocInfo = null;
 
         Query query = em.createNativeQuery("""
@@ -43,8 +35,7 @@ public class LogisticsServiceV4 extends AbstractService
 
         List<Object[]> resultList = query.getResultList();
 
-        if(!resultList.isEmpty())
-        {
+        if (!resultList.isEmpty()) {
             shipDocInfo = new ShipDocInfo();
             Object[] result = resultList.get(0);
             shipDocInfo.setDriverCode((String) result[0]);
@@ -60,8 +51,7 @@ public class LogisticsServiceV4 extends AbstractService
         return shipDocInfo;
     }
 
-    public ShipDocInfo getDocInfoForConfirmByTrxNo(String trxNo)
-    {
+    public ShipDocInfo getDocInfoForConfirmByTrxNo(String trxNo) {
         ShipDocInfo shipDocInfo = null;
 
         Query query = em.createNativeQuery("""
@@ -82,8 +72,7 @@ public class LogisticsServiceV4 extends AbstractService
 
         List<Object[]> resultList = query.getResultList();
 
-        if(!resultList.isEmpty())
-        {
+        if (!resultList.isEmpty()) {
             shipDocInfo = new ShipDocInfo();
             Object[] result = resultList.get(0);
             shipDocInfo.setDriverCode((String) result[0]);
@@ -99,8 +88,7 @@ public class LogisticsServiceV4 extends AbstractService
         return shipDocInfo;
     }
 
-    public ShipDocInfo getDocInfoForSendingByTrxNo(String trxNo)
-    {
+    public ShipDocInfo getDocInfoForSendingByTrxNo(String trxNo) {
         ShipDocInfo shipDocInfo = null;
 
         Query query = em.createNativeQuery("""
@@ -120,8 +108,7 @@ public class LogisticsServiceV4 extends AbstractService
 
         List<Object[]> resultList = query.getResultList();
 
-        if(!resultList.isEmpty())
-        {
+        if (!resultList.isEmpty()) {
             shipDocInfo = new ShipDocInfo();
             Object[] result = resultList.get(0);
             shipDocInfo.setDriverCode((String) result[0]);
@@ -136,8 +123,7 @@ public class LogisticsServiceV4 extends AbstractService
         return shipDocInfo;
     }
 
-    public ShipDocInfo getDocInfoForReturnByTrxNo(String trxNo)
-    {
+    public ShipDocInfo getDocInfoForReturnByTrxNo(String trxNo) {
         ShipDocInfo shipDocInfo = null;
 
         Query query = em.createNativeQuery("""
@@ -157,8 +143,7 @@ public class LogisticsServiceV4 extends AbstractService
 
         List<Object[]> resultList = query.getResultList();
 
-        if(!resultList.isEmpty())
-        {
+        if (!resultList.isEmpty()) {
             shipDocInfo = new ShipDocInfo();
             Object[] result = resultList.get(0);
             shipDocInfo.setDriverCode((String) result[0]);
@@ -173,8 +158,7 @@ public class LogisticsServiceV4 extends AbstractService
         return shipDocInfo;
     }
 
-    public ShipDocInfo getDocInfoForDeliveryByTrxNo(String trxNo)
-    {
+    public ShipDocInfo getDocInfoForDeliveryByTrxNo(String trxNo) {
         ShipDocInfo shipDocInfo = null;
 
         Query query = em.createNativeQuery("""
@@ -205,8 +189,7 @@ public class LogisticsServiceV4 extends AbstractService
 
         List<Object[]> resultList = query.getResultList();
 
-        if(!resultList.isEmpty())
-        {
+        if (!resultList.isEmpty()) {
             shipDocInfo = new ShipDocInfo();
             Object[] result = resultList.get(0);
             shipDocInfo.setDriverCode((String) result[0]);
@@ -226,8 +209,7 @@ public class LogisticsServiceV4 extends AbstractService
         return shipDocInfo;
     }
 
-    public List<ShipDoc> getDocList(String startDate, String endDate)
-    {
+    public List<ShipDoc> getDocList(String startDate, String endDate) {
         List<ShipDoc> docList = new ArrayList<>();
 
         Query query = em.createNativeQuery("""
@@ -258,21 +240,21 @@ public class LogisticsServiceV4 extends AbstractService
 
         List<Object[]> resultList = query.getResultList();
 
-        resultList.stream().map((result)->
-                                {
-                                    ShipDoc doc = new ShipDoc();
-                                    doc.setDocNo((String) result[0]);
-                                    doc.setTrxNo((String) result[1]);
-                                    doc.setTrxDate((String) result[2]);
-                                    doc.setBpCode((String) result[3]);
-                                    doc.setBpName((String) result[4]);
-                                    doc.setSbeCode((String) result[5]);
-                                    doc.setSbeName((String) result[6]);
-                                    doc.setDriverCode((String) result[7]);
-                                    doc.setDriverName((String) result[8]);
-                                    doc.setShipStatus((String) result[9]);
-                                    return doc;
-                                }).forEachOrdered(docList::add);
+        resultList.stream().map((result) ->
+        {
+            ShipDoc doc = new ShipDoc();
+            doc.setDocNo((String) result[0]);
+            doc.setTrxNo((String) result[1]);
+            doc.setTrxDate((String) result[2]);
+            doc.setBpCode((String) result[3]);
+            doc.setBpName((String) result[4]);
+            doc.setSbeCode((String) result[5]);
+            doc.setSbeName((String) result[6]);
+            doc.setDriverCode((String) result[7]);
+            doc.setDriverName((String) result[8]);
+            doc.setShipStatus((String) result[9]);
+            return doc;
+        }).forEachOrdered(docList::add);
 
         em.close();
 
@@ -280,11 +262,9 @@ public class LogisticsServiceV4 extends AbstractService
     }
 
     @Transactional
-    public void changeDocStatus(UpdateDeliveryRequest request)
-    {
+    public void changeDocStatus(UpdateDeliveryRequest request) {
 
-        for(UpdateDeliveryRequestItem requestItem : request.getRequestItems())
-        {
+        for (UpdateDeliveryRequestItem requestItem : request.getRequestItems()) {
             StoredProcedureQuery query = em.createStoredProcedureQuery("SP_CHANGE_SHIP_STATUS");
             query.registerStoredProcedureParameter("TRX_NO", String.class, IN);
             query.registerStoredProcedureParameter("STATUS", String.class, IN);
@@ -304,8 +284,7 @@ public class LogisticsServiceV4 extends AbstractService
     }
 
     @Transactional
-    public void confirmDelivery(ConfirmDeliveryRequest request)
-    {
+    public void confirmDelivery(ConfirmDeliveryRequest request) {
         StoredProcedureQuery query = em.createStoredProcedureQuery("SP_CONFIRM_DELIVERY");
         query.registerStoredProcedureParameter("TRX_NO", String.class, IN);
         query.registerStoredProcedureParameter("DRIVER_CODE", String.class, IN);
@@ -324,11 +303,9 @@ public class LogisticsServiceV4 extends AbstractService
     }
 
     @Transactional
-    public void confirmShipment(List<UpdateDeliveryRequestItem> requestList)
-    {
+    public void confirmShipment(List<UpdateDeliveryRequestItem> requestList) {
 
-        for(UpdateDeliveryRequestItem request : requestList)
-        {
+        for (UpdateDeliveryRequestItem request : requestList) {
             StoredProcedureQuery query = em.createStoredProcedureQuery("SP_CONFIRM_SHIPMENT");
             query.registerStoredProcedureParameter("TRX_NO", String.class, IN);
             query.registerStoredProcedureParameter("DRIVER_CODE", String.class, IN);
@@ -348,19 +325,18 @@ public class LogisticsServiceV4 extends AbstractService
     }
 
     @Transactional
-    public void updateDocLocation(UpdateDocLocationRequest request)
-    {
+    public void updateDocLocation(UpdateDocLocationRequest request) {
         Query query = em.createNativeQuery("""
-                           UPDATE SHIP_TRX
-                           SET LATITUDE = :LATITUDE,
-                               LONGITUDE = :LONGITUDE,
-                               ADDRESS = :ADDRESS
-                           FROM SHIP_DOC SD
-                           JOIN SHIP_TRX ST ON SD.TRX_NO = ST.TRX_NO
-                           WHERE ST.SHIP_STATUS = 'YC'
-                               AND SD.DRIVER_CODE = (SELECT PER_CODE
-                                                       FROM PER_MASTER
-                                                       WHERE USER_ID = :USER_ID)""");
+                UPDATE SHIP_TRX
+                SET LATITUDE = :LATITUDE,
+                    LONGITUDE = :LONGITUDE,
+                    ADDRESS = :ADDRESS
+                FROM SHIP_DOC SD
+                JOIN SHIP_TRX ST ON SD.TRX_NO = ST.TRX_NO
+                WHERE ST.SHIP_STATUS = 'YC'
+                    AND SD.DRIVER_CODE = (SELECT PER_CODE
+                                            FROM PER_MASTER
+                                            WHERE USER_ID = :USER_ID)""");
         query.setParameter("LATITUDE", request.getLatitude());
         query.setParameter("LONGITUDE", request.getLongitude());
         query.setParameter("ADDRESS", request.getAddress());
@@ -370,8 +346,7 @@ public class LogisticsServiceV4 extends AbstractService
         em.close();
     }
 
-    public List<ShipDoc> getNotConfirmedDocList(String startDate, String endDate, String driverCode)
-    {
+    public List<ShipDoc> getNotConfirmedDocList(String startDate, String endDate, String driverCode) {
         List<ShipDoc> docList = new ArrayList<>();
 
         Query query = em.createNativeQuery("""
@@ -404,29 +379,28 @@ public class LogisticsServiceV4 extends AbstractService
 
         List<Object[]> resultList = query.getResultList();
 
-        resultList.stream().map((result)->
-                                {
-                                    ShipDoc doc = new ShipDoc();
-                                    doc.setDocNo((String) result[0]);
-                                    doc.setTrxNo((String) result[1]);
-                                    doc.setTrxDate((String) result[2]);
-                                    doc.setBpCode((String) result[3]);
-                                    doc.setBpName((String) result[4]);
-                                    doc.setSbeCode((String) result[5]);
-                                    doc.setSbeName((String) result[6]);
-                                    doc.setDriverCode((String) result[7]);
-                                    doc.setDriverName((String) result[8]);
-                                    doc.setShipStatus((String) result[9]);
-                                    return doc;
-                                }).forEachOrdered(docList::add);
+        resultList.stream().map((result) ->
+        {
+            ShipDoc doc = new ShipDoc();
+            doc.setDocNo((String) result[0]);
+            doc.setTrxNo((String) result[1]);
+            doc.setTrxDate((String) result[2]);
+            doc.setBpCode((String) result[3]);
+            doc.setBpName((String) result[4]);
+            doc.setSbeCode((String) result[5]);
+            doc.setSbeName((String) result[6]);
+            doc.setDriverCode((String) result[7]);
+            doc.setDriverName((String) result[8]);
+            doc.setShipStatus((String) result[9]);
+            return doc;
+        }).forEachOrdered(docList::add);
 
         em.close();
 
         return docList;
     }
 
-    public  boolean checkDeliveryConfirmationCode(String trxNo, String confirmationCode)
-    {
+    public boolean checkDeliveryConfirmationCode(String trxNo, String confirmationCode) {
         boolean isValid = false;
 
         Query query = em.createNativeQuery("""
@@ -437,8 +411,7 @@ public class LogisticsServiceV4 extends AbstractService
 
         List<Boolean> resultList = query.getResultList();
 
-        if(!resultList.isEmpty())
-        {
+        if (!resultList.isEmpty()) {
             isValid = resultList.get(0);
         }
 
@@ -447,8 +420,7 @@ public class LogisticsServiceV4 extends AbstractService
         return isValid;
     }
 
-    public List<WaitingDocToShip> getWaitingDocListToShip(String driverCode)
-    {
+    public List<WaitingDocToShip> getWaitingDocListToShip(String driverCode) {
         List<WaitingDocToShip> docList = new ArrayList<>();
 
         Query query = em.createNativeQuery("""
@@ -474,7 +446,7 @@ public class LogisticsServiceV4 extends AbstractService
 
         List<Object[]> resultList = query.getResultList();
 
-        resultList.stream().map((result)->
+        resultList.stream().map((result) ->
         {
             WaitingDocToShip doc = new WaitingDocToShip();
             doc.setTrxNo((String) result[0]);

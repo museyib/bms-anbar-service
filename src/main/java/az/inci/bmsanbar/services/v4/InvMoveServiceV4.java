@@ -1,14 +1,7 @@
 package az.inci.bmsanbar.services.v4;
 
 import az.inci.bmsanbar.exception.OperationNotCompletedException;
-import az.inci.bmsanbar.model.v4.PickDoc;
-import az.inci.bmsanbar.model.v4.PickTrx;
-import az.inci.bmsanbar.model.v4.ProductApproveRequest;
-import az.inci.bmsanbar.model.v4.ProductApproveRequestItem;
-import az.inci.bmsanbar.model.v4.TransferRequest;
-import az.inci.bmsanbar.model.v4.TransferRequestItem;
-import az.inci.bmsanbar.model.v4.InternalUseRequest;
-import az.inci.bmsanbar.model.v4.InternalUseRequestItem;
+import az.inci.bmsanbar.model.v4.*;
 import az.inci.bmsanbar.services.AbstractService;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.Query;
@@ -23,10 +16,8 @@ import java.util.List;
 import static jakarta.persistence.ParameterMode.IN;
 
 @Service
-public class InvMoveServiceV4 extends AbstractService
-{
-    public List<PickTrx> getSplitTrxList(String bpCode, String invCode, double qty)
-    {
+public class InvMoveServiceV4 extends AbstractService {
+    public List<PickTrx> getSplitTrxList(String bpCode, String invCode, double qty) {
         List<PickTrx> trxList = new ArrayList<>();
         Query query = em.createNativeQuery("EXEC DBO.SP_TRX_FOR_RETURN :BP_CODE, :INV_CODE, :QTY");
 //        StoredProcedureQuery query = em.createStoredProcedureQuery("SP_TRX_FOR_RETURN");
@@ -38,39 +29,37 @@ public class InvMoveServiceV4 extends AbstractService
         query.setParameter("QTY", qty);
         List<Object[]> resultList = query.getResultList();
         resultList.stream().map((result) ->
-                                {
-                                    PickTrx trx = new PickTrx();
-                                    trx.setPrevTrxId(Integer.parseInt(String.valueOf(result[1])));
-                                    trx.setPrevTrxNo((String) result[2]);
-                                    trx.setTrxDate(String.valueOf(result[3]));
-                                    trx.setQty(Double.parseDouble(String.valueOf(result[4])));
-                                    trx.setPrice(Double.parseDouble(String.valueOf(result[5])));
-                                    trx.setDiscountRatio(Double.parseDouble(String.valueOf(result[6])));
-                                    return trx;
-                                }).forEachOrdered(trxList::add);
+        {
+            PickTrx trx = new PickTrx();
+            trx.setPrevTrxId(Integer.parseInt(String.valueOf(result[1])));
+            trx.setPrevTrxNo((String) result[2]);
+            trx.setTrxDate(String.valueOf(result[3]));
+            trx.setQty(Double.parseDouble(String.valueOf(result[4])));
+            trx.setPrice(Double.parseDouble(String.valueOf(result[5])));
+            trx.setDiscountRatio(Double.parseDouble(String.valueOf(result[6])));
+            return trx;
+        }).forEachOrdered(trxList::add);
         em.close();
 
         return trxList;
     }
 
     @Transactional
-    public void createTransfer(TransferRequest request)
-    {
+    public void createTransfer(TransferRequest request) {
         Query query = em.createNativeQuery("""
-                    INSERT INTO ANDROID_WHS_TRANSFER(
-                        WHS_CODE_FROM,
-                        WHS_CODE_TO,
-                        INV_CODE,
-                        QUANTITY,
-                        USER_ID)
-                    VALUES(
-                        :WHS_CODE_FROM,
-                        :WHS_CODE_TO,
-                        :INV_CODE,
-                        :QUANTITY,
-                        :USER_ID)""");
-        for(TransferRequestItem requestItem : request.getRequestItems())
-        {
+                INSERT INTO ANDROID_WHS_TRANSFER(
+                    WHS_CODE_FROM,
+                    WHS_CODE_TO,
+                    INV_CODE,
+                    QUANTITY,
+                    USER_ID)
+                VALUES(
+                    :WHS_CODE_FROM,
+                    :WHS_CODE_TO,
+                    :INV_CODE,
+                    :QUANTITY,
+                    :USER_ID)""");
+        for (TransferRequestItem requestItem : request.getRequestItems()) {
             query.setParameter("WHS_CODE_FROM", request.getSrcWhsCode());
             query.setParameter("WHS_CODE_TO", request.getTrgWhsCode());
             query.setParameter("INV_CODE", requestItem.getInvCode());
@@ -87,36 +76,34 @@ public class InvMoveServiceV4 extends AbstractService
     }
 
     @Transactional
-    public void insertProductApproveData(ProductApproveRequest request)
-    {
+    public void insertProductApproveData(ProductApproveRequest request) {
         Query query = em.createNativeQuery("""
-                    INSERT INTO TERMINAL_APPROVE(
-                        SYSTEM_NO,
-                        SYSTEM_DATE,
-                        INV_CODE,
-                        INV_QTY,
-                        NOTES,
-                        USER_ID,
-                        INV_BRAND_CODE,
-                        INV_NAME,
-                        BARCODE,
-                        INTERNAL_COUNT,
-                        STATUS)
-                    VALUES(
-                        :SYSTEM_NO,
-                        :SYSTEM_DATE,
-                        :INV_CODE,
-                        :INV_QTY,
-                        :NOTES,
-                        :USER_ID,
-                        :INV_BRAND_CODE,
-                        :INV_NAME,
-                        :BARCODE,
-                        :INTERNAL_COUNT,
-                        :STATUS)""");
+                INSERT INTO TERMINAL_APPROVE(
+                    SYSTEM_NO,
+                    SYSTEM_DATE,
+                    INV_CODE,
+                    INV_QTY,
+                    NOTES,
+                    USER_ID,
+                    INV_BRAND_CODE,
+                    INV_NAME,
+                    BARCODE,
+                    INTERNAL_COUNT,
+                    STATUS)
+                VALUES(
+                    :SYSTEM_NO,
+                    :SYSTEM_DATE,
+                    :INV_CODE,
+                    :INV_QTY,
+                    :NOTES,
+                    :USER_ID,
+                    :INV_BRAND_CODE,
+                    :INV_NAME,
+                    :BARCODE,
+                    :INTERNAL_COUNT,
+                    :STATUS)""");
 
-        for(ProductApproveRequestItem item : request.getRequestItems())
-        {
+        for (ProductApproveRequestItem item : request.getRequestItems()) {
             query.setParameter("SYSTEM_NO", request.getTrxNo());
             query.setParameter("SYSTEM_DATE", request.getTrxDate());
             query.setParameter("INV_CODE", item.getInvCode());
@@ -130,8 +117,7 @@ public class InvMoveServiceV4 extends AbstractService
             query.setParameter("STATUS", request.getStatus());
             query.executeUpdate();
         }
-        if(request.getStatus() == 2)
-        {
+        if (request.getStatus() == 2) {
             StoredProcedureQuery procedureQuery = em.createStoredProcedureQuery("SP_CREATE_MAL_QEBULU");
             procedureQuery.registerStoredProcedureParameter("USER_ID", String.class, IN);
             procedureQuery.setParameter("USER_ID", request.getUserId());
@@ -142,8 +128,7 @@ public class InvMoveServiceV4 extends AbstractService
     }
 
     @Transactional
-    public List<PickDoc> getApproveDocList()
-    {
+    public List<PickDoc> getApproveDocList() {
         Query query = em.createNativeQuery("""
                 SELECT SYSTEM_NO,
                     dbo.fnFormatDate(SYSTEM_DATE, 'dd-mm-yyyy'),
@@ -153,22 +138,21 @@ public class InvMoveServiceV4 extends AbstractService
                 GROUP BY SYSTEM_NO, SYSTEM_DATE, NOTES""");
         List<PickDoc> docList = new ArrayList<>();
         List<Object[]> resultList = query.getResultList();
-        resultList.stream().map((result)->
-                                {
-                                    PickDoc doc = new PickDoc();
-                                    doc.setTrxNo(String.valueOf(result[0]));
-                                    doc.setTrxDate(String.valueOf(result[1]));
-                                    doc.setNotes(String.valueOf(result[2]));
-                                    return doc;
-                                }).forEachOrdered(docList::add);
+        resultList.stream().map((result) ->
+        {
+            PickDoc doc = new PickDoc();
+            doc.setTrxNo(String.valueOf(result[0]));
+            doc.setTrxDate(String.valueOf(result[1]));
+            doc.setNotes(String.valueOf(result[2]));
+            return doc;
+        }).forEachOrdered(docList::add);
 
         em.close();
 
         return docList;
     }
 
-    public List<PickTrx> getApproveTrxList()
-    {
+    public List<PickTrx> getApproveTrxList() {
         Query q = em.createNativeQuery("""
                 SELECT SYSTEM_NO,
                     INV_CODE,
@@ -181,18 +165,18 @@ public class InvMoveServiceV4 extends AbstractService
                 WHERE STATUS = 0""");
         List<PickTrx> trxList = new ArrayList<>();
         List<Object[]> resultList = q.getResultList();
-        resultList.stream().map((result)->
-                                {
-                                    PickTrx trx = new PickTrx();
-                                    trx.setTrxNo(String.valueOf(result[0]));
-                                    trx.setInvCode(String.valueOf(result[1]));
-                                    trx.setInvName(String.valueOf(result[2]));
-                                    trx.setBarcode(String.valueOf(result[3]));
-                                    trx.setQty(Double.parseDouble(String.valueOf(result[4])));
-                                    trx.setNotes(String.valueOf(result[5]));
-                                    trx.setInvBrand(String.valueOf(result[6]));
-                                    return trx;
-                                }).forEachOrdered(trxList::add);
+        resultList.stream().map((result) ->
+        {
+            PickTrx trx = new PickTrx();
+            trx.setTrxNo(String.valueOf(result[0]));
+            trx.setInvCode(String.valueOf(result[1]));
+            trx.setInvName(String.valueOf(result[2]));
+            trx.setBarcode(String.valueOf(result[3]));
+            trx.setQty(Double.parseDouble(String.valueOf(result[4])));
+            trx.setNotes(String.valueOf(result[5]));
+            trx.setInvBrand(String.valueOf(result[6]));
+            return trx;
+        }).forEachOrdered(trxList::add);
 
         em.close();
 
@@ -200,38 +184,36 @@ public class InvMoveServiceV4 extends AbstractService
     }
 
     @Transactional
-    public void createInternalUseDoc(InternalUseRequest request)
-    {
+    public void createInternalUseDoc(InternalUseRequest request) {
         Query query = em.createNativeQuery("""
-                    INSERT INTO TERMINAL_INV_ISSUE(
-                        SYSTEM_NO,
-                        SYSTEM_DATE,
-                        INV_CODE,
-                        INV_QTY,
-                        NOTES,
-                        USER_ID,
-                        INV_BRAND_CODE,
-                        INV_NAME,
-                        BARCODE,
-                        INTERNAL_COUNT,
-                        WHS_CODE,
-                        EXP_CENTER_CODE)
-                    VALUES(
-                        :SYSTEM_NO,
-                        :SYSTEM_DATE,
-                        :INV_CODE,
-                        :INV_QTY,
-                        :NOTES,
-                        :USER_ID,
-                        :INV_BRAND_CODE,
-                        :INV_NAME,
-                        :BARCODE,
-                        :INTERNAL_COUNT,
-                        :WHS_CODE,
-                        :EXP_CENTER_CODE)""");
+                INSERT INTO TERMINAL_INV_ISSUE(
+                    SYSTEM_NO,
+                    SYSTEM_DATE,
+                    INV_CODE,
+                    INV_QTY,
+                    NOTES,
+                    USER_ID,
+                    INV_BRAND_CODE,
+                    INV_NAME,
+                    BARCODE,
+                    INTERNAL_COUNT,
+                    WHS_CODE,
+                    EXP_CENTER_CODE)
+                VALUES(
+                    :SYSTEM_NO,
+                    :SYSTEM_DATE,
+                    :INV_CODE,
+                    :INV_QTY,
+                    :NOTES,
+                    :USER_ID,
+                    :INV_BRAND_CODE,
+                    :INV_NAME,
+                    :BARCODE,
+                    :INTERNAL_COUNT,
+                    :WHS_CODE,
+                    :EXP_CENTER_CODE)""");
 
-        for(InternalUseRequestItem item : request.getRequestItems())
-        {
+        for (InternalUseRequestItem item : request.getRequestItems()) {
             query.setParameter("SYSTEM_NO", request.getTrxNo());
             query.setParameter("SYSTEM_DATE", new Date(System.currentTimeMillis()));
             query.setParameter("INV_CODE", item.getInvCode());
@@ -254,7 +236,7 @@ public class InvMoveServiceV4 extends AbstractService
         procedureQuery.execute();
         em.close();
 
-        int resultId = (int)procedureQuery.getOutputParameterValue("RESULT_ID");
+        int resultId = (int) procedureQuery.getOutputParameterValue("RESULT_ID");
         String errorMessage = String.valueOf(procedureQuery.getOutputParameterValue("ERROR_MESSAGE"));
 
         if (resultId == 1)

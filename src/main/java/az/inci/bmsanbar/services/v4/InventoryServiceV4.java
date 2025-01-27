@@ -1,11 +1,7 @@
 package az.inci.bmsanbar.services.v4;
 
 
-import az.inci.bmsanbar.model.v4.InvAttribute;
-import az.inci.bmsanbar.model.v4.InvBarcode;
-import az.inci.bmsanbar.model.v4.Inventory;
-import az.inci.bmsanbar.model.v4.InvInfo;
-import az.inci.bmsanbar.model.v4.LatestMovementItem;
+import az.inci.bmsanbar.model.v4.*;
 import az.inci.bmsanbar.services.AbstractService;
 import jakarta.persistence.Query;
 import jakarta.persistence.StoredProcedureQuery;
@@ -20,10 +16,8 @@ import static jakarta.persistence.ParameterMode.IN;
 
 @SuppressWarnings({"SqlResolve", "SqlNoDataSourceInspection"})
 @Service
-public class InventoryServiceV4 extends AbstractService
-{
-    public InvInfo getInfoByBarcode(String barcode, String userId)
-    {
+public class InventoryServiceV4 extends AbstractService {
+    public InvInfo getInfoByBarcode(String barcode, String userId) {
         InvInfo invInfo = new InvInfo();
 
         StoredProcedureQuery q = em.createStoredProcedureQuery("SP_INV_INFO_BY_BARCODE");
@@ -32,8 +26,7 @@ public class InventoryServiceV4 extends AbstractService
         q.setParameter("BARCODE", barcode);
         q.setParameter("USER_ID", userId);
         List<Object[]> result = q.getResultList();
-        if(!result.isEmpty())
-        {
+        if (!result.isEmpty()) {
             invInfo.setInvCode(String.valueOf(result.get(0)[0]));
             invInfo.setInvName(String.valueOf(result.get(0)[1]));
             invInfo.setInfo(String.valueOf(result.get(0)[2]));
@@ -47,8 +40,7 @@ public class InventoryServiceV4 extends AbstractService
         return invInfo;
     }
 
-    public InvInfo getInfoByInvCode(String invCode, String userId)
-    {
+    public InvInfo getInfoByInvCode(String invCode, String userId) {
         InvInfo invInfo = new InvInfo();
 
         StoredProcedureQuery q = em.createStoredProcedureQuery("SP_INV_INFO_BY_INV_CODE");
@@ -57,8 +49,7 @@ public class InventoryServiceV4 extends AbstractService
         q.setParameter("INV_CODE", invCode);
         q.setParameter("USER_ID", userId);
         List<Object[]> result = q.getResultList();
-        if(!result.isEmpty())
-        {
+        if (!result.isEmpty()) {
             invInfo.setInvCode(String.valueOf(result.get(0)[0]));
             invInfo.setInvName(String.valueOf(result.get(0)[1]));
             invInfo.setInfo(String.valueOf(result.get(0)[2]));
@@ -72,16 +63,14 @@ public class InventoryServiceV4 extends AbstractService
         return invInfo;
     }
 
-    public List<Inventory> getSearchResult(String keyword, String field)
-    {
+    public List<Inventory> getSearchResult(String keyword, String field) {
         List<Inventory> inventoryList = new ArrayList<>();
 
         String wildCardKeyword = "%".concat(keyword.trim().replaceAll(" ", "%")).concat("%");
 
         Query q = em.createNativeQuery(
                 "SELECT INV_CODE, INV_NAME, INV_BRAND_CODE, UNIT_CODE FROM INV_MASTER WHERE INV_NAME LIKE :KEYWORD");
-        if(field != null)
-        {
+        if (field != null) {
             switch (field) {
                 case "Kod" -> q = em.createNativeQuery(
                         "SELECT INV_CODE, INV_NAME, INV_BRAND_CODE, UNIT_CODE FROM INV_MASTER WHERE INV_CODE LIKE :KEYWORD");
@@ -93,57 +82,55 @@ public class InventoryServiceV4 extends AbstractService
         q.setParameter("KEYWORD", wildCardKeyword);
 
         List<Object[]> resultList = q.getResultList();
-        resultList.stream().map((result)->
-                                {
-                                    Inventory inventory = new Inventory();
-                                    inventory.setInvCode(String.valueOf(result[0]));
-                                    inventory.setInvName(String.valueOf(result[1]));
-                                    inventory.setInvBrand(String.valueOf(result[2]));
-                                    inventory.setDefaultUomCode(String.valueOf(result[3]));
-                                    return inventory;
-                                }).forEachOrdered(inventoryList::add);
+        resultList.stream().map((result) ->
+        {
+            Inventory inventory = new Inventory();
+            inventory.setInvCode(String.valueOf(result[0]));
+            inventory.setInvName(String.valueOf(result[1]));
+            inventory.setInvBrand(String.valueOf(result[2]));
+            inventory.setDefaultUomCode(String.valueOf(result[3]));
+            return inventory;
+        }).forEachOrdered(inventoryList::add);
 
         em.close();
 
         return inventoryList;
     }
 
-    public Inventory getInvByBarcode(String barcode)
-    {
+    public Inventory getInvByBarcode(String barcode) {
         Query q = em.createNativeQuery("""
-                               SELECT IM.INV_CODE,
-                                   IM.INV_NAME,
-                                   IM.INV_BRAND_CODE,
-                                   PL.PRICE
-                               FROM INV_MASTER IM
-                               LEFT JOIN INV_BARCODE IB ON IM.INV_CODE = IB.INV_CODE
-                               LEFT JOIN PRICE_LIST PL ON IM.INV_CODE = PL.INV_CODE
-                                                            AND PL.PRICE_CODE = 'P01'
-                               WHERE IB.BAR_CODE = :BAR_CODE""");
+                SELECT IM.INV_CODE,
+                    IM.INV_NAME,
+                    IM.INV_BRAND_CODE,
+                    PL.PRICE
+                FROM INV_MASTER IM
+                LEFT JOIN INV_BARCODE IB ON IM.INV_CODE = IB.INV_CODE
+                LEFT JOIN PRICE_LIST PL ON IM.INV_CODE = PL.INV_CODE
+                                             AND PL.PRICE_CODE = 'P01'
+                WHERE IB.BAR_CODE = :BAR_CODE""");
         q.setParameter("BAR_CODE", barcode);
         List<Object[]> resultList = q.getResultList();
         Inventory inventory = new Inventory();
         inventory.setBarcode(barcode);
-        resultList.stream().peek((result)->inventory.setInvCode(String.valueOf(result[0])))
-                  .peek((result)->inventory.setInvName(String.valueOf(result[1])))
-                  .peek((result)->inventory.setInvBrand(String.valueOf(result[2])))
-                  .forEachOrdered((result)->inventory.setPrice(Double.parseDouble(String.valueOf(result[3]))));
+        resultList.stream().peek((result) -> inventory.setInvCode(String.valueOf(result[0])))
+                .peek((result) -> inventory.setInvName(String.valueOf(result[1])))
+                .peek((result) -> inventory.setInvBrand(String.valueOf(result[2])))
+                .forEachOrdered((result) -> inventory.setPrice(Double.parseDouble(String.valueOf(result[3]))));
 
         em.close();
 
         return inventory;
     }
 
-    public BigDecimal getQty(String whsCode, String invCode)
-    {
+    public BigDecimal getQty(String whsCode, String invCode) {
         Query q = em.createNativeQuery("""
-                                SELECT WHS_QTY FROM WHS_SUM
-                                WHERE WHS_CODE = :WHS_CODE AND INV_CODE = :INV_CODE""");
+                SELECT WHS_QTY FROM WHS_SUM
+                WHERE WHS_CODE = :WHS_CODE AND INV_CODE = :INV_CODE""");
         q.setParameter("WHS_CODE", whsCode);
         q.setParameter("INV_CODE", invCode);
         List<BigDecimal> resultList = q.getResultList();
         BigDecimal qty = new BigDecimal("0");
-        if(!resultList.isEmpty())
+        if (!resultList.isEmpty())
             qty = resultList.get(0);
 
         em.close();
@@ -151,20 +138,19 @@ public class InventoryServiceV4 extends AbstractService
         return qty;
     }
 
-    public Integer getPickReport(String startDate, String endDate, String pickUser)
-    {
+    public Integer getPickReport(String startDate, String endDate, String pickUser) {
         Query q = em.createNativeQuery("""
-                                SELECT count(*) FROM INV_PICK_TRX IPT JOIN PICK_DOC PD
-                                ON IPT.TRX_NO=PD.TRX_NO AND PD.REC_STATUS=6
-                                WHERE IPT.TRX_DATE BETWEEN :START_DATE AND :END_DATE
-                                AND IPT.PICK_USER_ID = :USER_ID
-                                AND IPT.PICK_STATUS IN ('P', 'Q')""");
+                SELECT count(*) FROM INV_PICK_TRX IPT JOIN PICK_DOC PD
+                ON IPT.TRX_NO=PD.TRX_NO AND PD.REC_STATUS=6
+                WHERE IPT.TRX_DATE BETWEEN :START_DATE AND :END_DATE
+                AND IPT.PICK_USER_ID = :USER_ID
+                AND IPT.PICK_STATUS IN ('P', 'Q')""");
         q.setParameter("START_DATE", startDate);
         q.setParameter("END_DATE", endDate);
         q.setParameter("USER_ID", pickUser);
         List<Integer> resultList = q.getResultList();
         Integer qty = 0;
-        if(!resultList.isEmpty())
+        if (!resultList.isEmpty())
             qty = resultList.get(0);
 
         em.close();
@@ -172,20 +158,19 @@ public class InventoryServiceV4 extends AbstractService
         return qty;
     }
 
-    public Integer getPackReport(String startDate, String endDate, String approveUser)
-    {
+    public Integer getPackReport(String startDate, String endDate, String approveUser) {
         Query q = em.createNativeQuery("""
-                                SELECT count(*) FROM INV_PICK_TRX IPT
-                                JOIN PICK_DOC PD ON IPT.TRX_NO=PD.TRX_NO
-                                WHERE IPT.TRX_DATE BETWEEN :START_DATE AND :END_DATE
-                                    AND IPT.APPROVE_USER_ID = :USER_ID
-                                    AND IPT.PICK_STATUS IN ('P', 'Q')""");
+                SELECT count(*) FROM INV_PICK_TRX IPT
+                JOIN PICK_DOC PD ON IPT.TRX_NO=PD.TRX_NO
+                WHERE IPT.TRX_DATE BETWEEN :START_DATE AND :END_DATE
+                    AND IPT.APPROVE_USER_ID = :USER_ID
+                    AND IPT.PICK_STATUS IN ('P', 'Q')""");
         q.setParameter("START_DATE", startDate);
         q.setParameter("END_DATE", endDate);
         q.setParameter("USER_ID", approveUser);
         List<Integer> resultList = q.getResultList();
         Integer qty = 0;
-        if(!resultList.isEmpty())
+        if (!resultList.isEmpty())
             qty = resultList.get(0);
 
         em.close();
@@ -193,90 +178,88 @@ public class InventoryServiceV4 extends AbstractService
         return qty;
     }
 
-    public List<InvAttribute> getAttributeList(String invCode)
-    {
+    public List<InvAttribute> getAttributeList(String invCode) {
         List<InvAttribute> attributeList = new ArrayList<>();
 
         Query q = em.createNativeQuery("""
-                               SELECT IMA.INV_CODE,
-                                   IMA.INV_ATTRIB_ID,
-                                   IMA.INV_ATTRIB_NAME,
-                                   IMA.DATA_TYPE,
-                                   ISNULL(IA.ATTRIB_VALUE, '') AS ATTRIB_VALUE,
-                                   IA.WHS_CODE,
-                                   IIF(IA.ATTRIB_VALUE IS NULL, 0, 1) ATTRIB_STATUS
-                               FROM (SELECT IM.INV_CODE,
-                                          IAD.INV_ATTRIB_ID,
-                                          IAD.INV_ATTRIB_NAME,
-                                          IAD.DATA_TYPE
-                                   FROM INV_MASTER IM,
-                                        INV_ATTRIB_DEF IAD) IMA
-                               LEFT JOIN INV_ATTRIB IA ON IA.INV_CODE = IMA.INV_CODE
-                                                        AND IA.INV_ATTRIB_ID = IMA.INV_ATTRIB_ID
-                               WHERE IMA.INV_CODE = :INV_CODE""");
+                SELECT IMA.INV_CODE,
+                    IMA.INV_ATTRIB_ID,
+                    IMA.INV_ATTRIB_NAME,
+                    IMA.DATA_TYPE,
+                    ISNULL(IA.ATTRIB_VALUE, '') AS ATTRIB_VALUE,
+                    IA.WHS_CODE,
+                    IIF(IA.ATTRIB_VALUE IS NULL, 0, 1) ATTRIB_STATUS
+                FROM (SELECT IM.INV_CODE,
+                           IAD.INV_ATTRIB_ID,
+                           IAD.INV_ATTRIB_NAME,
+                           IAD.DATA_TYPE
+                    FROM INV_MASTER IM,
+                         INV_ATTRIB_DEF IAD) IMA
+                LEFT JOIN INV_ATTRIB IA ON IA.INV_CODE = IMA.INV_CODE
+                                         AND IA.INV_ATTRIB_ID = IMA.INV_ATTRIB_ID
+                WHERE IMA.INV_CODE = :INV_CODE""");
         q.setParameter("INV_CODE", invCode);
         List<Object[]> resultList = q.getResultList();
-        resultList.stream().map((result)->
-                                {
-                                    InvAttribute attribute = new InvAttribute();
-                                    attribute.setInvCode(String.valueOf(result[0]));
-                                    attribute.setAttributeId(String.valueOf(result[1]));
-                                    attribute.setAttributeName(String.valueOf(result[2]));
-                                    attribute.setAttributeType(String.valueOf(result[3]));
-                                    attribute.setAttributeValue(String.valueOf(result[4]));
-                                    attribute.setWhsCode(String.valueOf(result[5]));
-                                    attribute.setDefined(Integer.parseInt(String.valueOf(result[6])) == 1);
-                                    return attribute;
-                                }).forEachOrdered(attributeList::add);
+        resultList.stream().map((result) ->
+        {
+            InvAttribute attribute = new InvAttribute();
+            attribute.setInvCode(String.valueOf(result[0]));
+            attribute.setAttributeId(String.valueOf(result[1]));
+            attribute.setAttributeName(String.valueOf(result[2]));
+            attribute.setAttributeType(String.valueOf(result[3]));
+            attribute.setAttributeValue(String.valueOf(result[4]));
+            attribute.setWhsCode(String.valueOf(result[5]));
+            attribute.setDefined(Integer.parseInt(String.valueOf(result[6])) == 1);
+            return attribute;
+        }).forEachOrdered(attributeList::add);
 
         em.close();
 
         return attributeList;
     }
 
-    public List<InvAttribute> getAttributeList(String invCode, String userId)
-    {
+    public List<InvAttribute> getAttributeList(String invCode, String userId) {
         List<InvAttribute> attributeList = new ArrayList<>();
 
         Query q = em.createNativeQuery("""
-                               SELECT IMA.INV_CODE,
-                                   IMA.INV_ATTRIB_ID,
-                                   IMA.INV_ATTRIB_NAME,
-                                   IMA.DATA_TYPE,
-                                   ISNULL(IA.ATTRIB_VALUE, '') AS ATTRIB_VALUE,
-                                   IIF(IA.WHS_CODE IS NULL OR IA.WHS_CODE='',
-                                       (SELECT TOP 1 WHS_CODE
-                                       FROM BMS_USER_WHS
-                                       WHERE USER_ID = :USER_ID), IA.WHS_CODE) AS WHS_CODE,
-                                   IIF(IA.ATTRIB_VALUE IS NULL, 0, 1) ATTRIB_STATUS
-                               FROM (SELECT IM.INV_CODE,
-                                          IAD.INV_ATTRIB_ID,
-                                          IAD.INV_ATTRIB_NAME,
-                                          IAD.DATA_TYPE
-                                   FROM INV_MASTER IM,
-                                        INV_ATTRIB_DEF IAD) IMA
-                               LEFT JOIN INV_ATTRIB IA ON IA.INV_CODE = IMA.INV_CODE
-                                                   AND IA.INV_ATTRIB_ID = IMA.INV_ATTRIB_ID
-                                                   AND (IA.WHS_CODE = (SELECT TOP 1 WHS_CODE
-                                                                        FROM BMS_USER_WHS
-                                                                        WHERE USER_ID = :USER_ID)
-                                                            OR IA.INV_ATTRIB_ID NOT IN ('AT010','AT011'))
-                               WHERE IMA.INV_CODE = :INV_CODE""");
+                SELECT IMA.INV_CODE,
+                    IMA.INV_ATTRIB_ID,
+                    IMA.INV_ATTRIB_NAME,
+                    IMA.DATA_TYPE,
+                    ISNULL(IA.ATTRIB_VALUE, '') AS ATTRIB_VALUE,
+                    IIF(IA.WHS_CODE IS NULL OR IA.WHS_CODE='',
+                        (SELECT TOP 1 WHS_CODE
+                        FROM BMS_USER_WHS
+                        WHERE USER_ID = :USER_ID), IA.WHS_CODE) AS WHS_CODE,
+                    IIF(IA.ATTRIB_VALUE IS NULL, 0, 1) ATTRIB_STATUS
+                FROM (SELECT IM.INV_CODE,
+                           IAD.INV_ATTRIB_ID,
+                           IAD.INV_ATTRIB_NAME,
+                           IAD.DATA_TYPE
+                    FROM INV_MASTER IM,
+                         INV_ATTRIB_DEF IAD) IMA
+                LEFT JOIN INV_ATTRIB IA ON IA.INV_CODE = IMA.INV_CODE
+                                    AND IA.INV_ATTRIB_ID = IMA.INV_ATTRIB_ID
+                                    AND (IA.WHS_CODE = (SELECT TOP 1 WHS_CODE
+                                                         FROM BMS_USER_WHS
+                                                         WHERE USER_ID = :USER_ID)
+                                             OR IA.INV_ATTRIB_ID NOT IN ('AT010','AT011'))
+                WHERE IMA.INV_CODE = :INV_CODE""");
         q.setParameter("USER_ID", userId);
         q.setParameter("INV_CODE", invCode);
         List<Object[]> resultList = q.getResultList();
-        resultList.stream().map((result)->
-                                {
-                                    InvAttribute attribute = new InvAttribute();
-                                    attribute.setInvCode(String.valueOf(result[0]));
-                                    attribute.setAttributeId(String.valueOf(result[1]));
-                                    attribute.setAttributeName(String.valueOf(result[2]));
-                                    attribute.setAttributeType(String.valueOf(result[3]));
-                                    attribute.setAttributeValue(String.valueOf(result[4]));
-                                    attribute.setWhsCode(String.valueOf(result[5]));
-                                    attribute.setDefined(Integer.parseInt(String.valueOf(result[6])) == 1);
-                                    return attribute;
-                                }).forEachOrdered(attributeList::add);
+        resultList.stream().map((result) ->
+        {
+            InvAttribute attribute = new InvAttribute();
+            attribute.setInvCode(String.valueOf(result[0]));
+            attribute.setAttributeId(String.valueOf(result[1]));
+            attribute.setAttributeName(String.valueOf(result[2]));
+            attribute.setAttributeType(String.valueOf(result[3]));
+            attribute.setAttributeValue(String.valueOf(result[4]));
+            attribute.setWhsCode(String.valueOf(result[5]));
+            attribute.setDefined(Integer.parseInt(String.valueOf(result[6])) == 1);
+            return attribute;
+        }).forEachOrdered(attributeList::add);
 
         em.close();
 
@@ -284,17 +267,13 @@ public class InventoryServiceV4 extends AbstractService
     }
 
     @Transactional
-    public void updateInvAttributes(List<InvAttribute> attributeList)
-    {
-        for(InvAttribute attribute : attributeList)
-        {
-            if(attribute.isDefined())
-            {
+    public void updateInvAttributes(List<InvAttribute> attributeList) {
+        for (InvAttribute attribute : attributeList) {
+            if (attribute.isDefined()) {
                 Query q;
-                if(attribute.getAttributeValue().isEmpty() ||
-                   (attribute.getAttributeValue().equals("0")
-                    && attribute.getAttributeType().equals("BIT")))
-                {
+                if (attribute.getAttributeValue().isEmpty() ||
+                        (attribute.getAttributeValue().equals("0")
+                                && attribute.getAttributeType().equals("BIT"))) {
                     q = em.createNativeQuery("""
                             DELETE FROM INV_ATTRIB
                             WHERE INV_CODE = :INV_CODE AND INV_ATTRIB_ID = :INV_ATTRIB_ID
@@ -302,9 +281,7 @@ public class InventoryServiceV4 extends AbstractService
                     q.setParameter("INV_CODE", attribute.getInvCode());
                     q.setParameter("INV_ATTRIB_ID", attribute.getAttributeId());
                     q.setParameter("WHS_CODE", attribute.getWhsCode());
-                }
-                else
-                {
+                } else {
                     q = em.createNativeQuery("""
                             UPDATE INV_ATTRIB
                             SET ATTRIB_VALUE = :ATTRIB_VALUE
@@ -316,20 +293,18 @@ public class InventoryServiceV4 extends AbstractService
                     q.setParameter("WHS_CODE", attribute.getWhsCode());
                 }
                 q.executeUpdate();
-            }
-            else if(!attribute.getAttributeValue().isEmpty())
-            {
+            } else if (!attribute.getAttributeValue().isEmpty()) {
                 Query q = em.createNativeQuery("""
-                                INSERT INTO INV_ATTRIB(
-                                    INV_CODE,
-                                    INV_ATTRIB_ID,
-                                    ATTRIB_VALUE,
-                                    WHS_CODE)
-                                VALUES (
-                                    :INV_CODE,
-                                    :INV_ATTRIB_ID,
-                                    :ATTRIB_VALUE,
-                                    :WHS_CODE)""");
+                        INSERT INTO INV_ATTRIB(
+                            INV_CODE,
+                            INV_ATTRIB_ID,
+                            ATTRIB_VALUE,
+                            WHS_CODE)
+                        VALUES (
+                            :INV_CODE,
+                            :INV_ATTRIB_ID,
+                            :ATTRIB_VALUE,
+                            :WHS_CODE)""");
                 q.setParameter("INV_CODE", attribute.getInvCode());
                 q.setParameter("INV_ATTRIB_ID", attribute.getAttributeId());
                 q.setParameter("ATTRIB_VALUE", attribute.getAttributeValue());
@@ -343,61 +318,54 @@ public class InventoryServiceV4 extends AbstractService
     @Transactional
     public boolean updateShelfBarcode(String whsCode,
                                       String shelfBarcode,
-                                      String invBarcode)
-    {
+                                      String invBarcode) {
         shelfBarcode = shelfBarcode.replace("%23", "#");
         Query selectQuery = em.createNativeQuery("""
-                                     SELECT INV_CODE FROM INV_ATTRIB
-                                     WHERE INV_CODE = (SELECT INV_CODE FROM INV_BARCODE
-                                                            WHERE BAR_CODE = :BAR_CODE)
-                                     AND INV_ATTRIB_ID = 'AT010' AND WHS_CODE = :WHS_CODE""");
+                SELECT INV_CODE FROM INV_ATTRIB
+                WHERE INV_CODE = (SELECT INV_CODE FROM INV_BARCODE
+                                       WHERE BAR_CODE = :BAR_CODE)
+                AND INV_ATTRIB_ID = 'AT010' AND WHS_CODE = :WHS_CODE""");
         selectQuery.setParameter("BAR_CODE", invBarcode);
         selectQuery.setParameter("WHS_CODE", whsCode);
         String invCode = "";
         List<Object> resultList = selectQuery.getResultList();
-        if(!resultList.isEmpty())
+        if (!resultList.isEmpty())
             invCode = String.valueOf(resultList.get(0));
 
-        if(invCode != null && !invCode.isEmpty())
-        {
+        if (invCode != null && !invCode.isEmpty()) {
             Query updateQuery = em.createNativeQuery("""
-                                            UPDATE INV_ATTRIB
-                                            SET ATTRIB_VALUE = :ATTRIB_VALUE
-                                            WHERE INV_CODE = :INV_CODE
-                                                AND INV_ATTRIB_ID = 'AT010'
-                                                AND WHS_CODE = :WHS_CODE""");
+                    UPDATE INV_ATTRIB
+                    SET ATTRIB_VALUE = :ATTRIB_VALUE
+                    WHERE INV_CODE = :INV_CODE
+                        AND INV_ATTRIB_ID = 'AT010'
+                        AND WHS_CODE = :WHS_CODE""");
             updateQuery.setParameter("ATTRIB_VALUE", shelfBarcode);
             updateQuery.setParameter("INV_CODE", invCode);
             updateQuery.setParameter("WHS_CODE", whsCode);
             updateQuery.executeUpdate();
-        }
-        else
-        {
+        } else {
             selectQuery = em.createNativeQuery("SELECT INV_CODE from INV_BARCODE WHERE BAR_CODE = :BAR_CODE");
             selectQuery.setParameter("BAR_CODE", invBarcode);
             resultList = selectQuery.getResultList();
-            if(!resultList.isEmpty())
-            {
+            if (!resultList.isEmpty()) {
                 invCode = String.valueOf(resultList.get(0));
                 Query insertQuery = em.createNativeQuery("""
-                                INSERT INTO INV_ATTRIB(
-                                    INV_CODE,
-                                    INV_ATTRIB_ID,
-                                    ATTRIB_VALUE,
-                                    WHS_CODE)
-                                VALUES (
-                                    :INV_CODE,
-                                    :INV_ATTRIB_ID,
-                                    :ATTRIB_VALUE,
-                                    :WHS_CODE)""");
+                        INSERT INTO INV_ATTRIB(
+                            INV_CODE,
+                            INV_ATTRIB_ID,
+                            ATTRIB_VALUE,
+                            WHS_CODE)
+                        VALUES (
+                            :INV_CODE,
+                            :INV_ATTRIB_ID,
+                            :ATTRIB_VALUE,
+                            :WHS_CODE)""");
                 insertQuery.setParameter("INV_CODE", invCode);
                 insertQuery.setParameter("INV_ATTRIB_ID", "AT010");
                 insertQuery.setParameter("ATTRIB_VALUE", shelfBarcode);
                 insertQuery.setParameter("WHS_CODE", whsCode);
                 insertQuery.executeUpdate();
-            }
-            else
-            {
+            } else {
                 return false;
             }
         }
@@ -407,8 +375,7 @@ public class InventoryServiceV4 extends AbstractService
         return true;
     }
 
-    public List<InvBarcode> getBarcodeList(String invCode)
-    {
+    public List<InvBarcode> getBarcodeList(String invCode) {
         List<InvBarcode> barcodeList = new ArrayList<>();
 
         Query q = em.createNativeQuery("""
@@ -421,16 +388,16 @@ public class InventoryServiceV4 extends AbstractService
                 WHERE IM.INV_CODE = :INV_CODE""");
         q.setParameter("INV_CODE", invCode);
         List<Object[]> resultList = q.getResultList();
-        resultList.stream().map((result)->
-                                {
-                                    InvBarcode barcode = new InvBarcode();
-                                    barcode.setInvCode(String.valueOf(result[0]));
-                                    barcode.setBarcode(String.valueOf(result[1]));
-                                    barcode.setUomFactor(Double.parseDouble(String.valueOf(result[2])));
-                                    barcode.setUom(String.valueOf(result[3]));
-                                    barcode.setDefined(true);
-                                    return barcode;
-                                }).forEachOrdered(barcodeList::add);
+        resultList.stream().map((result) ->
+        {
+            InvBarcode barcode = new InvBarcode();
+            barcode.setInvCode(String.valueOf(result[0]));
+            barcode.setBarcode(String.valueOf(result[1]));
+            barcode.setUomFactor(Double.parseDouble(String.valueOf(result[2])));
+            barcode.setUom(String.valueOf(result[3]));
+            barcode.setDefined(true);
+            return barcode;
+        }).forEachOrdered(barcodeList::add);
 
         em.close();
 
@@ -438,39 +405,31 @@ public class InventoryServiceV4 extends AbstractService
     }
 
     @Transactional
-    public void updateInvBarcodes(List<InvBarcode> barcodeList)
-    {
-        for(InvBarcode barcode : barcodeList)
-        {
+    public void updateInvBarcodes(List<InvBarcode> barcodeList) {
+        for (InvBarcode barcode : barcodeList) {
             Query q;
-            if(barcode.isDefined())
-            {
-                if(barcode.getUomFactor() == 0)
-                {
+            if (barcode.isDefined()) {
+                if (barcode.getUomFactor() == 0) {
                     q = em.createStoredProcedureQuery("SP_DELETE_BARCODE");
-                    ((StoredProcedureQuery)q).registerStoredProcedureParameter("INV_CODE", String.class, IN);
-                    ((StoredProcedureQuery)q).registerStoredProcedureParameter("BAR_CODE", String.class, IN);
-                }
-                else
-                {
+                    ((StoredProcedureQuery) q).registerStoredProcedureParameter("INV_CODE", String.class, IN);
+                    ((StoredProcedureQuery) q).registerStoredProcedureParameter("BAR_CODE", String.class, IN);
+                } else {
                     q = em.createNativeQuery("""
-                                     UPDATE INV_BARCODE
-                                     SET UOM_FACTOR = :UOM_FACTOR,
-                                         UOM = :UOM
-                                     WHERE INV_CODE = :INV_CODE AND BAR_CODE = :BAR_CODE""");
+                            UPDATE INV_BARCODE
+                            SET UOM_FACTOR = :UOM_FACTOR,
+                                UOM = :UOM
+                            WHERE INV_CODE = :INV_CODE AND BAR_CODE = :BAR_CODE""");
                     q.setParameter("UOM_FACTOR", barcode.getUomFactor());
                     q.setParameter("UOM", barcode.getUom());
                 }
                 q.setParameter("INV_CODE", barcode.getInvCode());
                 q.setParameter("BAR_CODE", barcode.getBarcode());
-            }
-            else
-            {
+            } else {
                 q = em.createStoredProcedureQuery("SP_INSERT_BARCODE");
-                ((StoredProcedureQuery)q).registerStoredProcedureParameter("INV_CODE", String.class, IN);
-                ((StoredProcedureQuery)q).registerStoredProcedureParameter("BAR_CODE", String.class, IN);
-                ((StoredProcedureQuery)q).registerStoredProcedureParameter("UOM", String.class, IN);
-                ((StoredProcedureQuery)q).registerStoredProcedureParameter("UOM_FACTOR", Double.class, IN);
+                ((StoredProcedureQuery) q).registerStoredProcedureParameter("INV_CODE", String.class, IN);
+                ((StoredProcedureQuery) q).registerStoredProcedureParameter("BAR_CODE", String.class, IN);
+                ((StoredProcedureQuery) q).registerStoredProcedureParameter("UOM", String.class, IN);
+                ((StoredProcedureQuery) q).registerStoredProcedureParameter("UOM_FACTOR", Double.class, IN);
                 q.setParameter("INV_CODE", barcode.getInvCode());
                 q.setParameter("BAR_CODE", barcode.getBarcode());
                 q.setParameter("UOM_FACTOR", barcode.getUomFactor());
@@ -481,8 +440,7 @@ public class InventoryServiceV4 extends AbstractService
         em.close();
     }
 
-    public List<Inventory> getInvList()
-    {
+    public List<Inventory> getInvList() {
         List<Inventory> inventoryList = new ArrayList<>();
 
         Query q = em.createNativeQuery("""
@@ -497,33 +455,31 @@ public class InventoryServiceV4 extends AbstractService
                 JOIN PRICE_LIST PL ON IM.INV_CODE = PL.INV_CODE AND PL.PRICE_CODE = 'P01'
                 ORDER BY IM.INV_CODE""");
         List<Object[]> resultList = q.getResultList();
-        resultList.stream().map((result)->
-                                {
-                                    Inventory inventory = new Inventory();
-                                    inventory.setInvCode(String.valueOf(result[0]));
-                                    inventory.setInvName(String.valueOf(result[1]));
-                                    inventory.setInvBrand(String.valueOf(result[2]));
-                                    inventory.setBarcode(String.valueOf(result[3]));
-                                    inventory.setPrice(Double.parseDouble(String.valueOf(result[4])));
-                                    inventory.setInternalCount(String.valueOf(result[5]));
-                                    return inventory;
-                                }).forEachOrdered(inventoryList::add);
+        resultList.stream().map((result) ->
+        {
+            Inventory inventory = new Inventory();
+            inventory.setInvCode(String.valueOf(result[0]));
+            inventory.setInvName(String.valueOf(result[1]));
+            inventory.setInvBrand(String.valueOf(result[2]));
+            inventory.setBarcode(String.valueOf(result[3]));
+            inventory.setPrice(Double.parseDouble(String.valueOf(result[4])));
+            inventory.setInternalCount(String.valueOf(result[5]));
+            return inventory;
+        }).forEachOrdered(inventoryList::add);
 
         em.close();
 
         return inventoryList;
     }
 
-    public List<Inventory> getInvListByUser(String userId)
-    {
+    public List<Inventory> getInvListByUser(String userId) {
         List<Inventory> inventoryList = new ArrayList<>();
 
         StoredProcedureQuery q = em.createStoredProcedureQuery("SP_GET_INV_LIST_BY_USER_PRODUCER");
         q.registerStoredProcedureParameter("USER_ID", String.class, IN);
         q.setParameter("USER_ID", userId);
         List<Object[]> resultList = q.getResultList();
-        for(Object[] result : resultList)
-        {
+        for (Object[] result : resultList) {
             Inventory inventory = new Inventory();
             inventory.setInvCode(String.valueOf(result[0]));
             inventory.setInvName(String.valueOf(result[1]));
@@ -538,8 +494,7 @@ public class InventoryServiceV4 extends AbstractService
         return inventoryList;
     }
 
-    public List<Inventory> getWhsSumByUser(String userId, String whsCode)
-    {
+    public List<Inventory> getWhsSumByUser(String userId, String whsCode) {
         List<Inventory> inventoryList = new ArrayList<>();
 
         StoredProcedureQuery q = em.createStoredProcedureQuery("SP_GET_WHS_SUM_FOR_TERMINAL_INT_USE");
@@ -548,8 +503,7 @@ public class InventoryServiceV4 extends AbstractService
         q.setParameter("USER_ID", userId);
         q.setParameter("WHS_CODE", whsCode);
         List<Object[]> resultList = q.getResultList();
-        for(Object[] result : resultList)
-        {
+        for (Object[] result : resultList) {
             Inventory inventory = new Inventory();
             inventory.setInvCode(String.valueOf(result[0]));
             inventory.setInvName(String.valueOf(result[1]));
@@ -566,8 +520,7 @@ public class InventoryServiceV4 extends AbstractService
         return inventoryList;
     }
 
-    public InvBarcode getInvBarcode(String barcode)
-    {
+    public InvBarcode getInvBarcode(String barcode) {
         InvBarcode invBarcode = new InvBarcode();
 
         Query q = em.createNativeQuery("""
@@ -578,8 +531,7 @@ public class InventoryServiceV4 extends AbstractService
                 WHERE BAR_CODE = :BAR_CODE""");
         q.setParameter("BAR_CODE", barcode);
         List<Object[]> resultList = q.getResultList();
-        if(!resultList.isEmpty())
-        {
+        if (!resultList.isEmpty()) {
             invBarcode.setInvCode(String.valueOf(resultList.get(0)[0]));
             invBarcode.setBarcode(String.valueOf(resultList.get(0)[1]));
             invBarcode.setUomFactor(Double.parseDouble(String.valueOf(resultList.get(0)[2])));
@@ -591,12 +543,11 @@ public class InventoryServiceV4 extends AbstractService
         return invBarcode;
     }
 
-    public List<LatestMovementItem> getLatestMovementItems(String invCode, String whsCode, int top)
-    {
+    public List<LatestMovementItem> getLatestMovementItems(String invCode, String whsCode, int top) {
         List<LatestMovementItem> latestMovementItemList = new ArrayList<>();
         String queryString = String.format("""
-                SELECT TOP %d TRX_NO, CONVERT(DATETIME2(0), LOG_DATE) AS LOG_DATE, INV_MVMT FROM WHS_LOG
-                WHERE WHS_CODE = :WHS_CODE AND INV_CODE = :INV_CODE ORDER BY LOG_DATE DESC""",
+                        SELECT TOP %d TRX_NO, CONVERT(DATETIME2(0), LOG_DATE) AS LOG_DATE, INV_MVMT FROM WHS_LOG
+                        WHERE WHS_CODE = :WHS_CODE AND INV_CODE = :INV_CODE ORDER BY LOG_DATE DESC""",
                 top);
         Query query = em.createNativeQuery(queryString);
 
@@ -604,8 +555,7 @@ public class InventoryServiceV4 extends AbstractService
         query.setParameter("INV_CODE", invCode);
 
         List<Object[]> resultList = query.getResultList();
-        for (Object[] result : resultList)
-        {
+        for (Object[] result : resultList) {
             LatestMovementItem latestMovementItem = new LatestMovementItem();
             latestMovementItem.setTrxNo(String.valueOf(result[0]));
             latestMovementItem.setTrxDate(String.valueOf(result[1]));

@@ -21,43 +21,40 @@ import static jakarta.persistence.ParameterMode.IN;
  */
 
 @Service
-public class DocServiceV4 extends AbstractService
-{
-    public List<PickDoc> getPackDocList(String userId)
-    {
+public class DocServiceV4 extends AbstractService {
+    public List<PickDoc> getPackDocList(String userId) {
         StoredProcedureQuery q = em.createStoredProcedureQuery("SP_TERMINAL_GET_PACK_DOC_ALL");
         q.registerStoredProcedureParameter("USER_ID", String.class, IN);
         q.setParameter("USER_ID", userId);
         List<PickDoc> docList = new ArrayList<>();
         List<Object[]> resultList = q.getResultList();
-        resultList.stream().map((result)->
-                                {
-                                    PickDoc doc = new PickDoc();
-                                    doc.setTrxNo(String.valueOf(result[0]));
-                                    doc.setTrxDate(String.valueOf(result[1]));
-                                    doc.setDescription(String.valueOf(result[2]));
-                                    doc.setBpCode(String.valueOf(result[3]));
-                                    doc.setBpName(String.valueOf(result[4]));
-                                    doc.setSbeCode(String.valueOf(result[5]));
-                                    doc.setSbeName(String.valueOf(result[6]));
-                                    doc.setPrevTrxNo(String.valueOf(result[7]));
-                                    doc.setNotes(String.valueOf(result[8]));
-                                    doc.setItemCount(Integer.parseInt(String.valueOf(result[9])));
-                                    doc.setPickedItemCount(Integer.parseInt(String.valueOf(result[10])));
-                                    return doc;
-                                }).forEachOrdered(docList::add);
+        resultList.stream().map((result) ->
+        {
+            PickDoc doc = new PickDoc();
+            doc.setTrxNo(String.valueOf(result[0]));
+            doc.setTrxDate(String.valueOf(result[1]));
+            doc.setDescription(String.valueOf(result[2]));
+            doc.setBpCode(String.valueOf(result[3]));
+            doc.setBpName(String.valueOf(result[4]));
+            doc.setSbeCode(String.valueOf(result[5]));
+            doc.setSbeName(String.valueOf(result[6]));
+            doc.setPrevTrxNo(String.valueOf(result[7]));
+            doc.setNotes(String.valueOf(result[8]));
+            doc.setItemCount(Integer.parseInt(String.valueOf(result[9])));
+            doc.setPickedItemCount(Integer.parseInt(String.valueOf(result[10])));
+            return doc;
+        }).forEachOrdered(docList::add);
 
         em.close();
 
         return docList;
     }
 
-    public boolean isTaxed(String trxNo)
-    {
+    public boolean isTaxed(String trxNo) {
         Query q = em.createNativeQuery("SELECT TAXED_FLAG FROM ACC_DOC WHERE TRX_NO = :TRX_NO");
         q.setParameter("TRX_NO", trxNo);
         List<Object> resultList = q.getResultList();
-        if(!resultList.isEmpty())
+        if (!resultList.isEmpty())
             return Boolean.parseBoolean(String.valueOf(resultList.get(0)));
 
         em.close();

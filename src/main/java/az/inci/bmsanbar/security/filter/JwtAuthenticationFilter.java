@@ -21,8 +21,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Component
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends OncePerRequestFilter
-{
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
 
@@ -30,25 +29,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain)
-            throws ServletException, IOException
-    {
+            throws ServletException, IOException {
         final String authHeader = request.getHeader(AUTHORIZATION);
         final String jwt;
         final String username;
 
-        if (authHeader != null && authHeader.startsWith("Bearer "))
-        {
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
             jwt = authHeader.substring(7);
 
-            if (!jwtService.isTokenExpired(jwt))
-            {
+            if (!jwtService.isTokenExpired(jwt)) {
                 username = jwtService.extractUsername(jwt);
 
-                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null)
-                {
+                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                     UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                    if (jwtService.isTokenValid(jwt, userDetails))
-                    {
+                    if (jwtService.isTokenValid(jwt, userDetails)) {
                         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                                 userDetails,
                                 null,

@@ -10,8 +10,7 @@ import lombok.Data;
 import java.util.Objects;
 
 @Data
-public class PickTrx
-{
+public class PickTrx {
     private int position;
     private int trxId;
     private String trxNo;
@@ -47,17 +46,15 @@ public class PickTrx
     private int prevTrxId;
 
     @Override
-    public boolean equals(Object o)
-    {
-        if(this == o) return true;
-        if(o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         PickTrx trx = (PickTrx) o;
         return trxId == trx.trxId;
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return Objects.hash(trxId);
     }
 }

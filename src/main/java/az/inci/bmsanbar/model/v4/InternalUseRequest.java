@@ -5,8 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class InternalUseRequest
-{
+public class InternalUseRequest {
     private String userId;
     private String whsCode;
     private String expCenterCode;

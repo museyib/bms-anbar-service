@@ -19,8 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class ApplicationConfig
-{
+public class ApplicationConfig {
     private final UserRepository userRepository;
 
     @Value("${api.username}")
@@ -30,34 +29,30 @@ public class ApplicationConfig
     private String apiPassword;
 
     @Bean
-    public PasswordEncoder passwordEncoder()
-    {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public UserDetailsService userDetailsService()
-    {
+    public UserDetailsService userDetailsService() {
         return username -> userRepository.findByUsername(username)
-                                 .orElseThrow(() -> new UsernameNotFoundException("user not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("user not found"));
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception
-    {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 
     @Bean
-    public CommandLineRunner commandLineRunner()
-    {
+    public CommandLineRunner commandLineRunner() {
         return args -> {
             if (userRepository.findByUsername(apiUsername).isEmpty())
                 userRepository.save(ApiUser.builder()
-                                           .username(apiUsername)
-                                           .role(Role.ADMIN)
-                                           .password(passwordEncoder().encode(apiPassword))
-                                           .build());
+                        .username(apiUsername)
+                        .role(Role.ADMIN)
+                        .password(passwordEncoder().encode(apiPassword))
+                        .build());
         };
     }
 }

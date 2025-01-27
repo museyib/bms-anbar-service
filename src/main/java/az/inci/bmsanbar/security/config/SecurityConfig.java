@@ -15,31 +15,29 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig
-{
+public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthFilter;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
-    {
-         http.csrf(AbstractHttpConfigurer::disable)
-             .authorizeHttpRequests(registry ->
-                             registry.requestMatchers(
-                                     "/v4/authenticate",
-                                     "/v4/app-version/**",
-                                     "/download",
-                                     "/swagger/**",
-                                     "/swagger-ui.html",
-                                     "/swagger-ui/**",
-                                     "/v2/download",
-                                     "/v3/download",
-                                     "/v3/api-docs*/**",
-                                     "/error").permitAll()
-                                     .requestMatchers("/v4/**").authenticated()
-                                     .anyRequest().denyAll())
-                 .exceptionHandling(configurer -> configurer.authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
-                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(STATELESS))
-                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(registry ->
+                        registry.requestMatchers(
+                                        "/v4/authenticate",
+                                        "/v4/app-version/**",
+                                        "/download",
+                                        "/swagger/**",
+                                        "/swagger-ui.html",
+                                        "/swagger-ui/**",
+                                        "/v2/download",
+                                        "/v3/download",
+                                        "/v3/api-docs*/**",
+                                        "/error").permitAll()
+                                .requestMatchers("/v4/**").authenticated()
+                                .anyRequest().denyAll())
+                .exceptionHandling(configurer -> configurer.authenticationEntryPoint(new CustomAuthenticationEntryPoint()))
+                .sessionManagement(configurer -> configurer.sessionCreationPolicy(STATELESS))
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

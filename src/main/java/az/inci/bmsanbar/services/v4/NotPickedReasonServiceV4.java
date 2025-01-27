@@ -9,10 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class NotPickedReasonServiceV4 extends AbstractService
-{
-    public List<NotPickedReason> getReasonList()
-    {
+public class NotPickedReasonServiceV4 extends AbstractService {
+    public List<NotPickedReason> getReasonList() {
         List<NotPickedReason> reasonList = new ArrayList<>();
         Query query = em.createNativeQuery("SELECT * FROM INV_NOT_PICKED_REASON");
 

@@ -11,8 +11,7 @@ import lombok.Data;
  * @author User
  */
 @Data
-public class InvBarcode
-{
+public class InvBarcode {
 
     private String invCode;
     private String barcode;

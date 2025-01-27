@@ -22,7 +22,7 @@ public class AppVersionControllerV4 {
 
     @GetMapping("/check")
     public ResponseEntity<Response<Boolean>> checkForNewVersion(@RequestParam("app-name") String appName,
-                                                       @RequestParam("current-version") int currentVersion) {
-        return ResponseEntity.ok(Response.getResultResponse(appVersionService.checkForNewVersion(appName,currentVersion)));
+                                                                @RequestParam("current-version") int currentVersion) {
+        return ResponseEntity.ok(Response.getResultResponse(appVersionService.checkForNewVersion(appName, currentVersion)));
     }
 }

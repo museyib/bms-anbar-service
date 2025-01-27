@@ -20,15 +20,14 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         if (!request.getRequestURI().startsWith("/v4")) {
-            Response apiResponse = Response.getUserErrorResponse("API versiyası uyğun deyil. Proqramı yeniləyin!");
+            Response<Void> apiResponse = Response.getUserErrorResponse("API versiyası uyğun deyil. Proqramı yeniləyin!");
             response.setStatus(HttpServletResponse.SC_OK);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
             response.getWriter().write(new ObjectMapper().writeValueAsString(apiResponse));
             response.getWriter().flush();
             response.getWriter().close();
-        }
-        else
+        } else
             defaultEntryPoint.commence(request, response, authException);
     }
 }

@@ -13,30 +13,27 @@ import java.util.List;
 
 @SuppressWarnings({"SqlResolve", "SqlNoDataSourceInspection"})
 @Service
-public class SubjectServiceV4 extends AbstractService
-{
-    public List<Sbe> getSbeList()
-    {
+public class SubjectServiceV4 extends AbstractService {
+    public List<Sbe> getSbeList() {
         List<Sbe> sbeList = new ArrayList<>();
         Query q = em.createNativeQuery("SELECT SBE_CODE, SBE_NAME FROM SBE_MASTER WHERE SBE_TYPE IN ('S','B')");
 
         List<Object[]> resultList = q.getResultList();
 
-        resultList.stream().map((result)->
-                                {
-                                    Sbe sbe = new Sbe();
-                                    sbe.setSbeCode(String.valueOf(result[0]));
-                                    sbe.setSbeName(String.valueOf(result[1]));
-                                    return sbe;
-                                }).forEachOrdered(sbeList::add);
+        resultList.stream().map((result) ->
+        {
+            Sbe sbe = new Sbe();
+            sbe.setSbeCode(String.valueOf(result[0]));
+            sbe.setSbeName(String.valueOf(result[1]));
+            return sbe;
+        }).forEachOrdered(sbeList::add);
 
         em.close();
 
         return sbeList;
     }
 
-    public List<Customer> getCustomerList(String sbeCode)
-    {
+    public List<Customer> getCustomerList(String sbeCode) {
         List<Customer> customerList = new ArrayList<>();
         Query q = em.createNativeQuery("""
                 SELECT BM.BP_CODE,
@@ -51,43 +48,41 @@ public class SubjectServiceV4 extends AbstractService
 
         List<Object[]> resultList = q.getResultList();
 
-        resultList.stream().map((result)->
-                                {
-                                    Customer customer = new Customer();
-                                    customer.setBpCode(String.valueOf(result[0]));
-                                    customer.setBpName(String.valueOf(result[1]));
-                                    customer.setSbeCode(String.valueOf(result[2]));
-                                    customer.setSbeName(String.valueOf(result[3]));
-                                    return customer;
-                                }).forEachOrdered(customerList::add);
+        resultList.stream().map((result) ->
+        {
+            Customer customer = new Customer();
+            customer.setBpCode(String.valueOf(result[0]));
+            customer.setBpName(String.valueOf(result[1]));
+            customer.setSbeCode(String.valueOf(result[2]));
+            customer.setSbeName(String.valueOf(result[3]));
+            return customer;
+        }).forEachOrdered(customerList::add);
 
         em.close();
 
         return customerList;
     }
 
-    public List<Whs> getWhsList()
-    {
+    public List<Whs> getWhsList() {
         List<Whs> whsList = new ArrayList<>();
         Query q = em.createNativeQuery("SELECT WHS_CODE, WHS_NAME FROM WHS_MASTER WHERE INACTIVE_FLAG = 0");
 
         List<Object[]> resultList = q.getResultList();
 
-        resultList.stream().map((result)->
-                                {
-                                    Whs whs = new Whs();
-                                    whs.setWhsCode(String.valueOf(result[0]));
-                                    whs.setWhsName(String.valueOf(result[1]));
-                                    return whs;
-                                }).forEachOrdered(whsList::add);
+        resultList.stream().map((result) ->
+        {
+            Whs whs = new Whs();
+            whs.setWhsCode(String.valueOf(result[0]));
+            whs.setWhsName(String.valueOf(result[1]));
+            return whs;
+        }).forEachOrdered(whsList::add);
 
         em.close();
 
         return whsList;
     }
 
-    public List<Whs> getTrgWhsList(String userId)
-    {
+    public List<Whs> getTrgWhsList(String userId) {
         List<Whs> whsList = new ArrayList<>();
         Query q = em.createNativeQuery("""
                 SELECT WM.WHS_CODE,WM.WHS_NAME
@@ -98,34 +93,33 @@ public class SubjectServiceV4 extends AbstractService
 
         List<Object[]> resultList = q.getResultList();
 
-        resultList.stream().map((result)->
-                                {
-                                    Whs whs = new Whs();
-                                    whs.setWhsCode(String.valueOf(result[0]));
-                                    whs.setWhsName(String.valueOf(result[1]));
-                                    return whs;
-                                }).forEachOrdered(whsList::add);
+        resultList.stream().map((result) ->
+        {
+            Whs whs = new Whs();
+            whs.setWhsCode(String.valueOf(result[0]));
+            whs.setWhsName(String.valueOf(result[1]));
+            return whs;
+        }).forEachOrdered(whsList::add);
 
         em.close();
 
         return whsList;
     }
 
-    public List<ExpCenter> getExpCenterList()
-    {
+    public List<ExpCenter> getExpCenterList() {
         List<ExpCenter> expCenterList = new ArrayList<>();
         Query q = em.createNativeQuery(
                 "SELECT EXP_CENTER_CODE, EXP_CENTER_DESC FROM dbo.FN_GET_EXP_CENTER_HIERARCHY('U04')");
 
         List<Object[]> resultList = q.getResultList();
 
-        resultList.stream().map((result)->
-                                {
-                                    ExpCenter expCenter = new ExpCenter();
-                                    expCenter.setExpCenterCode(String.valueOf(result[0]));
-                                    expCenter.setExpCenterName(String.valueOf(result[1]));
-                                    return expCenter;
-                                }).forEachOrdered(expCenterList::add);
+        resultList.stream().map((result) ->
+        {
+            ExpCenter expCenter = new ExpCenter();
+            expCenter.setExpCenterCode(String.valueOf(result[0]));
+            expCenter.setExpCenterName(String.valueOf(result[1]));
+            return expCenter;
+        }).forEachOrdered(expCenterList::add);
 
         em.close();
 

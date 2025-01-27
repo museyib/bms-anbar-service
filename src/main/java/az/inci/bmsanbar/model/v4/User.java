@@ -12,8 +12,7 @@ import lombok.Data;
  */
 
 @Data
-public class User
-{
+public class User {
     private String id;
     private String name;
     private String password;
@@ -33,10 +32,8 @@ public class User
     private boolean purchaseOrdersFlag;
     private boolean barcodeFlag;
 
-    public void setUserInfo(String field, boolean value)
-    {
-        switch(field)
-        {
+    public void setUserInfo(String field, boolean value) {
+        switch (field) {
             case "CollectBtn":
                 setCollectFlag(!value);
                 break;

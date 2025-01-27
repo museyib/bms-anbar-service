@@ -7,18 +7,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @RestController
-public class BmsanbarApplication
-{
+public class BmsanbarApplication {
 
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         SpringApplication.run(BmsanbarApplication.class, args);
     }
 
     @GetMapping(value = "/")
-    public String home()
-    {
+    public String home() {
         return "BMSAnbar Spring service";
     }
 }

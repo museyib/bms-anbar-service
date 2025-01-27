@@ -14,26 +14,22 @@ import java.util.List;
 
 @RequestMapping("/v4/doc")
 @RestController
-public class DocControllerV4
-{
+public class DocControllerV4 {
     private DocServiceV4 service;
 
     @Autowired
-    public void setService(DocServiceV4 service)
-    {
+    public void setService(DocServiceV4 service) {
         this.service = service;
     }
 
     @GetMapping(value = "/pack/all", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<Response<List<PickDoc>>> packDocList(@RequestParam("user-id") String userId)
-    {
+    public ResponseEntity<Response<List<PickDoc>>> packDocList(@RequestParam("user-id") String userId) {
         List<PickDoc> result = service.getPackDocList(userId);
         return ResponseEntity.ok(Response.getResultResponse(result));
     }
 
     @GetMapping(value = "/taxed")
-    public ResponseEntity<Response<Boolean>> isTaxed(@RequestParam("trx-no") String trxNo)
-    {
+    public ResponseEntity<Response<Boolean>> isTaxed(@RequestParam("trx-no") String trxNo) {
         boolean result = service.isTaxed(trxNo);
         return ResponseEntity.ok(Response.getResultResponse(result));
     }

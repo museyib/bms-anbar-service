@@ -5,8 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class TransferRequest
-{
+public class TransferRequest {
     private String srcWhsCode;
     private String trgWhsCode;
     private String userId;

@@ -13,8 +13,7 @@ import java.util.List;
  * @author User
  */
 @Data
-public class PickDoc
-{
+public class PickDoc {
     private String trxNo;
     private String trxDate;
     private String description;
