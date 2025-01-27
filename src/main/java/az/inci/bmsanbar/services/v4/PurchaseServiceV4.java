@@ -14,8 +14,7 @@ import java.util.List;
 @Service
 public class PurchaseServiceV4 extends AbstractService {
 
-    public List<PurchaseDoc> getDocList(String userId)
-    {
+    public List<PurchaseDoc> getDocList(String userId) {
         List<PurchaseDoc> docList = new ArrayList<>();
 
         Query query = em.createNativeQuery("""
@@ -40,8 +39,7 @@ public class PurchaseServiceV4 extends AbstractService {
                 ORDER BY TRX_NO DESC""");
         query.setParameter("USER_ID", userId);
         List<Object[]> resultList = query.getResultList();
-        for (Object[] result : resultList)
-        {
+        for (Object[] result : resultList) {
             PurchaseDoc doc = getPurchaseDoc(result);
             docList.add(doc);
         }
@@ -63,8 +61,7 @@ public class PurchaseServiceV4 extends AbstractService {
         return doc;
     }
 
-    public List<PurchaseTrx> getTrxList(String trxNo)
-    {
+    public List<PurchaseTrx> getTrxList(String trxNo) {
         List<PurchaseTrx> trxList = new ArrayList<>();
 
         Query query = em.createNativeQuery("""
@@ -87,8 +84,7 @@ public class PurchaseServiceV4 extends AbstractService {
 
         query.setParameter("TRX_NO", trxNo);
         List<Object[]> resultList = query.getResultList();
-        for (Object[] result : resultList)
-        {
+        for (Object[] result : resultList) {
             PurchaseTrx trx = new PurchaseTrx();
             trx.setTrxNo(trxNo);
             trx.setTrxId((Integer) result[0]);
@@ -116,8 +112,7 @@ public class PurchaseServiceV4 extends AbstractService {
     }
 
     @Transactional
-    public void updatePurchaseQty(UpdatePurchaseTrxRequest request)
-    {
+    public void updatePurchaseQty(UpdatePurchaseTrxRequest request) {
         Query query = em.createNativeQuery("""
                 UPDATE OINV_TRX SET PICKED_QTY = :QTY WHERE TRX_ID = :TRX_ID""");
         query.setParameter("QTY", request.getQty());
