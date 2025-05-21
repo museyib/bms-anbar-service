@@ -11,5 +11,5 @@ public class ConfirmDeliveryRequest {
     private String deliverPerson;
     private String driverCode;
     private boolean transitionFlag;
-    private String confirmatioinCode;
+    private String confirmationCode;
 }

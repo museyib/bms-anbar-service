@@ -88,6 +88,46 @@ public class LogisticsServiceV4 extends AbstractService {
         return shipDocInfo;
     }
 
+    public ShipDocInfo getDocInfoForArchiveByTrxNo(String trxNo) {
+        ShipDocInfo shipDocInfo = null;
+
+        Query query = em.createNativeQuery("""
+                SELECT TOP 1 SD.DRIVER_CODE,
+                    PM.PER_NAME,
+                    SD.VEHICLE_CODE,
+                    ISNULL(ST.DELIVER_NOTES, '') AS DELIVER_NOTES,
+                    ST.SHIP_STATUS,
+                    ST.CONFIRM_FLAG,
+                    ST.DELIVER_FLAG,
+                    ST.ARCHIVE_FLAG
+                FROM SHIP_TRX ST
+                JOIN SHIP_DOC SD ON ST.TRX_NO = SD.TRX_NO
+                JOIN PER_MASTER PM ON SD.DRIVER_CODE = PM.PER_CODE
+                WHERE ST.SRC_TRX_NO = :SRC_TRX_NO
+                ORDER BY ST.TRX_ID DESC""");
+
+        query.setParameter("SRC_TRX_NO", trxNo);
+
+        List<Object[]> resultList = query.getResultList();
+
+        if (!resultList.isEmpty()) {
+            shipDocInfo = new ShipDocInfo();
+            Object[] result = resultList.get(0);
+            shipDocInfo.setDriverCode((String) result[0]);
+            shipDocInfo.setDriverName((String) result[1]);
+            shipDocInfo.setVehicleCode((String) result[2]);
+            shipDocInfo.setDeliverNotes((String) result[3]);
+            shipDocInfo.setShipStatus((String) result[4]);
+            shipDocInfo.setConfirmFlag(Boolean.parseBoolean(String.valueOf(result[5])));
+            shipDocInfo.setDeliverFlag(Boolean.parseBoolean(String.valueOf(result[6])));
+            shipDocInfo.setArchiveFlag(Boolean.parseBoolean(String.valueOf(result[7])));
+        }
+
+        em.close();
+
+        return shipDocInfo;
+    }
+
     public ShipDocInfo getDocInfoForSendingByTrxNo(String trxNo) {
         ShipDocInfo shipDocInfo = null;
 
@@ -317,6 +357,21 @@ public class LogisticsServiceV4 extends AbstractService {
             query.setParameter("NOTE", request.getNote());
             query.setParameter("DELIVER_PERSON", request.getDeliverPerson());
             query.setParameter("TRANSITION_FLAG", request.isTransitionFlag());
+
+            query.executeUpdate();
+        }
+
+        em.close();
+    }
+
+    @Transactional
+    public void archiveDelivery(List<ArchiveDeliveryRequest> requestList) {
+        for (ArchiveDeliveryRequest request : requestList) {
+            StoredProcedureQuery query = em.createStoredProcedureQuery("SP_ARCHIVE_DELIVERY");
+            query.registerStoredProcedureParameter("TRX_NO", String.class, IN);
+            query.registerStoredProcedureParameter("DRIVER_CODE", String.class, IN);
+            query.setParameter("TRX_NO", request.getTrxNo());
+            query.setParameter("DRIVER_CODE", request.getDriverCode());
 
             query.executeUpdate();
         }

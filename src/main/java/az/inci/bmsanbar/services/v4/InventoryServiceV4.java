@@ -546,8 +546,28 @@ public class InventoryServiceV4 extends AbstractService {
     public List<LatestMovementItem> getLatestMovementItems(String invCode, String whsCode, int top) {
         List<LatestMovementItem> latestMovementItemList = new ArrayList<>();
         String queryString = String.format("""
-                        SELECT TOP %d TRX_NO, CONVERT(DATETIME2(0), LOG_DATE) AS LOG_DATE, INV_MVMT FROM WHS_LOG
-                        WHERE WHS_CODE = :WHS_CODE AND INV_CODE = :INV_CODE ORDER BY LOG_DATE DESC""",
+                        SELECT TOP %s *
+                        FROM
+                        (
+                            SELECT TRX_NO,
+                                   TRX_DATE,
+                                   DBT_CRD * QTY * UOM_FACTOR AS QTY
+                            FROM INV_TRX
+                            WHERE INV_CODE = :INV_CODE
+                                  AND WHS_CODE = :WHS_CODE
+                            UNION ALL
+                            SELECT TRX_NO,
+                                   TRX_DATE,
+                                   DBT_CRD * QTY * UOM_FACTOR AS QTY
+                            FROM IVC_TRX
+                            WHERE((TRX_TYPE_ID = 17
+                                   AND (PREV_TRX_TYPE_ID != 25
+                                        OR PREV_TRX_TYPE_ID IS NULL))
+                                  OR TRX_TYPE_ID != 17)
+                                 AND INV_CODE = :INV_CODE
+                                 AND WHS_CODE = :WHS_CODE
+                        ) T
+                        ORDER BY TRX_DATE DESC""",
                 top);
         Query query = em.createNativeQuery(queryString);
 

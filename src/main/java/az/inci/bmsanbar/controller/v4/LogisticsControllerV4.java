@@ -88,6 +88,20 @@ public class LogisticsControllerV4 {
             return ResponseEntity.ok(Response.getUserErrorResponse(NOT_VALID_SHIPMENT_DOC));
     }
 
+    @GetMapping(value = "/doc-info-for-archive", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<Response<ShipDocInfo>> getDocInfoForArchiveByTrxNo(@RequestParam("trx-no") String trxNo) {
+        if (shipmentService.isValid(trxNo)) {
+            ShipDocInfo result = logisticsService.getDocInfoForArchiveByTrxNo(trxNo);
+            if (result == null) {
+                return ResponseEntity.ok(Response.getUserErrorResponse(NOT_FOUND_VALID_SHIPMENT));
+            } else if (result.isArchiveFlag()) {
+                return ResponseEntity.ok(Response.getUserErrorResponse("Bu sənəd artıq arxivləşdirilib."));
+            } else
+                return ResponseEntity.ok(Response.getResultResponse(result));
+        } else
+            return ResponseEntity.ok(Response.getUserErrorResponse(NOT_VALID_SHIPMENT_DOC));
+    }
+
     @GetMapping(value = "/doc-list", produces = "application/json;charset=UTF-8")
     public ResponseEntity<Response<List<ShipDoc>>> getDocList(@RequestParam("start-date") String startDate,
                                                               @RequestParam("end-date") String endDate) {
@@ -104,7 +118,7 @@ public class LogisticsControllerV4 {
     @PostMapping(value = "/confirm-delivery", produces = "application/json;charset=UTF-8")
     public ResponseEntity<Response<Boolean>> confirmDelivery(@RequestBody ConfirmDeliveryRequest request) {
         boolean isValid = logisticsService.checkDeliveryConfirmationCode(request.getTrxNo(),
-                request.getConfirmatioinCode());
+                request.getConfirmationCode());
         if (isValid) {
             logisticsService.confirmDelivery(request);
             return ResponseEntity.ok(Response.getSuccessResponse());
@@ -115,6 +129,12 @@ public class LogisticsControllerV4 {
     @PostMapping(value = "/confirm-shipment", produces = "application/json;charset=UTF-8")
     public ResponseEntity<Response<Void>> confirmShipment(@RequestBody List<UpdateDeliveryRequestItem> requestList) {
         logisticsService.confirmShipment(requestList);
+        return ResponseEntity.ok(Response.getSuccessResponse());
+    }
+
+    @PostMapping(value = "/archive-delivery", produces = "application/json;charset=UTF-8")
+    public ResponseEntity<Response<Boolean>> archiveDelivery(@RequestBody List<ArchiveDeliveryRequest> requestList) {
+        logisticsService.archiveDelivery(requestList);
         return ResponseEntity.ok(Response.getSuccessResponse());
     }
 
