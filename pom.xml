@@ -5,14 +5,14 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.1</version>
+        <version>3.4.5</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>az.inci</groupId>
-    <artifactId>bmsanbar</artifactId>
+    <artifactId>wms</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>bmsanbar</name>
-    <description>Demo project for Spring Boot</description>
+    <name>wms</name>
+    <description>Warehouse Management System</description>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
