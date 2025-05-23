@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>az.inci</groupId>
-    <artifactId>wms</artifactId>
+    <artifactId>wms-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>wms</name>
+    <name>wms-service</name>
     <description>Warehouse Management System</description>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
